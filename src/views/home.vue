@@ -1,7 +1,7 @@
 <template>
 	<div class="wrap">
         <header class="v-header">
-            <!-- <div class="logo">后台管理系统</div> -->
+            <div class="logo">后台管理系统</div>
             <div class="nav">
                 <!-- @select="handleSelect" -->
                 <!-- TODO：navIndex -->
@@ -130,7 +130,7 @@ export default {
                 this.$router.push({name: 'index'})
                 break
             case '/business':
-                this.$router.push({path: '/business/user/user-list'})
+                this.$router.push({path: '/business/goods/index'})
                 break
             case '/system':
                 this.$router.push({path: '/system/setting/website'})

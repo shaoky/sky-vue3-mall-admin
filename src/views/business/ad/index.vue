@@ -47,7 +47,7 @@
             </el-table-column>
         </el-table>
          <!-- 分页 -->
-        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange"  :total="page.total"></pagination>
+        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange"  :total="count"></pagination>
     </div>
 </template>
 
@@ -55,8 +55,12 @@
 import { defineComponent, reactive, onMounted, toRefs } from 'vue';
 import { getAdPositionListApi, getAdListApi, delAd } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';
+import Pagination from '../../../components/pagination.vue';
 
 export default defineComponent({
+    components: {
+        Pagination
+    },
     setup() {
         const state: any = reactive({
             form: {
@@ -70,9 +74,7 @@ export default defineComponent({
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
             list: [ ],
-            page: {
-                total: 20
-            },
+            count: 0,
             positionList: []
         })
 
@@ -84,6 +86,7 @@ export default defineComponent({
         const getAdList = async () => {
             const data: any = await getAdListApi(state.form)
             state.list = data.list
+            state.count = data.count
         }
 
         const getAdPosition = async () => {

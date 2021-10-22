@@ -47,7 +47,7 @@
             </el-table-column>
         </el-table>
          <!-- 分页 -->
-        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange"  :total="page.total"></pagination>
+        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange"  :total="count"></pagination>
     </div>
 </template>
 
@@ -72,9 +72,7 @@ export default defineComponent({
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
             list: [ ],
-            page: {
-                total: 20
-            },
+            count: 0,
             categoryList: []
         })
 
@@ -86,6 +84,7 @@ export default defineComponent({
         const getArticleList = async () => {
             const data: any = await getArticleListApi(state.form)
             state.list = data.list
+            state.count = data.count
         }
 
         const _getArticleTypeList = async () => {
@@ -140,6 +139,7 @@ export default defineComponent({
             ...toRefs(state),
             getArticleList,
             onDelete,
+            handleCurrentChange
         };
      }
   });

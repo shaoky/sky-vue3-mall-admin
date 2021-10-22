@@ -41,7 +41,11 @@ export default {
                         {
                             name: '网站设置',
                             url: '/system/setting/website'
-                        }
+                        },
+                        {
+                            name: '地图设置',
+                            url: '/system/setting/map'
+                        },
                     ]
                 },
                 {

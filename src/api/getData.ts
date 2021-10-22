@@ -55,5 +55,5 @@ export const deleteGoodsType = (data: any) => fetch('/admin/goods/type/delete', 
 /**
  * 系统设置
  */
-export const getWebsite = (data: any) => fetch('/admin/system/web/config/info', data, 'get')
+export const getWebsite = () => fetch('/admin/system/web/config/info', {}, 'get')
 export const updateWebsite = (data: any) => fetch('/admin/system/web/config/update', data, 'post')

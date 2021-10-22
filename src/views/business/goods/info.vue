@@ -91,7 +91,6 @@ export default defineComponent({
         ueditor
     },
     setup(props, a) {
-        // console.log(props)
         const ue = ref(null)
         const state: any = reactive({
             imgBaseUrl: imgBaseUrl,
@@ -237,6 +236,5 @@ export default defineComponent({
 
 
 <style scoped lang="less">
-
 .btn{text-align: center}
 </style>

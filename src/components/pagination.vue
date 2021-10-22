@@ -6,7 +6,7 @@
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-sizes="[10, 20, 100]"
-            :page-size="1"
+            :page-size="size"
             layout="prev, pager, next"
             :total="total">
         </el-pagination>
@@ -21,9 +21,13 @@ export default defineComponent({
         total: {
             type: Number,
             required: true
+        },
+        size: {
+            type: Number,
+            default: 10
         }
     },
-    emits: ['handleSizeChange', 'handleCurrentChange' ],
+    emits: ['handleSizeChange', 'handleCurrentChange'],
     setup(props, {emit}) {
         const state = reactive({
             currentPage: 1

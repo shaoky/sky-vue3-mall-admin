@@ -39,11 +39,11 @@ const routes: Array<RouteRecordRaw> = [
                 path: '/business',
                 component: () => import(/* webpackChunkName: "business" */ "../views/business/index.vue"),
                 children: [
-                    {
-                        path: '/business/user/user-list',
-                        meta: { title: '用户列表' },
-                        component: () => import(/* webpackChunkName: "businessUserList" */ "../views/business/user/user-list.vue"),
-                    },
+                    // {
+                    //     path: '/business/user/user-list',
+                    //     meta: { title: '用户列表' },
+                    //     component: () => import(/* webpackChunkName: "businessUserList" */ "../views/business/user/user-list.vue"),
+                    // },
                     /**
                      * 广告管理
                      */
@@ -126,10 +126,15 @@ const routes: Array<RouteRecordRaw> = [
                     {
                         path: '/system/setting/website',
                         meta: { title: '网站设置' },
-                        component: () => import(/* webpackChunkName: "dataTypeBasisList" */ "../views/system/setting/website.vue"),
+                        component: () => import(/* webpackChunkName: "systemWebsite" */ "../views/system/setting/website.vue"),
+                    },
+                    {
+                        path: '/system/setting/map',
+                        meta: { title: '地图设置' },
+                        component: () => import(/* webpackChunkName: "systemMap" */ "../views/system/setting/map.vue"),
                     }
                 ]
-            }
+            },
         ]
     }
 ];

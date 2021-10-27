@@ -3,9 +3,7 @@
         <header class="v-header">
             <div class="logo">后台管理系统</div>
             <div class="nav">
-                <!-- @select="handleSelect" -->
-                <!-- TODO：navIndex -->
-                <el-menu  :default-active="'/'" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu  :default-active="navIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                     <el-menu-item :index="item.url" :key="index" v-for="(item,index) in group">{{item.name}}</el-menu-item>
                     <el-submenu index="5">
                         <template #title>角色账号</template>
@@ -59,15 +57,17 @@
   </div>
 </template>
 
-<script>
-// import { mapGetters, mapMutations, mapActions } from 'vuex'
-// import { resetPassword, loginout } from '@/api/getData'
-// import validator from '@/utils/validator.js'
+<script lang="ts">
+import validator from '../utils/validator'
+import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getUserInfo, resetPassword } from '../api/getData'
+import { useRoute, useRouter } from 'vue-router'
+import { ElNotification, ElMessageBox } from 'element-plus'
 
-export default {
-    data () {
-        return {
+export default defineComponent({
+    setup() {
+        let state: any = reactive({
+            navIndex: '/',
             group: [
                 {
                     url: '/',
@@ -93,146 +93,200 @@ export default {
                 password: '',
                 newPassword: ''
             },
+            router: {},
             confirmNewPassword: '' // 确认密码
-        }
-    },
-    computed: {
-        // ...mapGetters({
-        //     navIndex: 'getNavIndex',
-        //     userInfo: 'getUserInfo'
-        // }),
-        // group () {
-        //     return this.$store.state.groups.group
-        // }
-    },
-    mounted () {
-        // if (!this.group) {
-        //     this.$store.dispatch('AGetAuthority')
-        // }
-        // if (!this.userInfo) {
-        //     // this.$store.dispatch(this.types.AGetUserInfo)
-        //     this.AGetUserInfo()
-        // }
-        this.getUserInfo()
-    },
-    methods: {
-        // ...mapMutations(['MDelToken']),
-        // ...mapActions(['AGetUserInfo']),
-        async getUserInfo() {
-            const { data } = await getUserInfo()
-            this.userInfo = data
+        })
 
-        },
-        handleSelect (key, keyPath) {
-            console.log(key)
+        onMounted(() => {
+            state.router = useRouter()
+            const path = useRoute().path
+            if (path.indexOf('/business') > -1) {
+                state.navIndex = '/business'
+            }
+            if (path.indexOf('/system') > -1) {
+                state.navIndex = '/system'
+            }
+            if (path.indexOf('/data') > -1) {
+                state.navIndex = '/data'
+            }
+        })
+
+        const getUserInfo = async() => {
+            const { data }: any = await getUserInfo()
+            state.userInfo = data
+        }
+
+        const handleSelect = async(key: any) => {
             switch (key) {
-            case '/':
-                this.$router.push({name: 'index'})
-                break
-            case '/business':
-                this.$router.push({path: '/business/goods/index'})
-                break
-            case '/system':
-                this.$router.push({path: '/system/setting/website'})
-                break
-            case '/data':
-                this.$router.push({path: '/data/type/basis-list'})
-                break
-            case 'userInfo':
-                console.log(2222)
-                this.userInfoVisible = true
-                break
-            case 'editPasswrod':
-                this.editPasswordVisible = true
-                break
-            case 'loginOut':
-                this.$confirm('是否确认退出登录?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
+                case '/':
+                    state.router.push({name: 'index'})
+                    break
+                case '/business':
+                    state.router.push({path: '/business/goods/index'})
+                    break
+                case '/system':
+                    state.router.push({path: '/system/setting/website'})
+                    break
+                case '/data':
+                    state.router.push({path: '/data/type/basis-list'})
+                    break
+                case 'userInfo':
+                    state.userInfoVisible = true
+                    break
+                case 'editPasswrod':
+                    state.editPasswordVisible = true
+                    break
+                case 'loginOut':
+                    ElMessageBox.confirm('是否确认退出登录?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消'
+                    }).then(() => {
+                        state.router.push('/')
+                    })
+            }
+        }
+
+        const reset = async() => {
+            if (validator.pass(state.editPassword.password)) {
+                ElNotification({
+                    title: '提示',
+                    message: validator.pass(state.editPassword.password),
                     type: 'warning'
-                }).then(() => {
-                    // this.out()
-                    this.MDelToken()
-                    this.$router.push({'path': '/'})
                 })
-                break
-            }
-        },
-        // 修改密码
-        async reset () {
-            if (validator.pass(this.editPassword.loginPwd)) {
-                this.$message(validator.pass(this.editPassword.loginPwd))
                 return
             }
-            if (!this.editPassword.newLoginPwd) {
-                this.$message('请输入新密码')
+            if (!state.editPassword.newPassword) {
+                ElNotification({
+                    title: '提示',
+                    message: '请输入新密码',
+                    type: 'warning'
+                })
                 return
             }
-            if (!this.confirmNew) {
-                this.$message('请再次输入新密码')
+            if (!state.confirmNewPassword) {
+                ElNotification({
+                    title: '提示',
+                    message: '请再次输入新密码',
+                    type: 'warning'
+                })
                 return
             }
-            if (this.editPassword.newLoginPwd !== this.confirmNew) {
-                this.$message('两次输入的密码不一致')
+            if (state.editPassword.newPassword !== state.confirmNewPassword) {
+                ElNotification({
+                    title: '提示',
+                    message: '两次输入的密码不一致',
+                    type: 'warning'
+                })
                 return
             }
             try {
-                let res = await resetPassword(this.editPassword)
-                if (res.code === 200) {
-                    this.$notify({
-                        title: '成功',
-                        message: res.data,
-                        type: 'success'
-                    })
-                }
+                let data: any = await resetPassword({
+                    password: state.editPassword.password,
+                    newPassword: state.editPassword.newPassword
+                })
+                ElNotification({
+                    title: '成功',
+                    message: data,
+                    type: 'success'
+                })
             } catch(e) {
-                console.log(22222)
-                console.log(e);
+                 ElNotification({
+                    title: '错误',
+                    message: e.data,
+                    type: 'error'
+                })
+                return
             }
-            this.editPasswordVisible = false
-        },
-        // 登出
-        async out () {
-            let res = await loginout()
-            console.log(res)
+            state.editPasswordVisible = false
+        }
+
+        const out = () => {
+            state.router.push({path: '/'})
+        }
+
+        return {
+            ...toRefs(state),
+            handleSelect,
+            reset,
+            out
         }
     }
-}
+   
+})
 </script>
 
 <style lang="less">
-// @import "../assets/less/define.less";
-.wrap{
-    .v-header{display: flex; height: 80px; background: #007cfc;position: fixed; top: 0; left: 0; right: 0; z-index: 9; overflow: hidden;
-        .logo{flex: 1; font-size: 26px;line-height: 80px; color: #fff; padding-left: 50px;}
-        .nav{display: flex; align-items: center; margin-right: 52px;
-            .el-menu-demo{background-color: transparent; border-bottom: none;
-            }
-            .el-menu--horizontal>.el-menu-item{height: 53px;}
-        }
+.v-header{
+    display: flex;
+    height: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9;
+    background: #007cfc;
+    overflow: hidden;
+    .logo{
+        flex: 1;
+        padding-left: 50px;
+        font-size: 26px;
+        line-height: 80px;
+        color: #fff;
     }
-    .mainBody{position: absolute; top: 80px; left: 0; right: 0; bottom: 0; overflow: hidden; overflow-y: auto; width: auto;
-        /*左边导航*/
-        .el-aside{ position: fixed; top: 80px; left: 0; bottom: 0; background-color: #fff; border: 1px solid #e5e5e5;
-            .el-menu{border-right: none;}
+    .nav{
+        display: flex;
+        align-items: center;
+        margin-right: 52px;
+        .el-menu-demo{
+            background-color: transparent;
+            border-bottom: none;
         }
-        /*主体内容区*/
-        .right-main{flex: 1; padding: 0 40px 40px 240px; background: #fff;}
+        .el-menu--horizontal>.el-menu-item{height: 53px;}
     }
 }
-
-// 弹出框-用户信息
-.userInfo{
-    .el-dialog__body{}
+.mainBody{
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    overflow-y: auto;
+    width: auto;
+    /*左边导航*/
+    .el-aside{
+        position: fixed;
+        top: 80px;
+        left: 0;
+        bottom: 0;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        .el-menu{border-right: none;}
+    }
+    /*主体内容区*/
+    .right-main{
+        flex: 1;
+        padding: 0 40px 40px 240px;
+        background: #fff;
+    }
 }
 
 /*
  * 导航样式覆盖
  */
 
-.el-menu--horizontal>.el-menu-item{color: #fff!important; font-size: 16px; padding: 0 10px; margin: 0 21px!important;} // 默认颜色
+.el-menu--horizontal>.el-menu-item{
+    padding: 0 10px;
+    margin: 0 21px!important;
+    color: #fff!important;
+    font-size: 16px;
+} // 默认颜色
 // 选中颜色
-.el-menu--horizontal>.el-menu-item.is-active{color: #fff!important; opacity: .8; border-bottom: 2px solid #fff;}
+.el-menu--horizontal>.el-menu-item.is-active{
+    color: #fff!important;
+    opacity: .8;
+    border-bottom: 2px solid #fff;
+}
 .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover{color: #fff;}
 // 选中背景颜色
 .el-menu--horizontal>.el-menu-item:hover{background-color: transparent!important;}

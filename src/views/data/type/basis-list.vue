@@ -83,11 +83,13 @@ import { defineComponent, reactive, onMounted, toRefs } from 'vue';
 import { getGoodsTypeList, addGoodsType, updateGoodsType, getArticleTypeList, deleteArticle, deleteGoodsType } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import Pagination from '../../../components/pagination.vue';
+import { imgBaseUrl } from '../../../config/env'
 
 export default defineComponent({
     components: {Pagination},
     setup() {
         const state: any = reactive({
+            imgBaseUrl: imgBaseUrl,
             dialogVisible: false,
             isAdd: false,
             default: {

@@ -6,7 +6,7 @@ export const getIndexData = (data: any) => fetch('/h5/index/data', data, 'post')
 // export const getGoodsList = (data: any) => fetch('/h5/goods/list', data, 'post')
 export const getUserList = (data: any) => fetch('/h5/goods/list', data, 'post')
 export const getUserInfo = () => fetch('/admin/user/admin/info', {} , 'get')
-export const resetPassword = () => fetch('/admin/user/admin/password', {} , 'post')
+export const resetPassword = (data: any) => fetch('/admin/user/admin/password', data , 'post')
 
 // 广告内容管理
 export const getAdListApi = (data: any) => fetch('/admin/ad/list', data, 'get')
@@ -40,6 +40,7 @@ export const addGoods = (data: any) => fetch('/admin/goods/add', data, 'post')
 export const deleteGoods = (data: any) => fetch('/admin/goods/delete', data, 'post')
 export const updateGoods = (data: any) => fetch('/admin/goods/update', data, 'post')
 export const goodsGoodsInfo = (data: any) => fetch('/admin/goods/info', data, 'get')
+export const setGoodsIsOpen = (data: any) => fetch('/admin/goods/isOpen/set', data, 'post')
 
 
 /**

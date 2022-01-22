@@ -61,14 +61,14 @@
                 </el-dialog>
             </el-form-item>
             <el-form-item label="内容：" class="ueditor-box">
-                <ueditor ref="ue"  :config="{initialContent: form.content}" v-if="form.content || isInit"></ueditor>
+                <ueditor ref="ue"  :config="{initialContent: form.content}" v-if="form.content"></ueditor>
             </el-form-item>
             <el-form-item label="产品排序：">
                 <el-input style="width:200px;" v-model.number="form.sort"></el-input>
             </el-form-item>
-            <el-form-item label="是否启用：">
+            <!-- <el-form-item label="是否启用：">
                 <el-checkbox v-model="form.isOpen"></el-checkbox>
-            </el-form-item>
+            </el-form-item> -->
             <div class="btn">
                 <el-button type="primary" @click="onSubmit">保存</el-button>
             </div>
@@ -107,8 +107,7 @@ export default defineComponent({
             typeList: [],
             bannerList: [],
             dialogImageUrl: '',
-            dialogVisible: false,
-            isInit: false
+            dialogVisible: false
         })
 
         onMounted(async() => {
@@ -119,7 +118,6 @@ export default defineComponent({
                 state.id = Number(params.id) 
                 _getGoodsInfo(state.id)
             }
-            state.isInit = true
         })
 
         const _getGoodsInfo = async (id: number) => {
@@ -157,18 +155,19 @@ export default defineComponent({
             state.imageUrl = URL.createObjectURL(file.raw)
         }
 
+        // 上传图片
         const handleBannerSuccess = (res: any, file: any) => {
-            // state.form.imageUrl = res.data.url
-            
             state.bannerList.push({
-                // id: state.bannerList.length + 1,
                 url: res.data.url
             })
-           
-            // state.imageUrl = URL.createObjectURL(file.raw)
         }
         
+        // 图片删除
+        const handleRemove = (res) => {
+            console.log(res)
+        }
 
+        // 图片预览
         const handlePictureCardPreview = (file: any) => {
             state.dialogImageUrl = file.url
             state.dialogVisible = true
@@ -182,11 +181,9 @@ export default defineComponent({
 
 
         const onSubmit = async () => {
-            console.log(ue)
             // @ts-ignore
             state.form.content = ue.value.content
             state.form.bannerList = state.bannerList
-            console.log(state.form)
             // state.form.bannerList = state.bannerList.map((item: any) => ({
             //     id: item.id || undefined,
             //     url: item.
@@ -216,7 +213,6 @@ export default defineComponent({
                     });
                 }
             }
-            // this.form = {}
         }
 
 
@@ -227,7 +223,8 @@ export default defineComponent({
             handleBannerSuccess,
             ue,
             handlePictureCardPreview,
-            goodsClassIdChange
+            goodsClassIdChange,
+            handleRemove
         }
     }
 })

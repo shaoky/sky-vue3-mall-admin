@@ -42,6 +42,7 @@
                     <img :src="scope.row.imageUrl" style="max-height: 160px; margin:0 auto; display: block;">
                 </template>
             </el-table-column>
+            <el-table-column label="价格" prop="price"></el-table-column>
             <el-table-column label="排序" prop="sort"></el-table-column>
             <el-table-column label="状态">
                 <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
@@ -49,6 +50,7 @@
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
                     <el-button @click="$router.push({name:'goodsInfo',params:{id: scope.row.id}})" type="text" >编辑</el-button>
+                    <el-button @click="setIsOpen(scope.row)" type="text">{{scope.row.isOpen ? '下架' : '上架'}}</el-button>
                     <el-button @click="onDelete(scope.row.id)" type="text">删除</el-button>
                 </template>
             </el-table-column>
@@ -60,7 +62,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue';
-import { getGoodsList, getGoodsTypeList, deleteGoods } from '../../../api/getData'
+import { getGoodsList, getGoodsTypeList, deleteGoods, setGoodsIsOpen } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import Pagination from '../../../components/pagination.vue';
 import { deleteChildren } from '../../../utils/tools'
@@ -149,13 +151,27 @@ export default defineComponent({
             _getGoodsList()
         }
 
+        const setIsOpen = async(data: any) => {
+            const res = await setGoodsIsOpen({
+                id: data.id,
+                isOpen: data.isOpen ? 0 : 1
+            })
+            data.isOpen = !data.isOpen
+            ElMessage({
+                type: 'success',
+                message: '操作成功',
+            });
+
+        }
+
 
         return {
             ...toRefs(state),
             _getGoodsList,
             onDelete,
             goodsClassIdChange,
-            handleCurrentChange
+            handleCurrentChange,
+            setIsOpen
         };
      }
   });

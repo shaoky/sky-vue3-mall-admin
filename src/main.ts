@@ -15,7 +15,6 @@ router.beforeEach((to, from , next) => {
     document.title = 'xxx商城'
     next()
 })
-
 app.use(router)
 .use(ElementPlus)
 .use(VueUeditorWrap)

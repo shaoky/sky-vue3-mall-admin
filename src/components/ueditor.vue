@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs, ref } from 'vue';
 
 export default defineComponent({
     props: {
@@ -14,8 +14,8 @@ export default defineComponent({
         }
     },
     setup(props) {
+        const content = ref(props.config.initialContent)
         const state = reactive({
-            content: props.config.initialContent,
             editorConfig: {
                 initialFrameWidth: 900,
                 initialFrameHeight: 240,
@@ -28,7 +28,8 @@ export default defineComponent({
         })
 
         return {
-            ...toRefs(state)
+            ...toRefs(state),
+            content
         }
     },
     created() {

@@ -34,6 +34,16 @@ export default {
         return {
             path: '/business',
             group: [
+                // {
+                //     name: '基础数据管理',
+                //     url: '',
+                //     children: [
+                //         {
+                //             name: '商品类型',
+                //             url: '/data/basis/goods-type'
+                //         },
+                //     ]
+                // },
                 {
                     name: '基础类目管理',
                     url: '',
@@ -44,6 +54,7 @@ export default {
                         },
                     ]
                 },
+                
             ]
         }
     },

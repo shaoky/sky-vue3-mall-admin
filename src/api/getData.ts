@@ -52,6 +52,19 @@ export const getGoodsTypeList = (data: any) => fetch('/admin/goods/type/list', d
 export const addGoodsType = (data: any) => fetch('/admin/goods/type/add', data, 'post')
 export const updateGoodsType = (data: any) => fetch('/admin/goods/type/update', data, 'post')
 export const deleteGoodsType = (data: any) => fetch('/admin/goods/type/delete', data, 'post')
+export const getGoodsTypeInfo = (data: any) => fetch('/admin/goods/type/info', data, 'get')
+// 规格
+export const getGoodsSpecList = (data: any) => fetch('/admin/goods/spec/list', data, 'get')
+export const addGoodsSpec = (data: any) => fetch('/admin/goods/spec/add', data, 'post')
+export const updateGoodsSpec = (data: any) => fetch('/admin/goods/spec/update', data, 'post')
+export const deleteGoodsSpec = (data: any) => fetch('/admin/goods/spec/delete', data, 'post')
+// 属性
+export const getGoodsAttrList = (data: any) => fetch('/admin/goods/attr/list', data, 'get')
+export const addGoodsAttr = (data: any) => fetch('/admin/goods/attr/add', data, 'post')
+export const updateGoodsAttr = (data: any) => fetch('/admin/goods/attr/update', data, 'post')
+export const deleteGoodsAttr = (data: any) => fetch('/admin/goods/attr/delete', data, 'post')
+export const getGoodsTypeBasisInfo = (data: any) => fetch('/admin/goods/type/basis/info', data, 'get')
+
 
 /**
  * 系统设置

@@ -114,8 +114,20 @@ const routes: Array<RouteRecordRaw> = [
                 children: [
                     {
                         path: '/data/type/basis-list',
-                        meta: { title: '后台基础类目' },
+                        meta: { title: '产品类目' },
                         component: () => import(/* webpackChunkName: "dataTypeBasisList" */ "../views/data/type/basis-list.vue"),
+                    },
+                    {
+                        path: '/data/type/goods-attr/:id',
+                        name: 'goodsAttr',
+                        meta: { title: '商品属性' },
+                        component: () => import(/* webpackChunkName: "dataBasisGoodsAttr" */ "../views/data/type/goods-attr.vue"),
+                    },
+                    {
+                        path: '/data/type/goods-spec/:id',
+                        name: 'goodsSpec',
+                        meta: { title: '商品规格' },
+                        component: () => import(/* webpackChunkName: "dataBasisGoodsSpec" */ "../views/data/type/goods-spec.vue"),
                     }
                 ]
             },

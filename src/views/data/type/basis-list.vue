@@ -30,7 +30,8 @@
                     <el-button type="text" @click="onEdit(scope.row, scope.$index)">编辑</el-button>
                     <el-button type="text" @click="onDelete(scope.row.id, list, scope.$index)">删除</el-button>
                     <el-button type="text" @click="onEdit(scope.row,-1)">添加子类</el-button>
-                    <!-- <el-button type="text" @click="$router.push({name:'goodsAttr',params:{goodsClassId:scope.row.goodsClassId}})">查看属性</el-button> -->
+                    <el-button type="text" @click="$router.push({name:'goodsAttr',params:{id:scope.row.id}})">查看属性</el-button>
+                    <el-button type="text" @click="$router.push({name:'goodsSpec',params:{id:scope.row.id}})">查看规格</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -44,14 +45,6 @@
                         <el-input style="width:300px;" v-model.number="form.sort"></el-input>
                     </el-form-item>
                     <el-form-item label="分类图片：">
-                        <!-- <el-upload
-                            class="avatar-uploader"
-                            :action="imgBaseUrl"
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess">
-                            <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload> -->
                         <el-upload
                             class="avatar-uploader"
                             list-type="picture-card"

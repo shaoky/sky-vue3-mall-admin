@@ -11,7 +11,7 @@
 
 <script>
 import { defineComponent, onMounted, reactive, toRefs } from 'vue'
- import { getIndexData } from '../..//api/getData'
+import { getIndexData } from '../..//api/getData'
 
 
 export default defineComponent({

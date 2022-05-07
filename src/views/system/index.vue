@@ -53,8 +53,8 @@ export default {
                     url: '',
                     children: [
                         {
-                            name: '登录用户管理',
-                            url: '/system/log/user-logs'
+                            name: '用户登录日志',
+                            url: '/system/log/login'
                         },
                     ]
                 },

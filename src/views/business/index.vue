@@ -86,6 +86,16 @@ export default {
                         // }
                     ]
                 },
+                {
+                    name: '订单管理',
+                    url: '',
+                    children: [
+                        {
+                            name: '订单列表',
+                            url: '/business/order/index'
+                        },
+                    ]
+                },
             ]
         }
     },

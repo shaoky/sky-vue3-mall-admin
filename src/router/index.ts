@@ -103,6 +103,21 @@ const routes: Array<RouteRecordRaw> = [
                         meta: { title: '产品详情' },
                         component: () => import(/* webpackChunkName: "businessGoodsInfo" */ "../views/business/goods/info.vue"),
                     },
+                    /**
+                     * 订单管理
+                     */
+                    {
+                        path: '/business/order/index',
+                        name: 'order',
+                        meta: { title: '订单列表' },
+                        component: () => import(/* webpackChunkName: "businessOrderIndex" */ "../views/business/order/index.vue"),
+                    },
+                    {
+                        path: '/business/order/info/:id',
+                        name: 'orderInfo',
+                        meta: { title: '订单详情' },
+                        component: () => import(/* webpackChunkName: "businessOrderInfo" */ "../views/business/order/info.vue"),
+                    },
                 ]
             },
             /**
@@ -144,6 +159,11 @@ const routes: Array<RouteRecordRaw> = [
                         path: '/system/setting/map',
                         meta: { title: '地图设置' },
                         component: () => import(/* webpackChunkName: "systemMap" */ "../views/system/setting/map.vue"),
+                    },
+                    {
+                        path: '/system/log/login',
+                        meta: { title: '地图设置' },
+                        component: () => import(/* webpackChunkName: "logLogin" */ "../views/system/log/login.vue"),
                     }
                 ]
             },

@@ -42,6 +42,12 @@ export const updateGoods = (data: any) => fetch('/admin/goods/update', data, 'po
 export const goodsGoodsInfo = (data: any) => fetch('/admin/goods/info', data, 'get')
 export const setGoodsIsOpen = (data: any) => fetch('/admin/goods/isOpen/set', data, 'post')
 
+// 订单管理
+export const getOrderList = (data: any) => fetch('/admin/order/list', data, 'get')
+export const getOrderInfo = (data: any) => fetch('/admin/order/info', data, 'get')
+export const setOrderDelivery = (data: any) => fetch('/admin/order/delivery', data, 'post')
+
+
 
 /**
  * 数据管理
@@ -71,3 +77,4 @@ export const getGoodsTypeBasisInfo = (data: any) => fetch('/admin/goods/type/bas
  */
 export const getWebsite = () => fetch('/admin/system/web/config/info', {}, 'get')
 export const updateWebsite = (data: any) => fetch('/admin/system/web/config/update', data, 'post')
+export const getLogLogin = (data: any) => fetch('/admin/system/log/login', data, 'get')

@@ -1,10 +1,13 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import user from './modules/user'
-// Vue.use(Vuex)
-export default new Vuex.Store({
-    strict: false,
-    modules: {
-        user,
+import { defineStore } from 'pinia'
+export const useStore = defineStore('main', {
+    state: () => {
+        return {
+            user: {}
+        }
+    },
+    actions: {
+        updateUser(user) {
+            this.user = user
+        }
     }
 })

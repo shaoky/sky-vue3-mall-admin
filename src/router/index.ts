@@ -28,7 +28,7 @@ const routes: Array<RouteRecordRaw> = [
                 meta: {
                     title: '商城运营管理系统'
                 },
-                path: '/home',
+                path: '/index',
                 component: () => import(/* webpackChunkName: "index" */ "../views/index/index.vue"),
             },
             /**

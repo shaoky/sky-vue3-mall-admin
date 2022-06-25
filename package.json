@@ -10,11 +10,11 @@
     "axios": "^0.21.1",
     "element-plus": "^1.0.2-beta.48",
     "lodash": "^4.17.21",
-    "vue": "^3.0.5",
+    "pinia": "^2.0.14",
+    "vue": "^3.2.37",
     "vue-baidu-map": "^0.21.22",
     "vue-router": "^4.0.8",
-    "vue-ueditor-wrap": "^3.0.8",
-    "vuex": "^3.6.2"
+    "vue-ueditor-wrap": "^3.0.8"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.2",

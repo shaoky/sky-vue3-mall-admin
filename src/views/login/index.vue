@@ -19,102 +19,134 @@
                         <el-input v-model="account.password" @keyup.enter.native="login" type="password" placeholder="请输入密码"></el-input>
                     </div>
                 </div>
-                <div class="submit-btn" @click="login">登录</div>
+                <div class="submit-btn" @click="onLogin">登录</div>
             </div>
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
+// @ts-ignore
+import { reactive } from 'vue'
 import { mapMutations } from 'vuex'
 import { login } from '../../api/getData'
+import { useRouter } from 'vue-router'
+import { ElNotification } from 'element-plus'
+import { useStore } from '../../store/index'
 
-export default {
-    data () {
-        return {
-            account: {
-                username: '',
-                password: ''
-            }
-        }
-    },
-    mounted () {
-    },
-    methods: {
-        ...mapMutations(['setToken']),
-        async login () {
-            try {
-                const loginInfo = await login(this.account)
-                window.localStorage.setItem('token', loginInfo.token)
-                this.$router.push({ name: 'home' })
-            } catch (err) {
-                this.$message.error(err.data)
-            }
-        }
+let account = reactive({
+    username: '',
+    password: ''
+})
+
+let store = useStore()
+let router = useRouter()
+
+const onLogin = async() => {
+    try {
+        const loginInfo: any = await login(account)
+        store.updateUser({
+            username: loginInfo.username
+        })
+        window.localStorage.setItem('token', loginInfo.token)
+        router.push({ name: 'index' })
+    } catch (e) {
+        ElNotification({
+            title: '提示',
+            message: e.error,
+            type: 'warning'
+        })
     }
 }
 </script>
 
-<style lang="less">
-    .login{
-        .box{
-            width: 1200px; margin: 0 auto; position: relative;
+<style lang="less" scoped>
+.login {
+    .box {
+        width: 1200px;
+        margin: 0 auto;
+        position: relative;
+    }
+    height: 1080px;
+    background: url('./assets/bg.png');
+    background-position: top center;
+    position:relative;
+    .login-title {
+        position: absolute;
+        top: 170px;
+        left: 0;
+        font-size: 26px;
+        color: #fff;
+    }
+    .login-title1 {
+        position: absolute;
+        top: 560px;
+        left: 90px;
+        font-size: 26px;
+        color: #fff;
+    }
+    .login-box {
+        width: 400px;
+        height: 520px;
+        background:#fff;
+        float: left;
+        margin: 178px 0 0 745px;
+        .box-title {
+            font-size: 30px;
+            color:#2ca3ff;
+            text-align: center;
+            padding-top: 55px;
         }
-        height:1080px;
-        background: url('./assets/bg.png');
-        background-position: top center;
-        position:relative;
-        .login-title{position: absolute; top: 170px; left: 0; font-size: 26px; color: #fff;}
-        .login-title1{position: absolute; top: 560px; left: 90px; font-size: 26px; color: #fff;}
-        .login-box{
-            width: 400px;
-            height: 520px;
-            background:#fff;
-            // margin: 0 auto;
-            // margin-top: 138px;
-            float: left;
-            margin: 178px 0 0 745px;
-            .box-title{
-                font-size: 30px;
-                color:#2ca3ff;
-                text-align:center;
-                padding-top: 55px;
-            }
-            .box-container{
-                width: 320px; margin: 0 auto;
-                margin-top: 52px;
-                .item{
+        .box-container {
+            width: 320px;
+            margin: 0 auto;
+            margin-top: 52px;
+            .item {
+                height: 50px;
+                margin: 0 auto;
+                display: flex;
+                align-items: center;
+                border: 1px solid #becef5;
+                .icon {
+                    width: 70px;
                     height: 50px;
-                    margin:0 auto;
-                    display: flex;
-                    align-items: center;
-                    border: 1px solid #becef5;
-                    .icon{width: 70px; height: 50px; line-height: 50px; text-indent: 12px; font-size: 20px; color: #88a4e8; margin-right: 2px;}
-                    .el-input__inner{ height: 28px; line-height: 28px; border: none;}
-                    &.password{margin-top: 37px;}
+                    line-height: 50px;
+                    text-indent: 12px;
+                    font-size: 20px;
+                    color: #88a4e8;
+                    margin-right: 2px;
+                }
+                :deep(.el-input__inner) {
+                    height: 28px;
+                    line-height: 28px;
+                    border: none;
+                }
+                &.password {
+                    margin-top: 37px;
                 }
             }
-            .submit-btn{
-                width: 320px; margin: 0 auto;
-                height: 54px;
-                line-height: 54px;
-                text-align: center;
-                font-size: 20px;
-                color:#fff;
-                // background:#357cee;
-                background-image: -webkit-gradient(linear, left top, right top, from(rgba(39, 158, 255, 1)), to(rgba(6, 120, 254, 1)));
-                margin:0 auto;
-                margin-top: 72px;
-                cursor: pointer;
-            }
         }
-        .footer{
-            float: left;
-            width: 100%;
-            margin-top: 310px;
-            // margin: 175px 0 120px 0;
+        .submit-btn {
+            width: 320px; margin: 0 auto;
+            height: 54px;
+            line-height: 54px;
             text-align: center;
-            color: #fff;
-            span{margin-left: 15px;}
+            font-size: 20px;
+            color:#fff;
+            background-image: -webkit-gradient(linear, left top, right top, from(rgba(39, 158, 255, 1)), to(rgba(6, 120, 254, 1)));
+            margin: 0 auto;
+            margin-top: 72px;
+            cursor: pointer;
         }
     }
+    .footer {
+        float: left;
+        width: 100%;
+        margin-top: 310px;
+        text-align: center;
+        color: #fff;
+        span {
+            margin-left: 15px;
+        }
+    }
+}
 </style>

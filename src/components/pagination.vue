@@ -7,7 +7,7 @@
             :current-page="currentPage"
             :page-sizes="[10, 20, 100]"
             :page-size="size"
-            layout="prev, pager, next"
+            layout="total, prev, pager, next"
             :total="total">
         </el-pagination>
     </div>

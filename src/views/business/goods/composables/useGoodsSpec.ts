@@ -5,13 +5,14 @@ interface GoodsSpec {
     name: string;
     content: string[];
     value: string[];
+    images: string[];
 }
 
 interface GoodsSku {
     stock: number;
     price: string;
     imageUrl: string;
-    spec: string[];
+    spec: string[] | string;
     specTable: Array<{
         rowspan: number;
         value: string;
@@ -25,8 +26,9 @@ export default function useGoodsSpec() {
         deleteGoodsSpecVisible: false,
         addGoodsAttrVisible: false,
         deleteGoodsAttrVisible: false,
+        addGoodsSkuImageVisible: false,
         goodsSkuList: [] as GoodsSku[],
-        saveGoodsSkuList: [] as GoodsSpec[],
+        saveGoodsSkuList: [] as GoodsSku[],
         goodsSku: {
             specName: '',
             specName1: '',
@@ -34,8 +36,12 @@ export default function useGoodsSpec() {
             delSpec: [],
             attrIndex: 0,
             specList: [] as any,
-            delAttr: [] as GoodsSpec[]
-        }
+            delAttr: [] as GoodsSpec[],
+            saveGoodsSpecList: [] as GoodsSpec[], // 临时保存
+            setGoodsSkuList: [] as GoodsSku[], // 临时保存
+            addAttrImage: -1,
+            attrImageIndex: 0
+        },
     })
     
     const onSpec = () => {
@@ -61,7 +67,7 @@ export default function useGoodsSpec() {
 
         for (var i = 0; i < len; i++) {
             let specTable = []
-            let spec = []
+            let spec: string[] = []
             // let rowspan = 0
             for (let j = 0; j < goodsSpecList.length; j++) {
                 // @ts-ignore
@@ -89,20 +95,32 @@ export default function useGoodsSpec() {
                 spec.push(goodsSpecList[j].value[n])
             }
 
+            // 添加时候，查下是否有图片
+            let goodsSpecListImage = goodsSpecList.find(item => item.images.length > 0)
+            let imageUrl = ''
+            if (goodsSpecListImage) {
+                goodsSpecListImage.value.forEach((item, index) => {
+                    if (spec.includes(item)) {
+                        // @ts-ignore
+                        imageUrl = goodsSpecListImage.images[index]
+                    }
+                })
+            }
+
+
             let sku = {
                 specTable,
                 spec,
                 price: '0',
                 stock: 0,
-                imageUrl: ''
+                imageUrl
             }
             state.goodsSkuList.push(sku)
         }
-        // @ts-ignore
-        state.saveGoodsSkuList.forEach((item: GoodsSku) => {
-            state.goodsSkuList.forEach((item1: GoodsSku) => {
-                let spec = item1.spec.join()
+        state.saveGoodsSkuList.forEach(item => {
+            state.goodsSkuList.forEach(item1 => {
                 // @ts-ignore
+                let spec: string = item1.spec.join()
                 if (item.spec === spec) {
                     item1.price = item.price
                     item1.stock = item.stock
@@ -121,7 +139,6 @@ export default function useGoodsSpec() {
     }
 
     const deleteSpec = () => {
-        console.log(state.goodsSku.specList)
         for (let item of state.goodsSpecList) {
             if (item.name === state.goodsSku.specList.name) {
                 _.pullAll(item.content, state.goodsSku.delSpec)
@@ -138,7 +155,8 @@ export default function useGoodsSpec() {
         state.goodsSpecList.push({
             name: state.goodsSku.attrName,
             content: [state.goodsSku.specName1],
-            value: []
+            value: [],
+            images: []
         })
         state.addGoodsAttrVisible = false
     }
@@ -157,12 +175,47 @@ export default function useGoodsSpec() {
         state.deleteGoodsAttrVisible = false
     }
 
+    const openSkuImage = () => {
+        state.goodsSku.saveGoodsSpecList = _.cloneDeep(state.goodsSpecList)
+        state.goodsSku.setGoodsSkuList = _.cloneDeep(state.goodsSkuList)
+        state.goodsSku.addAttrImage = state.goodsSpecList.findIndex(item => item.images.length > 0)
+        state.addGoodsSkuImageVisible = true
+    }
+    // sku上传图片
+    const handleSkuImageSuccess = (res: any, file: any) => {
+        let spec = state.goodsSpecList[Number(state.goodsSku.addAttrImage)]
+        if (!spec.images) {
+            spec.images = []
+            for(let item of spec.value) {
+                spec.images.push('')
+            }
+        }
+        spec.images[state.goodsSku.attrImageIndex] = res.data.url
+        for(let item of state.goodsSku.setGoodsSkuList) {
+            if (item.spec.includes(spec.value[state.goodsSku.attrImageIndex])) {
+                item.imageUrl = res.data.url
+            }
+        }
+        // state.form.imageUrl = res.data.url
+        // state.imageUrl = URL.createObjectURL(file.raw)
+    }
+
+    const addGoodsSkuImage = () => {
+        state.goodsSkuList = _.cloneDeep(state.goodsSku.setGoodsSkuList)
+        state.addGoodsSkuImageVisible = false
+    }
+
+
+
     return {
         goodsSpecState: state,
         onSpec,
         addSpec,
         deleteSpec,
         addAttr,
-        deleteAttr
+        deleteAttr,
+        openSkuImage,
+        handleSkuImageSuccess,
+        addGoodsSkuImage
     }
 }

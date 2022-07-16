@@ -40,28 +40,31 @@
                     class="mt20"
                     :label="item.name+':'" v-for="(item, index) in goodsSpecList"
                     :key="index">
-                    <el-checkbox-group v-model="item.value" @change="onSpec(form.goodsSkuList)">
+                    <el-checkbox-group v-model="item.value" @change="onSpec">
                         <el-checkbox :label="item1" v-for="(item1, index1) in item.content" :key="index1">{{item1}}</el-checkbox>
                         <el-button size="mini" type="primary" style="margin-left: 20px;" v-if="item.content.length > 0" @click="deleteGoodsSpecVisible = true, goodsSku.specList = item">删除</el-button>
-                        <el-button size="mini" type="primary" style="margin-left: 20px;" @click="addGoodsSpecVisible = true, goodsSku.attrIndex = index, goodsSku.specName = ''">新增</el-button>
+                        <el-button size="mini" type="primary" style="margin-left: 20px;" @click="addGoodsSpecVisible = true, goodsSku.attrIndex = index, goodsSku.specName = ''">新增{{item.name}}</el-button>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item style="margin-left: -70px;">
                     <el-button size="mini" type="primary" style="margin-left: 20px;" v-if="goodsSpecList.length > 0" @click="deleteGoodsAttrVisible = true">删除属性</el-button>
                     <el-button size="mini" type="primary" style="margin-left: 20px;" @click="addGoodsAttrVisible = true, goodsSku.specName1 = '', goodsSku.attrName = ''">新增属性</el-button>
+                    <el-button size="mini" type="primary" style="margin-left: 20px" @click="openSkuImage">设置图片</el-button>
                 </el-form-item>
             </el-form>
             <table class="v-table" style="margin-left: 70px;">
                 <tr>
                     <th v-for="(item, index) in goodsSpecList" :key="index" width="80">{{item.name}}</th>
                     <th>销售价格</th>
-                    <th>商品库存</th>
+                    <th style="width: 180px;">商品库存</th>
+                    <th>图片</th>
                     <!-- <th>库存预警值</th> -->
                 </tr>
                 <tr v-for="(item, index) in goodsSkuList" :key="index">
                     <td v-for="(item1, index1) in item.specTable" :key="index1" :rowspan="item1.rowspan">{{item1.value}}</td>
                     <td><el-input v-model.number="item.price"></el-input></td>
-                    <td><el-input v-model.number="item.stock"></el-input></td>
+                    <td style="width: 180px;"><el-input v-model.number="item.stock"></el-input></td>
+                    <td><img :src="item.imageUrl" width="50" height="50" v-if="item.imageUrl"></td>
                     <!-- <td><el-input v-model.number="item.goodsStockWarn"></el-input></td> -->
                 </tr>
             </table>
@@ -172,10 +175,47 @@
                 <el-button type="primary" @click="addAttr()">确 定</el-button>
             </span>
         </el-dialog>
+        
+        <el-dialog title="设置图片" v-model="addGoodsSkuImageVisible" width="500px" center>
+            <el-form label-width="120px">
+                <el-form-item label="属性名称：">
+                    <el-radio-group v-model="goodsSku.addAttrImage">
+                        <el-radio v-for="(item, index) in goodsSpecList" :label="index" :key="index">{{item.name}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
+            <table class="v-table" style="margin-left: 70px;" v-if="goodsSku.addAttrImage >= 0">
+                <tr v-for="(item, index) in goodsSpecList[goodsSku.addAttrImage].value" :key="index">
+                   <td>{{item}}</td>
+                   <td>
+                        <el-upload
+                            :action="imgBaseUrl"
+                            :show-file-list="false"
+                            class="upload-demo"
+                            :on-success="handleSkuImageSuccess"
+                        >
+                        <img
+                            width="150"
+                            height="150"
+                            :src="goodsSpecList[goodsSku.addAttrImage].images[index]" 
+                            @click="goodsSku.attrImageIndex = index" 
+                            v-if="goodsSpecList[goodsSku.addAttrImage].images[index]">
+                        <el-button @click="goodsSku.attrImageIndex = index" v-else>上传图片</el-button>
+                        </el-upload>
+                    </td>
+                </tr>
+            </table>
+            <div class="mt20">注意：只能选择其中一个属性上传</div>
+            <span slot="footer" class="dialog-footer mt20">
+                <el-button @click="goodsSpecList = goodsSku.saveGoodsSpecList, addGoodsSkuImageVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addGoodsSkuImage()">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script lang="ts">
+// @ts-ignore
 import { defineComponent, reactive, onMounted, toRefs, ref, watch } from 'vue';
 import { imgBaseUrl } from '../../../config/env'
 import { getGoodsTypeList, goodsGoodsInfo, addGoods, updateGoods, getGoodsTypeInfo } from '../../../api/getData'
@@ -210,10 +250,10 @@ export default defineComponent({
             attrList: [],
             // goodsSpecList: [],
             dialogImageUrl: '',
-            dialogVisible: false
+            dialogVisible: false,
         })
 
-        const { onSpec, addSpec, deleteSpec, addAttr, deleteAttr, goodsSpecState } = useGoodsSpec()
+        const { onSpec, addSpec, deleteSpec, addAttr, deleteAttr, handleSkuImageSuccess, openSkuImage, goodsSpecState, addGoodsSkuImage } = useGoodsSpec()
         
         onMounted(async() => {
 
@@ -279,6 +319,7 @@ export default defineComponent({
             state.form.imageUrl = res.data.url
             state.imageUrl = URL.createObjectURL(file.raw)
         }
+        
 
         // 上传图片
         const handleBannerSuccess = (res: any, file: any) => {
@@ -300,10 +341,16 @@ export default defineComponent({
         }
 
         const goodsClassIdChange = async(data: any) => {
-            state.form.goodsClassId = data[data.length-1]
+            state.form.goodsClassId = data[data.length - 1]
+            // let ids = data.toString()
             let res: any = await getGoodsTypeInfo({id: state.form.goodsClassId})
             state.attrList = res.goodsAttr
-            state.goodsSpecList = res.goodsSpec
+            goodsSpecState.goodsSpecList = res.goodsSpec
+            goodsSpecState.goodsSpecList.forEach((item: any) => {
+                if (!item.images) {
+                    item.images = []
+                }
+            })
 
             // const { specList }  = useGoodsSpec(res.goodsSpec)
         }
@@ -323,7 +370,7 @@ export default defineComponent({
                         value: item.value
                     }
                 })
-            form.attr = JSON.stringify(state.form.attr)
+            form.attr = JSON.stringify(form.attr)
             // state.form.bannerList = state.bannerList.map((item: any) => ({
             //     id: item.id || undefined,
             //     url: item.
@@ -334,13 +381,15 @@ export default defineComponent({
                 return {
                     name: item.name,
                     content: item.content,
-                    value: item.value
+                    value: item.value,
+                    images: item.images
                 }
             })
             form.spec = JSON.stringify(spec)
 
             form.sku = goodsSpecState.goodsSkuList.map((item: any) => {
                 return {
+                    imageUrl: item.imageUrl,
                     stock: item.stock,
                     price: item.price,
                     spec: item.spec.join()
@@ -380,6 +429,7 @@ export default defineComponent({
             onSubmit,
             handleAvatarSuccess,
             handleBannerSuccess,
+            handleSkuImageSuccess,
             ue,
             handlePictureCardPreview,
             goodsClassIdChange,
@@ -388,7 +438,9 @@ export default defineComponent({
             addSpec,
             deleteSpec,
             addAttr,
-            deleteAttr
+            deleteAttr,
+            addGoodsSkuImage,
+            openSkuImage
         }
     }
 })

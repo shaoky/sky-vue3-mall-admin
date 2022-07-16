@@ -1,7 +1,27 @@
 import axios from 'axios';
+// import router from 'vue-router'
+import router from '../router'
+
 // import { HttpModel } from './requestt';
 
 // export default async<T extends keyof HttpModel> (
+
+// const router = useRouter()
+axios.interceptors.response.use(
+    (response) => {
+        if (response.data.code === 401) {
+            router.push({
+                path: '/'
+            })
+        }
+        return response
+    },
+    (error: any) => {
+        console.log(error)
+    }
+)
+
+
 export default async (
     url: string = '',
     // url: T,
@@ -32,3 +52,4 @@ export default async (
         })
     })
 }
+

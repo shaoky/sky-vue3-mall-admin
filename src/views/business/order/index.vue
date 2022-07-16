@@ -41,6 +41,7 @@
 </template>
 
 <script lang="ts">
+// @ts-ignore
 import { defineComponent, reactive, onMounted, toRefs } from 'vue';
 import { getOrderList } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';

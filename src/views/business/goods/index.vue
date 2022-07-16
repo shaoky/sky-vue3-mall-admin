@@ -39,7 +39,7 @@
             <el-table-column label="类型" prop="goodsClassName"></el-table-column>
             <el-table-column label="图片" prop="imageUrl">
                 <template #default="scope">
-                    <img :src="scope.row.imageUrl" style="max-height: 160px; margin:0 auto; display: block;">
+                    <img :src="scope.row.imageUrl" style="max-height: 80px; margin:0 auto; display: block;">
                 </template>
             </el-table-column>
             <el-table-column label="价格" prop="price"></el-table-column>
@@ -56,11 +56,12 @@
             </el-table-column>
         </el-table>
          <!-- 分页 -->
-        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange"  :total="count"></pagination>
+        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange" :size="form.size" :total="count"></pagination>
     </div>
 </template>
 
 <script lang="ts">
+//@ts-ignore
 import { defineComponent, reactive, onMounted, toRefs } from 'vue';
 import { getGoodsList, getGoodsTypeList, deleteGoods, setGoodsIsOpen } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';

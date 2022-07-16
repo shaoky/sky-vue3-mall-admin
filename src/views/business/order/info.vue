@@ -9,7 +9,7 @@
                     <el-form-item label="下单时间：" >{{order.createTime}}</el-form-item>
                     <el-form-item label="付款时间：" >{{order.paymentTime}}</el-form-item>
                     <el-form-item label="发货时间：" >{{order.deliveryTime}}</el-form-item>
-                    <el-form-item label="完成时间：" >{{order.receiveTime}}</el-form-item>
+                    <el-form-item label="完成时间：" >{{order.confirmTime}}</el-form-item>
                     <el-form-item label="订单状态：" >{{order.statusName}}</el-form-item>
                 </el-form>
             </template>
@@ -116,12 +116,16 @@ export default defineComponent({
             
         })
 
-        onMounted(async() => {
+        onMounted(() => {
+            initData()
+        })
+
+        const initData = async() => {
             let params = useRoute().params
             state.id = +params.id
             const data: any = await getOrderInfo({id: params.id})
             state.order = data.info
-        })
+        }
 
         const _setOrderDelivery = async() => {
             const data = await setOrderDelivery({id: state.id, ...state.courier})
@@ -132,6 +136,7 @@ export default defineComponent({
                 message: data,
                 type: 'success'
             })
+            initData()
         }
 
 

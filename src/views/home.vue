@@ -241,6 +241,9 @@ const out = () => {
         }
     }
 }
+
+</style>
+<style lang="less">
 .mainBody {
     position: absolute;
     top: 80px;
@@ -269,11 +272,6 @@ const out = () => {
         background: #fff;
     }
 }
-
-
-</style>
-<style lang="less">
-
 /*
  * 导航样式覆盖
  */

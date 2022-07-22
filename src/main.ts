@@ -4,7 +4,7 @@ import router from "./router";
 // import store from './store';
 import './assets/less/main.less';
 import ElementPlus, { ElNotification } from 'element-plus';
-import 'element-plus/lib/theme-chalk/index.css';
+import 'element-plus/dist/index.css'
 import filter from './utils/filter';
 import VueUeditorWrap from 'vue-ueditor-wrap';
 import { createPinia } from 'pinia'

@@ -1,14 +1,14 @@
 {
-  "name": "wzyyyy-admin",
+  "name": "vue3-mall-admin",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "serve": "vite preview"
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "element-plus": "^1.0.2-beta.48",
+    "element-plus": "^2.2.9",
     "lodash": "^4.17.21",
     "pinia": "^2.0.14",
     "vue": "^3.2.37",
@@ -17,6 +17,7 @@
     "vue-ueditor-wrap": "^3.0.8"
   },
   "devDependencies": {
+    "@types/node": "^18.0.6",
     "@vitejs/plugin-vue": "^1.2.2",
     "@vue/compiler-sfc": "^3.0.5",
     "less": "^4.1.1",

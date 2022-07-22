@@ -1,11 +1,11 @@
 import axios from 'axios';
 // import router from 'vue-router'
 import router from '../router'
+import { ENVIR, baseURL } from './env'
 
 // import { HttpModel } from './requestt';
 
 // export default async<T extends keyof HttpModel> (
-
 // const router = useRouter()
 axios.interceptors.response.use(
     (response) => {
@@ -26,12 +26,12 @@ export default async (
     url: string = '',
     // url: T,
     params: object,
-    method: any = 'get',
+    method: 'get' | 'post' = 'get',
 ) => {
     return new Promise((resolve, reject) => {
         const token = window.localStorage.getItem('token') || ''
         axios({
-            baseURL: 'http://t.wzyyyy.com',
+            baseURL,
             url,
             method,
             params: method === 'get' ? params : {},
@@ -41,7 +41,6 @@ export default async (
                 Authorization: token,
             }
         }).then(res => {
-            console.log(res)
             if (res.data.code === 200) {
                 resolve(res.data.data)
             } else {

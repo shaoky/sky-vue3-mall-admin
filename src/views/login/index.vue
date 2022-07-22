@@ -27,7 +27,6 @@
 <script setup lang="ts">
 // @ts-ignore
 import { reactive } from 'vue'
-import { mapMutations } from 'vuex'
 import { login } from '../../api/getData'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'

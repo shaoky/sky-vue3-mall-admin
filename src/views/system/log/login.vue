@@ -10,12 +10,13 @@
             <el-table-column label="用户名" prop="username"></el-table-column>
             <el-table-column label="客户端请求ip" prop="ip"></el-table-column>
         </el-table>
-        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange" :total="total"></pagination>
+        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange" :size="size" :total="total"></pagination>
 
     </div>
 </template>
 
 <script lang="ts">
+// @ts-ignore
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getLogLogin } from '../../../api/getData'
 import Pagination from '../../../components/pagination.vue'
@@ -23,7 +24,7 @@ import Pagination from '../../../components/pagination.vue'
 export default defineComponent({
     components: {Pagination},
     setup() {
-        const state: any = reactive({
+        const state = reactive({
             show: false,
             id: '',
             list: [],
@@ -44,12 +45,18 @@ export default defineComponent({
 
         const handleCurrentChange = (page: number) => {
             state.page = page
+            getData()
         }
 
+        const handleSizeChange = (size: number) => {
+            state.size = size
+            getData()
+        }
 
         return {
             ...toRefs(state),
-            handleCurrentChange
+            handleCurrentChange,
+            handleSizeChange
         }
     }
 })

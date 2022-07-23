@@ -5,12 +5,12 @@
             <div class="nav">
                 <el-menu  :default-active="navIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                     <el-menu-item :index="item.url" :key="index" v-for="(item,index) in group">{{item.name}}</el-menu-item>
-                    <el-submenu index="5">
+                    <el-sub-menu index="5">
                         <template #title>角色账号</template>
                         <el-menu-item index="userInfo">个人信息</el-menu-item>
                         <el-menu-item index="editPasswrod">修改</el-menu-item>
                         <el-menu-item index="loginOut">登出</el-menu-item>
-                    </el-submenu>
+                    </el-sub-menu>
                 </el-menu>
             </div>
         </header>
@@ -294,10 +294,10 @@ const out = () => {
 .el-menu--horizontal>.el-menu-item:hover{background-color: transparent!important;}
 .el-menu-item:focus, .el-menu-item:hover{background-color: transparent!important;}
 // 二级下拉
-.el-menu--horizontal>.el-submenu.is-active .el-submenu__title{opacity: .8; color: #fff;}
-.el-menu--horizontal>.el-submenu .el-submenu__title{color: #fff!important; font-size: 16px;} // 文字
-.el-menu--horizontal>.el-submenu .el-submenu__title:hover{opacity: .8; background-color: transparent!important; color: #fff!important;}
-.el-menu--horizontal .el-submenu__title i{color: #fff;} // 箭头
+.el-menu--horizontal>.el-sub-menu.is-active .el-submenu__title{opacity: .8; color: #fff;}
+.el-menu--horizontal>.el-sub-menu .el-sub-menu__title{color: #fff!important; font-size: 16px;} // 文字
+.el-menu--horizontal>.el-sub-menu .el-sub-menu__title:hover{opacity: .8; background-color: transparent!important; color: #fff!important;}
+.el-menu--horizontal .el-sub-menu__title i{color: #fff;} // 箭头
 .el-menu--horizontal .el-menu .el-menu-item, .el-menu--horizontal .el-menu .el-submenu__title{color: #303133;}
 .el-menu--horizontal .el-menu .el-menu-item, .el-menu--horizontal .el-menu .el-submenu__title:hover{color: #303133;}
 .el-menu--horizontal .el-menu .el-menu-item:hover{color: #f00!important;} // 鼠标经过

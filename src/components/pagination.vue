@@ -4,10 +4,10 @@
             background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[10, 20, 100]"
+            v-model:currentPage="currentPage"
+            :page-sizes="[10, 50, 100]"
             :page-size="size"
-            layout="total, prev, pager, next"
+            layout="total, sizes, prev, pager, next"
             :total="total">
         </el-pagination>
     </div>
@@ -56,8 +56,8 @@ export default defineComponent({
 
 <style scoped lang="less">
 .el-pagination {
-    text-align: center;
-    margin: 0 auto;
+    // margin: 0 auto;
     margin-top: 20px;
+    justify-content: center;
 }
 </style>

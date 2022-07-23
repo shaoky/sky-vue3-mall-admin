@@ -13,10 +13,16 @@ interface GoodsSku {
     price: string;
     imageUrl: string;
     spec: string[] | string;
-    specTable: Array<{
-        rowspan: number;
-        value: string;
-    }>
+    // specTable: Array<{
+    //     rowspan: number;
+    //     value: string;
+    // }>
+    specTable: SpecTable[]
+}
+
+interface SpecTable {
+    rowspan: number;
+    value: string;
 }
 
 export default function useGoodsSpec() {
@@ -66,7 +72,7 @@ export default function useGoodsSpec() {
         }
 
         for (var i = 0; i < len; i++) {
-            let specTable = []
+            let specTable: SpecTable[] = []
             let spec: string[] = []
             // let rowspan = 0
             for (let j = 0; j < goodsSpecList.length; j++) {
@@ -162,7 +168,7 @@ export default function useGoodsSpec() {
     }
 
     const deleteAttr = () => {
-        let arr = []
+        let arr: any = []
         for (let item of state.goodsSpecList) {
             for (let item1 of state.goodsSku.delAttr) {
                 if (item1.name === item.name) {

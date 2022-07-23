@@ -49,7 +49,7 @@
                 <el-form-item style="margin-left: -70px;">
                     <el-button size="mini" type="primary" style="margin-left: 20px;" v-if="goodsSpecList.length > 0" @click="deleteGoodsAttrVisible = true">删除属性</el-button>
                     <el-button size="mini" type="primary" style="margin-left: 20px;" @click="addGoodsAttrVisible = true, goodsSku.specName1 = '', goodsSku.attrName = ''">新增属性</el-button>
-                    <el-button size="mini" type="primary" style="margin-left: 20px" @click="openSkuImage">设置图片</el-button>
+                    <el-button size="mini" type="primary" style="margin-left: 20px" @click="openSkuImage" v-if="goodsSpecList.length > 0">设置图片</el-button>
                 </el-form-item>
             </el-form>
             <table class="v-table" style="margin-left: 70px;">
@@ -70,7 +70,7 @@
             </table>
 
 
-            <el-tag class="mt20">商品属性</el-tag>
+            <el-tag class="mt20">商品属性</el-tag><br/>
             <div v-for="item of attrList" :key="item.id" class="mt20">
                 <el-form-item :label="item.name + ':'">
                     <el-input v-model="item.value" v-if="item.type === 1" style="width: 250px;"></el-input>
@@ -84,12 +84,11 @@
             <el-form-item label="产品主图：">
                 <el-upload
                     class="avatar-uploader"
-                    list-type="picture-card"
                     :action="imgBaseUrl"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess">
                     <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
                 </el-upload>
             </el-form-item>
             <el-form-item label="轮播图：" style="width: 800px">
@@ -101,10 +100,10 @@
                     :on-preview="handlePictureCardPreview"
                     :on-remove="handleRemove"
                     style="width: 800px">
-                    <i class="el-icon-plus"></i>
+                    <el-icon><Plus /></el-icon>
                 </el-upload>
                 <el-dialog v-model="dialogVisible">
-                    <img :src="dialogImageUrl" alt="">
+                    <img w-full :src="dialogImageUrl" alt="">
                 </el-dialog>
             </el-form-item>
             <el-form-item label="内容：" class="ueditor-box">
@@ -287,10 +286,10 @@ export default defineComponent({
                     }
                 }
             }
-            let goodsSpec = JSON.parse(data.info.spec)
+            let goodsSpec = JSON.parse(data.info.spec) || []
             goodsSpecState.goodsSpecList = goodsSpec
             goodsSpecState.saveGoodsSkuList = data.info.goodsSkuList
-            if (data.info.goodsSkuList) {
+            if (data.info.goodsSkuList.length > 0) {
                 onSpec()
             }
             
@@ -466,5 +465,8 @@ export default defineComponent({
         border-bottom: 1px solid #ebeef5;
     }
 }
-
+.avatar {
+    width: 150px;
+    height: 150px;
+}
 </style>

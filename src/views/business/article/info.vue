@@ -21,12 +21,11 @@
             <el-form-item label="文章主图：">
                 <el-upload
                     class="avatar-uploader"
-                    list-type="picture-card"
                     :action="imgBaseUrl"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess">
                     <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
                 </el-upload>
             </el-form-item>
             <el-form-item label="内容：" class="ueditor-box">
@@ -43,6 +42,7 @@
 </template>
 
 <script lang="ts">
+// @ts-ignore
 import { defineComponent, reactive, onMounted, toRefs, ref } from 'vue';
 import { imgBaseUrl } from '../../../config/env'
 import { getArticleTypeList, addArticle, updateArticle, getArticleInfoApi } from '../../../api/getData'
@@ -56,9 +56,8 @@ export default defineComponent({
         ueditor
     },
     setup(props, a) {
-        // console.log(props)
         const ue = ref(null)
-        const state: any = reactive({
+        const state = reactive({
             imgBaseUrl: imgBaseUrl,
             id: null,
             form: {
@@ -83,15 +82,15 @@ export default defineComponent({
         })
 
         const getArticleInfo = async (id: number) => {
-            const data: any = await getArticleInfoApi({id: id})
+            const data = await getArticleInfoApi({id: id})
             state.form = data.info
         }
 
         const _getArticleTypeList = async () => {
-            const data: any = await getArticleTypeList()
+            const data = await getArticleTypeList()
             state.typeList = data.list
         }
-        const handleAvatarSuccess = (res: any, file: any) => {
+        const handleAvatarSuccess = (res, file) => {
             state.form.imageUrl = res.data.url
             state.imageUrl = URL.createObjectURL(file.raw)
         }

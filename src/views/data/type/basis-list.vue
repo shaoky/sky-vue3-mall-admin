@@ -23,12 +23,12 @@
                 </template>
             </el-table-column>
             <el-table-column label="状态" width="80px;">
-                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="320px">
                 <template #default="scope">
                     <el-button type="text" @click="onEdit(scope.row, scope.$index)">编辑</el-button>
-                    <el-button type="text" @click="onDelete(scope.row.id, list, scope.$index)">删除</el-button>
+                    <el-button type="text" @click="onDelete(scope.row.id)">删除</el-button>
                     <el-button type="text" @click="onEdit(scope.row,-1)">添加子类</el-button>
                     <el-button type="text" @click="$router.push({name:'goodsAttr',params:{id:scope.row.id}})">查看属性</el-button>
                     <el-button type="text" @click="$router.push({name:'goodsSpec',params:{id:scope.row.id}})">查看规格</el-button>
@@ -47,12 +47,11 @@
                     <el-form-item label="分类图片：">
                         <el-upload
                             class="avatar-uploader"
-                            list-type="picture-card"
                             :action="imgBaseUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess">
                             <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
                         </el-upload>
                     </el-form-item>
                     <!-- <el-form-item label="商品类型：">
@@ -72,32 +71,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue'
 import { getGoodsTypeList, addGoodsType, updateGoodsType, getArticleTypeList, deleteArticle, deleteGoodsType } from '../../../api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus';
-import Pagination from '../../../components/pagination.vue';
+import { ElMessageBox, ElMessage } from 'element-plus'
+import Pagination from '../../../components/pagination.vue'
 import { imgBaseUrl } from '../../../config/env'
+import { Models } from '@/rapper'
+import { filtersModel } from '@/utils/filter'
 
 export default defineComponent({
     components: {Pagination},
     setup() {
-        const state: any = reactive({
-            imgBaseUrl: imgBaseUrl,
+        const internalInstance = getCurrentInstance()
+        const state = reactive({
+            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
+            imgBaseUrl,
             dialogVisible: false,
             isAdd: false,
             default: {
-                page: 1,
-                size: 20,
                 sort: 10,
                 title: '',
                 isOpen: false,
-                positionId: null
+                imageUrl: ''
             },
-            form: {},
+            form: {} as Models['POST/admin/goods/type/update']['Req'],
             status: [
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
-            list: [ ],
+            list: [] as Models['GET/admin/goods/type/list']['Res']['data']['list'],
             page: {
                 total: 20
             },
@@ -105,12 +106,11 @@ export default defineComponent({
         })
 
         onMounted(() => {
-            let a = 1
             _getGoodsTypeList()
         })
 
         const _getGoodsTypeList = async () => {
-            const data: any = await getGoodsTypeList({type: 1})
+            const data = await getGoodsTypeList({type: 1})
             state.list = data.list
         }
 
@@ -135,22 +135,24 @@ export default defineComponent({
             })
         };
 
-        const onEdit = (data: any, index: number) => {
-            state.form =  {...state.default}
+        const onEdit = (data, index: number) => {
+            state.form =  {...state.default} as any
             state.dialogVisible = true
             if (index === -1) {
                 state.isAdd = true
                 if (data.id) {
-                    state.form.classId = data.id
+                    state.form.parentId = data.id
                 } else {
-                    state.form.classId = null
+                    state.form.parentId = undefined
                 }
             } else {
                 state.isAdd = false
                 state.form = {...data}
                 if (state.form.isOpen === 0) {
+                    // @ts-ignore
                     state.form.isOpen = false
                 } else if (state.form.isOpen === 1) {
+                    // @ts-ignore
                     state.form.isOpen = true
                 }
             }
@@ -160,7 +162,7 @@ export default defineComponent({
             if (state.isAdd) {
                 // console.log(this.form)
                 try {
-                    let res: any = await addGoodsType(state.form)
+                    let res = await addGoodsType(state.form)
                     ElMessage({
                         type: 'success',
                         message: '添加成功',
@@ -171,7 +173,7 @@ export default defineComponent({
             } else {
                 // console.log(this.form)
                 try {
-                    let res: any = await updateGoodsType(state.form)
+                    let res = await updateGoodsType(state.form)
                     ElMessage({
                         type: 'success',
                         message: '添加成功',
@@ -182,9 +184,8 @@ export default defineComponent({
             }
         }
 
-        const handleAvatarSuccess = (res: any, file: any) => {
+        const handleAvatarSuccess = (res, file) => {
             state.form.imageUrl = res.data.url
-            state.imageUrl = URL.createObjectURL(file.raw)
         }
 
         const handleCurrentChange = () => {

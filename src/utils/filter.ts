@@ -10,4 +10,8 @@ class Filter {
     }
 }
 
+export interface filtersModel  {
+    isOpen (value: boolean): string;
+}
+
 export default new Filter()

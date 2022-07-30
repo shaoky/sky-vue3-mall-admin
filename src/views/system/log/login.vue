@@ -16,10 +16,10 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getLogLogin } from '../../../api/getData'
 import Pagination from '../../../components/pagination.vue'
+import { Models } from '@/rapper'
 
 export default defineComponent({
     components: {Pagination},
@@ -27,7 +27,7 @@ export default defineComponent({
         const state = reactive({
             show: false,
             id: '',
-            list: [],
+            list: [] as Models['GET/admin/system/log/login']['Res']['data']['list'],
             page: 1,
             size: 10,
             total: 0
@@ -38,7 +38,7 @@ export default defineComponent({
         })
 
         const getData = async() => {
-            const data: any = await getLogLogin({page: state.page, size: state.size})
+            const data = await getLogLogin({page: state.page, size: state.size})
             state.list = data.list
             state.total = data.count
         }

@@ -26,7 +26,7 @@
 </template>
 <script setup lang="ts">
 // @ts-ignore
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { login } from '../../api/getData'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
@@ -42,13 +42,13 @@ let router = useRouter()
 
 const onLogin = async() => {
     try {
-        const loginInfo: any = await login(account)
+        const loginInfo = await login(account)
         store.updateUser({
             username: loginInfo.username
         })
         window.localStorage.setItem('token', loginInfo.token)
         router.push({ name: 'index' })
-    } catch (e) {
+    } catch (e: any) {
         ElNotification({
             title: '提示',
             message: e.error,

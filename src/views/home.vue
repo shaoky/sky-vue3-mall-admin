@@ -112,14 +112,14 @@ onMounted(() => {
 })
 
 const _getUserInfo = async() => {
-    const data: any = await getUserInfo()
+    const data = await getUserInfo()
     userInfo.value = data
     store.updateUser({
         username: data.username
     })
 }
 
-const handleSelect = async(key: any) => {
+const handleSelect = async(key) => {
     switch (key) {
         case '/':
             router.push({name: 'index'})
@@ -184,7 +184,7 @@ const reset = async() => {
         return
     }
     try {
-        let data: any = await resetPassword({
+        let data = await resetPassword({
             password: editPassword.password,
             newPassword: editPassword.newPassword
         })

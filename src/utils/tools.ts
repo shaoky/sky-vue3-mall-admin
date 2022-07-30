@@ -1,4 +1,4 @@
-export const deleteChildren = (data: any) => {
+export const deleteChildren = (data) => {
     for (let item of data) {
         if (item.children) {
             if (item.children.length === 0) {

@@ -45,7 +45,7 @@
             <el-table-column label="价格" prop="price"></el-table-column>
             <el-table-column label="排序" prop="sort"></el-table-column>
             <el-table-column label="状态">
-                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
@@ -62,29 +62,34 @@
 
 <script lang="ts">
 //@ts-ignore
-import { defineComponent, reactive, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue'
 import { getGoodsList, getGoodsTypeList, deleteGoods, setGoodsIsOpen } from '../../../api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus';
-import Pagination from '../../../components/pagination.vue';
+import { ElMessageBox, ElMessage } from 'element-plus'
+import Pagination from '../../../components/pagination.vue'
 import { deleteChildren } from '../../../utils/tools'
+import { Models } from '@/rapper'
+import { filtersModel } from '@/utils/filter'
 
 export default defineComponent({
     components: {Pagination},
     setup() {
-        const state: any = reactive({
+        const internalInstance = getCurrentInstance()
+        const state = reactive({
+            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
+            goodsClassId: null as string | null,
             form: {
                 page: 1,
                 size: 20,
-                // title: '',
-                // isOpen: null,
-                // positionId: null
+                title: '',
+                goodsClassId: undefined as number | undefined,
+                isOpen: undefined as number | undefined
             },
             status: [
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
-            list: [ ],
+            list: [] as Models['GET/admin/goods/list']['Res']['data']['list'],
             count: 0,
-            categoryList: []
+            categoryList: [] as Models['GET/admin/goods/type/list']['Res']['data']['list']
         })
 
         onMounted(() => {
@@ -93,13 +98,13 @@ export default defineComponent({
         })
 
         const _getGoodsList = async () => {
-            const data: any = await getGoodsList(state.form)
+            const data = await getGoodsList(state.form)
             state.list = data.list
             state.count = data.count
         }
 
         const _getGoodsTypeList = async () => {
-            const data: any = await getGoodsTypeList({type: 2})
+            const data = await getGoodsTypeList({type: 2})
             deleteChildren(data.list)
             state.categoryList = data.list
         }
@@ -124,22 +129,6 @@ export default defineComponent({
 
                 _getGoodsList()
             })
-        };
-
-        const onEdit = (index: number) => {
-            state.form = {}
-            state.dialogVisible = true
-            if (index === -1) {
-                state.isAdd = true
-            } else {
-                state.isAdd = false
-                state.form = JSON.parse(JSON.stringify(state.list[index]))
-                if (state.form.isOpen === 0) {
-                    state.form.isOpen = false
-                } else if (state.form.isOpen === 1) {
-                    state.form.isOpen = true
-                }
-            }
         }
 
         const handleCurrentChange = (page: number) => {
@@ -147,12 +136,17 @@ export default defineComponent({
             _getGoodsList()
         }
 
-        const goodsClassIdChange = (data: any) => {
+        const handleSizeChange = (value: number) => {
+            state.form.size = value
+            _getGoodsList()
+        }
+
+        const goodsClassIdChange = (data) => {
             state.form.goodsClassId = data[data.length-1]
             _getGoodsList()
         }
 
-        const setIsOpen = async(data: any) => {
+        const setIsOpen = async(data) => {
             const res = await setGoodsIsOpen({
                 id: data.id,
                 isOpen: data.isOpen ? 0 : 1
@@ -172,6 +166,7 @@ export default defineComponent({
             onDelete,
             goodsClassIdChange,
             handleCurrentChange,
+            handleSizeChange,
             setIsOpen
         };
      }

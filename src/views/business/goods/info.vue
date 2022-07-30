@@ -94,11 +94,10 @@
             <el-form-item label="轮播图：" style="width: 800px">
                 <el-upload
                     :action="imgBaseUrl"
+                    :auto-upload="true"
                     list-type="picture-card"
                     :file-list="bannerList"
-                    :on-success="handleBannerSuccess"
                     :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove"
                     style="width: 800px">
                     <el-icon><Plus /></el-icon>
                 </el-upload>
@@ -224,29 +223,35 @@ import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { deleteChildren } from '../../../utils/tools'
 import useGoodsSpec from './composables/useGoodsSpec'
+import { Models } from '@/rapper'
+
+interface bannerModel {
+    id?: number;
+    url: string;
+}
 
 export default defineComponent({
     components: {
         ueditor
     },
-    setup(props, a) {
+    setup() {
         const ue = ref(null)
-        const state: any = reactive({
+        const state = reactive({
             isLoading: false,
             imgBaseUrl: imgBaseUrl,
-            classList: [],
-            id: null,
+            classList: [] as Models['GET/admin/goods/type/list']['Res']['data']['list'],
+            id: null as number | null,
             form: {
                 imageUrl: '',
-                isOpen: false,
+                isOpen: 0,
                 content: ' ',
                 saleCount: 0,
                 sort: 100,
-                goodsClassId: null
-            },
+                goodsClassId: undefined as number | undefined
+            } as Models['POST/admin/goods/update']['Req'],
             typeList: [],
-            bannerList: [],
-            attrList: [],
+            bannerList: [] as bannerModel[],
+            attrList: [] as Models['GET/admin/goods/type/info']['Res']['data']['goodsAttr'],
             // goodsSpecList: [],
             dialogImageUrl: '',
             dialogVisible: false,
@@ -266,10 +271,9 @@ export default defineComponent({
         })
         
         const _getGoodsInfo = async (id: number) => {
-            const data: any = await goodsGoodsInfo({id: id})
-            state.form = {...data.info}
-            state.form.goodsClassId = data.info.goodsClassIds
-            state.bannerList = data.info.bannerList.map((item: any) => ({
+            const data = await goodsGoodsInfo({id: id})
+            state.form = {...data.info} as any
+            state.bannerList = data.info.bannerList.map(item => ({
                 id: item.id,
                 url: item.imageUrl
             }))
@@ -278,11 +282,7 @@ export default defineComponent({
             for (let item of goodsAttr) {
                 for (let item1 of state.attrList) {
                     if (item1.name === item.name) {
-                        if (item.attrType === 3) {
-                            item1.value = item.value.split(',')
-                        } else {
-                            item1.value = item.value
-                        }
+                        item1.value = item.value
                     }
                 }
             }
@@ -310,42 +310,28 @@ export default defineComponent({
         }
 
         const _getGoodsTypeList = async () => {
-            const data: any = await getGoodsTypeList({type: 2, isOpen: 1})
+            const data = await getGoodsTypeList({type: 2, isOpen: 1})
             deleteChildren(data.list)
             state.classList = data.list
         }
-        const handleAvatarSuccess = (res: any, file: any) => {
+        const handleAvatarSuccess = (res, file) => {
             state.form.imageUrl = res.data.url
-            state.imageUrl = URL.createObjectURL(file.raw)
-        }
-        
-
-        // 上传图片
-        const handleBannerSuccess = (res: any, file: any) => {
-            console.log(res, file)
-            state.bannerList.push({
-                url: res.data.url
-            })
-        }
-        
-        // 图片删除
-        const handleRemove = (res) => {
-            console.log(res)
         }
 
         // 图片预览
-        const handlePictureCardPreview = (file: any) => {
+        const handlePictureCardPreview = (file) => {
             state.dialogImageUrl = file.url
             state.dialogVisible = true
         }
 
-        const goodsClassIdChange = async(data: any) => {
+        const goodsClassIdChange = async(data) => {
             state.form.goodsClassId = data[data.length - 1]
             // let ids = data.toString()
-            let res: any = await getGoodsTypeInfo({id: state.form.goodsClassId})
+            let res = await getGoodsTypeInfo({id: state.form.goodsClassId})
             state.attrList = res.goodsAttr
+            // @ts-ignore
             goodsSpecState.goodsSpecList = res.goodsSpec
-            goodsSpecState.goodsSpecList.forEach((item: any) => {
+            goodsSpecState.goodsSpecList.forEach(item => {
                 if (!item.images) {
                     item.images = []
                 }
@@ -360,23 +346,26 @@ export default defineComponent({
             let form = {...state.form}
             // @ts-ignore
             form.content = ue.value.content
-            form.bannerList = state.bannerList
-            form.attr = state.attrList
-                .filter((item: any) => item.value)
-                .map((item: any) => {
+            form.bannerList = state.bannerList.map(item => {
+                return {
+                    id: item.id || undefined,
+                    // @ts-ignore
+                    imageUrl: !item.id ? item?.response?.data?.url : item.url
+                }
+            })
+            form.attr = JSON.stringify(
+                state.attrList
+                .filter(item => item.value)
+                .map(item => {
                     return {
                         name: item.name,
                         value: item.value
                     }
                 })
-            form.attr = JSON.stringify(form.attr)
-            // state.form.bannerList = state.bannerList.map((item: any) => ({
-            //     id: item.id || undefined,
-            //     url: item.
-            // }))
+            )
             
             // 规格
-            let spec = goodsSpecState.goodsSpecList.map((item: any) => {
+            let spec = goodsSpecState.goodsSpecList.map(item => {
                 return {
                     name: item.name,
                     content: item.content,
@@ -386,14 +375,16 @@ export default defineComponent({
             })
             form.spec = JSON.stringify(spec)
 
-            form.sku = goodsSpecState.goodsSkuList.map((item: any) => {
-                return {
-                    imageUrl: item.imageUrl,
-                    stock: item.stock,
-                    price: item.price,
-                    spec: item.spec.join()
-                }
-            })
+            // form.sku = goodsSpecState.goodsSkuList.map(item => {
+            //     return {
+            //         id: item.id || undefined,
+            //         imageUrl: item.imageUrl,
+            //         stock: item.stock,
+            //         price: item.price,
+            //         // @ts-ignore
+            //         spec: item.spec.join()
+            //     }
+            // })
 
             if (state.id) {
                 try {
@@ -407,13 +398,13 @@ export default defineComponent({
                 
             } else {
                 try {
-                    let res = await addGoods(form)
+                    await addGoods(form)
                     ElMessage({
                         type: 'info',
                         message: '添加成功',
                     });
                     window.history.back()
-                } catch (err) {
+                } catch (err: any) {
                     ElMessage({
                         type: 'error',
                         message: err.data,
@@ -427,12 +418,10 @@ export default defineComponent({
             ...toRefs(goodsSpecState),
             onSubmit,
             handleAvatarSuccess,
-            handleBannerSuccess,
             handleSkuImageSuccess,
             ue,
             handlePictureCardPreview,
             goodsClassIdChange,
-            handleRemove,
             onSpec,
             addSpec,
             deleteSpec,

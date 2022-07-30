@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item label="类型：">
                 <el-select v-model="form.typeId" @change="getArticleList" placeholder="请选择类型">
-                    <el-option  v-for="item in categoryList" :key="item.value" :label="item.title" :value="item.id"></el-option>
+                    <el-option  v-for="item in categoryList" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="状态：" >
@@ -37,7 +37,7 @@
             </el-table-column>
             <el-table-column label="排序" prop="sort"></el-table-column>
             <el-table-column label="状态">
-                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
@@ -52,28 +52,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue';
 import { getArticleListApi, getArticleTypeList, deleteArticle } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import Pagination from '../../../components/pagination.vue';
+import { filtersModel } from '@/utils/filter'
+import { Models } from '@/rapper'
 
 export default defineComponent({
     components: {Pagination},
     setup() {
-        const state: any = reactive({
+        const internalInstance = getCurrentInstance()
+        const state = reactive({
+            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             form: {
                 page: 1,
                 size: 20,
                 title: '',
-                isOpen: null,
-                positionId: null
+                isOpen: null as Boolean | null,
+                typeId: ''
             },
             status: [
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
-            list: [ ],
+            list: [] as Models['GET/admin/article/list']['Res']['data']['list'],
             count: 0,
-            categoryList: []
+            categoryList: [] as Models['GET/admin/article/type/list']['Res']['data']['list']
         })
 
         onMounted(() => {
@@ -82,16 +86,15 @@ export default defineComponent({
         })
 
         const getArticleList = async () => {
-            const data: any = await getArticleListApi(state.form)
+            const data = await getArticleListApi(state.form)
             state.list = data.list
             state.count = data.count
         }
 
         const _getArticleTypeList = async () => {
-            const data: any = await getArticleTypeList()
+            const data = await getArticleTypeList()
             state.categoryList = data.list
         }
-        
 
         const onDelete = (id: number) => {
             ElMessageBox.confirm('确认删除吗?', '提示', {
@@ -114,23 +117,14 @@ export default defineComponent({
             })
         };
 
-        const onEdit = (index: number) => {
-            state.form = {}
-            state.dialogVisible = true
-            if (index === -1) {
-                state.isAdd = true
-            } else {
-                state.isAdd = false
-                state.form = JSON.parse(JSON.stringify(state.list[index]))
-                if (state.form.isOpen === 0) {
-                    state.form.isOpen = false
-                } else if (state.form.isOpen === 1) {
-                    state.form.isOpen = true
-                }
-            }
+        const handleCurrentChange = (value: number) => {
+            state.form.page = value
+            getArticleList()
+        
         }
 
-        const handleCurrentChange = () => {
+        const handleSizeChange = (value: number) => {
+            state.form.size = value
             getArticleList()
         }
 
@@ -139,7 +133,8 @@ export default defineComponent({
             ...toRefs(state),
             getArticleList,
             onDelete,
-            handleCurrentChange
+            handleCurrentChange,
+            handleSizeChange
         };
      }
   });

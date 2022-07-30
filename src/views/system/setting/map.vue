@@ -22,7 +22,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getWebsite, updateWebsite } from '../../../api/getData'
 import { ElNotification } from 'element-plus'
@@ -34,8 +34,8 @@ export default defineComponent({
             zoom: 13,
             id: '',
             website: {
-                baiduMapX: 0,
-                baiduMapY: 0
+                baiduMapX: '',
+                baiduMapY: ''
             },
             x: null,
             y: null

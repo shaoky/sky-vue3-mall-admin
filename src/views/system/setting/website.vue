@@ -51,42 +51,43 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue'
-import { getWebsite, updateWebsite } from '../../../api/getData'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { getWebsite, updateWebsite } from '@/api/getData'
 import { ElNotification } from 'element-plus'
+import type { Models } from '@/rapper'
 
-export default defineComponent({
-    setup() {
-        const state: any = reactive({
-            show: false,
-            id: '',
-            website: {}
-        })
-
-        onMounted(() => {
-            getData()
-        })
-
-        const getData = async() => {
-            state.website = await getWebsite()
-        }
-
-        const onSave = async() => {
-            const data = await updateWebsite(state.website)
-            ElNotification({
-                title: '保存成功',
-                message: data,
-                type: 'success'
-            })
-        }
-
-        return {
-            ...toRefs(state),
-            onSave
-        }
-    }
+let website = ref<Models['POST/admin/system/web/config/update']['Req']>({
+    webTitle: '',
+    webDescription: '',
+    webKeyworkds: '',
+    linkman: '',
+    tel: '',
+    email: '',
+    icp: '',
+    fax: '',
+    address: '',
+    company: ''
 })
+
+const initData = () => {
+    getData()
+}
+
+const getData = async() => {
+    website.value = await getWebsite()
+}
+
+const onSave = async() => {
+    const data = await updateWebsite(website.value)
+    ElNotification({
+        title: '保存成功',
+        message: data,
+        type: 'success'
+    })
+}
+
+initData()
 </script>
 
 <style scoped lang="less">

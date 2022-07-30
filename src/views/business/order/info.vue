@@ -94,10 +94,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getOrderInfo, setOrderDelivery } from '../../../api/getData'
 import { useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
+import { Models } from '@/rapper'
 
 export default defineComponent({
     components: {},
@@ -108,7 +109,7 @@ export default defineComponent({
             options: [{no: 1}],
             order: {
                 status: 0
-            },
+            } as Models['GET/admin/order/info']['Res']['data']['info'],
             courier: {
                 courierName: '',
                 courierNo: ''
@@ -123,7 +124,7 @@ export default defineComponent({
         const initData = async() => {
             let params = useRoute().params
             state.id = +params.id
-            const data: any = await getOrderInfo({id: params.id})
+            const data = await getOrderInfo({id: Number(params.id)})
             state.order = data.info
         }
 
@@ -133,7 +134,7 @@ export default defineComponent({
             state.order.status = 3
             ElNotification({
                 title: '保存成功',
-                message: data,
+                message: data as string,
                 type: 'success'
             })
             initData()

@@ -41,29 +41,25 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
-import { defineComponent, reactive, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getOrderList } from '../../../api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus';
-import Pagination from '../../../components/pagination.vue';
-import { deleteChildren } from '../../../utils/tools'
+import Pagination from '../../../components/pagination.vue'
+import { Models } from '@/rapper'
 
 export default defineComponent({
     components: {Pagination},
     setup() {
-        const state: any = reactive({
+        const state = reactive({
             form: {
                 page: 1,
                 size: 20,
-                no: ''
-                // title: '',
-                // isOpen: null,
-                // positionId: null
+                no: '',
+                status: null as number | null
             },
             status: [
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
-            list: [ ],
+            list: [] as Models['GET/admin/order/list']['Res']['data']['list'],
             count: 0,
             statusList: [
                 {value: 0, label: '全部'}, 
@@ -80,7 +76,7 @@ export default defineComponent({
         })
 
         const _getOrderList = async () => {
-            const data: any = await getOrderList(state.form)
+            const data = await getOrderList(state.form)
             state.list = data.list
             state.count = data.count
         }
@@ -90,17 +86,16 @@ export default defineComponent({
             _getOrderList()
         }
 
-        const goodsClassIdChange = (data: any) => {
-            state.form.goodsClassId = data[data.length-1]
+        const handleSizeChange = (value: number) => {
+            state.form.size = value
             _getOrderList()
         }
-
 
         return {
             ...toRefs(state),
             _getOrderList,
-            goodsClassIdChange,
             handleCurrentChange,
+            handleSizeChange
         };
      }
   });

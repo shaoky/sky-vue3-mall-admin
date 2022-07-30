@@ -9,6 +9,7 @@ interface GoodsSpec {
 }
 
 interface GoodsSku {
+    id?: number;
     stock: number;
     price: string;
     imageUrl: string;
@@ -17,7 +18,7 @@ interface GoodsSku {
     //     rowspan: number;
     //     value: string;
     // }>
-    specTable: SpecTable[]
+    specTable?: SpecTable[]
 }
 
 interface SpecTable {
@@ -128,6 +129,7 @@ export default function useGoodsSpec() {
                 // @ts-ignore
                 let spec: string = item1.spec.join()
                 if (item.spec === spec) {
+                    item1.id = item.id
                     item1.price = item.price
                     item1.stock = item.stock
                     item1.imageUrl = item.imageUrl
@@ -168,7 +170,7 @@ export default function useGoodsSpec() {
     }
 
     const deleteAttr = () => {
-        let arr: any = []
+        let arr: GoodsSpec[] = []
         for (let item of state.goodsSpecList) {
             for (let item1 of state.goodsSku.delAttr) {
                 if (item1.name === item.name) {
@@ -188,7 +190,7 @@ export default function useGoodsSpec() {
         state.addGoodsSkuImageVisible = true
     }
     // sku上传图片
-    const handleSkuImageSuccess = (res: any, file: any) => {
+    const handleSkuImageSuccess = (res, file) => {
         let spec = state.goodsSpecList[Number(state.goodsSku.addAttrImage)]
         if (!spec.images) {
             spec.images = []

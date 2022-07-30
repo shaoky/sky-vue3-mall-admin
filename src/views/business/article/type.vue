@@ -1,6 +1,6 @@
 <template>
     <div class="article-classify">
-        <el-breadcrumb separator-class="el-icon-arrow-right" @click="open">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>前台业务</el-breadcrumb-item>
             <el-breadcrumb-item>文章管理</el-breadcrumb-item>
@@ -23,7 +23,6 @@
             </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <!-- <pagination @handleCurrentChange='handleCurrentChange' :total="page.total"></pagination> -->
         <el-dialog title="新增/编辑" v-model="dialogVisible" width="30%" center>
             <el-form label-width="120px">
                 <el-form-item label="分类名称：">
@@ -35,12 +34,11 @@
                 <el-form-item label="分类图片：">
                     <el-upload
                         class="avatar-uploader"
-                        list-type="picture-card"
                         :action="imgBaseUrl"
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess">
                         <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        <el-icon v-else class="avatar-uploader-icon" :size="24" color="#8c939d"><Plus /></el-icon>
                     </el-upload>
                 </el-form-item>
             </el-form>
@@ -53,19 +51,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getArticleTypeList, deleteArticleType, addArticleType, updateArticleType } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { imgBaseUrl } from '../../../config/env';
+import { imgBaseUrl } from '../../../config/env'
+import { Models } from '@/rapper'
 
 export default defineComponent({
     setup() {
-        const state: any = reactive({
-            imgBaseUrl: imgBaseUrl,
+        const state = reactive({
+            imgBaseUrl,
             isAdd: true,
             fatherId: '',
-            form: {},
-            list: [],
+            form: {} as Models['POST/admin/article/type/update']['Req'],
+            list: [] as Models['GET/admin/article/type/list']['Res']['data']['list'],
             dialogVisible: false,
             position: [
                 {label: '系统公告', value: 1}, {label: '使用指南', value: 2}, {label: '常见问题', value: 3}
@@ -77,7 +76,7 @@ export default defineComponent({
         })
 
         const _getArticleTypeList = async () => {
-            const data: any = await getArticleTypeList()
+            const data = await getArticleTypeList()
             state.list = data.list
         }
         
@@ -104,7 +103,7 @@ export default defineComponent({
         };
 
         const onEdit = (index: number) => {
-            state.form = {}
+            state.form = {} as any
             state.dialogVisible = true
             if (index === -1) {
                 state.isAdd = true
@@ -128,7 +127,7 @@ export default defineComponent({
             if (state.isAdd) {
                 // console.log(this.form)
                 try {
-                    let res: any = await addArticleType(state.form)
+                    let res = await addArticleType(state.form)
                     ElMessage({
                         type: 'success',
                         message: '添加成功',
@@ -137,9 +136,8 @@ export default defineComponent({
                     _getArticleTypeList()
                 } catch (err) {}
             } else {
-                // console.log(this.form)
                 try {
-                    let res: any = await updateArticleType(state.form)
+                    let res = await updateArticleType(state.form)
                     ElMessage({
                         type: 'success',
                         message: '添加成功',
@@ -150,9 +148,8 @@ export default defineComponent({
             }
         }
 
-        const handleAvatarSuccess = (res: any, file: any) => {
+        const handleAvatarSuccess = (res) => {
             state.form.imageUrl = res.data.url
-            state.imageUrl = URL.createObjectURL(file.raw)
         }
 
         return {

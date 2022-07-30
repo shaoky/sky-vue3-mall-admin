@@ -1,6 +1,6 @@
 <template>
     <div class="article-classify">
-        <el-breadcrumb separator-class="el-icon-arrow-right" @click="open">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>前台业务</el-breadcrumb-item>
             <el-breadcrumb-item>广告管理</el-breadcrumb-item>
@@ -18,7 +18,7 @@
             <el-table-column label="广告位高度" prop="height"></el-table-column>
             <el-table-column label="广告位标识码" prop="mark"></el-table-column>
             <el-table-column label="状态">
-                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <!-- <el-table-column label="分类位置" prop="">
                 <template slot-scope="scope">{{ list[scope.$index].position | getPosition }}</template>
@@ -62,17 +62,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue';
 import { getAdPositionListApi, delAdPosition, addAdPosition, updateAdPosition } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';
+import { Models } from '@/rapper'
+import { filtersModel } from '@/utils/filter'
 
 export default defineComponent({
     setup() {
-        const state: any = reactive({
+        const internalInstance = getCurrentInstance()
+        const state = reactive({
+            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             isAdd: true,
             fatherId: '',
-            form: {},
-            list: [],
+            form: {} as Models['POST/admin/ad/position/update']['Req'],
+            list: [] as Models['GET/admin/ad/position/list']['Res']['data']['list'],
             dialogVisible: false,
             position: [
                 {label: '系统公告', value: 1}, {label: '使用指南', value: 2}, {label: '常见问题', value: 3}
@@ -84,8 +88,7 @@ export default defineComponent({
         })
 
         const getAdPosition = async () => {
-            const data: any = await getAdPositionListApi()
-            console.log(data)
+            const data = await getAdPositionListApi()
             state.list = data.list
         }
         
@@ -112,7 +115,7 @@ export default defineComponent({
         };
 
         const onEdit = (index: number) => {
-            state.form = {}
+            state.form = {} as any
             state.dialogVisible = true
             if (index === -1) {
                 state.isAdd = true
@@ -120,9 +123,9 @@ export default defineComponent({
                 state.isAdd = false
                 state.form = JSON.parse(JSON.stringify(state.list[index]))
                 if (state.form.isOpen === 0) {
-                    state.form.isOpen = false
+                    state.form.isOpen = false as any
                 } else if (state.form.isOpen === 1) {
-                    state.form.isOpen = true
+                    state.form.isOpen = true as any
                 }
             }
         }
@@ -134,32 +137,30 @@ export default defineComponent({
                 state.form.isOpen = 0
             }
             if (state.isAdd) {
-                // console.log(this.form)
                 try {
-                    let res: any = await addAdPosition(state.form)
+                    let res = await addAdPosition(state.form)
                     ElMessage({
                         type: 'success',
                         message: '添加成功',
                     });
                     state.dialogVisible = false
                     getAdPosition()
-                } catch (err) {
+                } catch (err: any) {
                     ElMessage({
                         type: 'error',
                         message: err.data,
                     })
                 }
             } else {
-                // console.log(this.form)
                 try {
-                    let res: any = await updateAdPosition(state.form)
+                    let res = await updateAdPosition(state.form)
                     ElMessage({
                         type: 'success',
                         message: '更新成功',
                     });
                     state.dialogVisible = false
                     getAdPosition()
-                } catch (err) {
+                } catch (err: any) {
                     ElMessage({
                         type: 'error',
                         message: err.data,

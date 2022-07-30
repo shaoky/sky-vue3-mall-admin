@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item label="位置：">
                 <el-select v-model="form.positionId" @change="getAdList" placeholder="请选择位置">
-                    <el-option  v-for="item in positionList" :key="item.value" :label="item.title" :value="item.id"></el-option>
+                    <el-option  v-for="item in positionList" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="状态：" >
@@ -37,7 +37,8 @@
             </el-table-column>
             <el-table-column label="排序" prop="sort"></el-table-column>
             <el-table-column label="状态">
-                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
+                
+                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
@@ -47,22 +48,26 @@
             </el-table-column>
         </el-table>
          <!-- 分页 -->
-        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange"  :total="count"></pagination>
+        <pagination @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :total="count"></pagination>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue'
 import { getAdPositionListApi, getAdListApi, delAd } from '../../../api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus';
-import Pagination from '../../../components/pagination.vue';
+import { ElMessageBox, ElMessage } from 'element-plus'
+import Pagination from '../../../components/pagination.vue'
+import { Models } from '@/rapper'
+import { filtersModel } from '@/utils/filter'
 
 export default defineComponent({
     components: {
         Pagination
     },
     setup() {
-        const state: any = reactive({
+        const internalInstance = getCurrentInstance()
+        const state = reactive({
+            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             form: {
                 page: 1,
                 size: 20,
@@ -73,9 +78,9 @@ export default defineComponent({
             status: [
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
-            list: [ ],
+            list: [] as Models['GET/admin/ad/list']['Res']['data']['list'],
             count: 0,
-            positionList: []
+            positionList: [] as Models['GET/admin/ad/position/list']['Res']['data']['list']
         })
 
         onMounted(() => {
@@ -84,13 +89,13 @@ export default defineComponent({
         })
 
         const getAdList = async () => {
-            const data: any = await getAdListApi(state.form)
+            const data = await getAdListApi(state.form)
             state.list = data.list
             state.count = data.count
         }
 
         const getAdPosition = async () => {
-            const data: any = await getAdPositionListApi()
+            const data = await getAdPositionListApi()
             state.positionList = data.list
         }
         
@@ -116,20 +121,15 @@ export default defineComponent({
             })
         };
 
-        const onEdit = (index: number) => {
-            state.form = {}
-            state.dialogVisible = true
-            if (index === -1) {
-                state.isAdd = true
-            } else {
-                state.isAdd = false
-                state.form = JSON.parse(JSON.stringify(state.list[index]))
-                if (state.form.isOpen === 0) {
-                    state.form.isOpen = false
-                } else if (state.form.isOpen === 1) {
-                    state.form.isOpen = true
-                }
-            }
+        const handleCurrentChange = (value: number) => {
+            state.form.page = value
+            getAdList()
+        }
+
+        const handleSizeChange = (value: number) => {
+            state.form.size = value
+            getAdList()
+        
         }
 
 
@@ -137,6 +137,8 @@ export default defineComponent({
             ...toRefs(state),
             getAdList,
             onDelete,
+            handleCurrentChange,
+            handleSizeChange
         };
      }
   });

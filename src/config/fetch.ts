@@ -1,38 +1,46 @@
 import axios from 'axios';
-// import router from 'vue-router'
 import router from '../router'
-import { ENVIR, baseURL } from './env'
+import { baseURL } from './env'
+import { ElMessage } from 'element-plus'
+import { IModels } from '../rapper/request'
 
-// import { HttpModel } from './requestt';
-
-// export default async<T extends keyof HttpModel> (
-// const router = useRouter()
 axios.interceptors.response.use(
     (response) => {
         if (response.data.code === 401) {
+            ElMessage({
+                type: 'error',
+                message: '登录超时',
+            });
             router.push({
                 path: '/'
             })
         }
         return response
     },
-    (error: any) => {
+    (error) => {
         console.log(error)
     }
 )
 
-
-export default async (
-    url: string = '',
-    // url: T,
-    params: object,
-    method: 'get' | 'post' = 'get',
-) => {
+export default async function<T extends keyof IModels> (
+    url: T,
+    params: IModels[T]['Req']
+    // @ts-ignore
+) :Promise<IModels[T]['Res']['data']> {
     return new Promise((resolve, reject) => {
+        let method
         const token = window.localStorage.getItem('token') || ''
+        let urlRep = url.replace(/GET/g, '')
+        urlRep = urlRep.replace(/POST/g, '')
+
+        if (url.indexOf('GET') > -1) {
+            method = 'get'
+        } else {
+            method = 'post'
+        }
         axios({
             baseURL,
-            url,
+            url: urlRep,
             method,
             params: method === 'get' ? params : {},
             data: method === 'post' ? params : {},

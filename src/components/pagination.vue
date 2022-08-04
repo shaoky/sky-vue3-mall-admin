@@ -13,7 +13,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
 export default defineComponent({
     props: {
@@ -35,13 +35,13 @@ export default defineComponent({
 
         const handleSizeChange = (val) => {
             emit('handleSizeChange', val)
-            const box = document.getElementById('mainBody')
+            const box = document.getElementById('mainBody')!
             box.scrollTop = 0
         }
 
         const handleCurrentChange = (val) => {
             emit('handleCurrentChange', val)
-            const box = document.getElementById('mainBody')
+            const box = document.getElementById('mainBody')!
             box.scrollTop = 0
         }
 

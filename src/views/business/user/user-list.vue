@@ -19,13 +19,13 @@
             <!-- <el-table-column prop="weixinAccount" label="微信号"></el-table-column> -->
         </el-table>
         <!-- 分页 -->
-        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange" :total="page.total"></pagination>
+        <!-- <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange" :total="page.total"></pagination> -->
     </div>
 </template>
 
-<script>
-import { getUserList } from '../../../api/getData'
-import pagination from '../../../components/pagination.vue'
+<script lang="ts">
+// import { getUserList } from '@/api/getData'
+import pagination from '@/components/pagination.vue'
 // import status from '@/mixins/status'
 
 export default {
@@ -50,17 +50,17 @@ export default {
     },
     methods: {
         async getUserList () {
-            let res = await getUserList(this.search)
-            this.userList = res.data.list
-            this.page.total = res.data.count
+            // let res = await getUserList(this.search)
+            // this.userList = res.data.list
+            // this.page.total = res.data.count
         },
         handleCurrentChange (val) {
-            this.search.page = val
-            this.getUserList()
+            // this.search.page = val
+            // this.getUserList()
         },
         handleSizeChange (val) {
-            this.search.size = val
-            this.getUserList()
+            // this.search.size = val
+            // this.getUserList()
         }
     },
     components: {

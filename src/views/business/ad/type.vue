@@ -25,8 +25,8 @@
             </el-table-column> -->
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
-                    <el-button type="text" @click="onEdit(scope.$index)">编辑</el-button>
-                    <el-button type="text" @click="onDelete(scope.row.id)">删除</el-button>
+                    <el-button type="primary" link @click="onEdit(scope.$index)">编辑</el-button>
+                    <el-button type="primary" link @click="onDelete(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

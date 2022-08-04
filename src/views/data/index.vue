@@ -4,14 +4,14 @@
             <el-aside width="200px" >
                 <!-- v-if="group[groupIndex]" -->
             <el-menu router :default-active="asideIndex" >
-                <el-submenu :index="index+'1'" :key="index" v-for="(item, index) in group">
+                <el-sub-menu :index="index+'1'" :key="index" v-for="(item, index) in group">
                     <template #title>
                         <span>{{item.name}}</span>
                     </template>
                     <el-menu-item-group :key="index1" v-for="(item1, index1) in item.children">
                         <el-menu-item :index="item1.url">{{item1.name}}</el-menu-item>
                     </el-menu-item-group>
-                </el-submenu>
+                </el-sub-menu>
                 <!-- <aside-menu :group="group" :path="path"></aside-menu> -->
             </el-menu>
             </el-aside>
@@ -25,56 +25,31 @@
     </div>
 </template>
 
-<script>
-// import { mapMutations } from 'vuex'
-// import asideMenu from '@/components/aside'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-export default {
-    data () {
-        return {
-            path: '/business',
-            group: [
-                // {
-                //     name: '基础数据管理',
-                //     url: '',
-                //     children: [
-                //         {
-                //             name: '商品类型',
-                //             url: '/data/basis/goods-type'
-                //         },
-                //     ]
-                // },
-                {
-                    name: '基础类目管理',
-                    url: '',
-                    children: [
-                        {
-                            name: '产品类目',
-                            url: '/data/type/basis-list'
-                        },
-                    ]
-                },
-                
-            ]
-        }
+let route = useRoute()
+
+const group = ref([
+    {
+        name: '基础类目管理',
+        url: '',
+        children: [
+            {
+                name: '产品类目',
+                url: '/data/type/basis-list'
+            },
+        ]
     },
-    computed: {
-        asideIndex () {
-            return this.$route.path
-        },
-        // group () {
-        //     return this.$store.state.groups.group
-        // }
-    },
-    mounted () {
-        // this.setNavIndex('/business')
-    },
-    methods: {
-    },
-    components: {
-        // asideMenu
-    }
+])
+let asideIndex = ref('')
+
+const initData = () => {
+    asideIndex.value = route.fullPath
 }
+
+initData()
 </script>
 
 <style scoped>

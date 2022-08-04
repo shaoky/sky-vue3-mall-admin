@@ -4,7 +4,7 @@
             <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>前台业务</el-breadcrumb-item>
             <el-breadcrumb-item>文章管理</el-breadcrumb-item>
-            <el-breadcrumb-item>{{adId ? '文章详情': '文章广告' }}</el-breadcrumb-item>
+            <el-breadcrumb-item>{{id ? '文章详情': '文章广告' }}</el-breadcrumb-item>
         </el-breadcrumb>
         <el-form label-width="120px">
             <el-form-item label="标题：">
@@ -42,43 +42,37 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import { defineComponent, reactive, onMounted, toRefs, ref } from 'vue';
 import { imgBaseUrl } from '../../../config/env'
 import { getArticleTypeList, addArticle, updateArticle, getArticleInfoApi } from '../../../api/getData'
 import ueditor from '../../../components/ueditor.vue'
-// import region from '@/components/common/region'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
+import { Models } from '@/rapper'
 
 export default defineComponent({
     components: {
         ueditor
     },
-    setup(props, a) {
+    setup() {
         const ue = ref(null)
         const state = reactive({
             imgBaseUrl: imgBaseUrl,
-            id: null,
-            form: {
-                imageUrl: '',
-                isOpen: false,
-                typeId: '',
-                content: ''
-            },
+            id: 0,
+            form: {} as Models['GET/admin/article/info']['Res']['data']['info'],
             positionList: [],
-            typeList: [],
+            typeList: [] as Models['GET/admin/article/type/list']['Res']['data']['list'],
             dialogImageUrl: '',
             dialogVisible: false
         })
 
-        onMounted(() => {
+        onMounted(async() => {
             let params = useRoute().params
             if (params.id) {
                 state.id = Number(params.id) 
+                await _getArticleTypeList()
                 getArticleInfo(state.id)
             }
-            _getArticleTypeList()
         })
 
         const getArticleInfo = async (id: number) => {
@@ -92,7 +86,6 @@ export default defineComponent({
         }
         const handleAvatarSuccess = (res, file) => {
             state.form.imageUrl = res.data.url
-            state.imageUrl = URL.createObjectURL(file.raw)
         }
 
         const onSubmit = async () => {
@@ -100,7 +93,7 @@ export default defineComponent({
             state.form.content = ue.value.content
             if (state.id) {
                 try {
-                    let res = await updateArticle(state.form)
+                    await updateArticle(state.form)
                     ElMessage({
                         type: 'info',
                         message: '修改成功',
@@ -110,22 +103,20 @@ export default defineComponent({
                 
             } else {
                 try {
-                    let res = await addArticle(state.form)
+                    await addArticle(state.form)
                     ElMessage({
                         type: 'info',
                         message: '添加成功',
                     });
                     window.history.back()
-                } catch (err) {
+                } catch (err: any) {
                     ElMessage({
                         type: 'error',
                         message: err.data,
                     });
                 }
             }
-            // this.form = {}
         }
-
 
         return {
             ...toRefs(state),

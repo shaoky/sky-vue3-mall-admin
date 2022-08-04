@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
     "rapper": "rapper --type normal --rapperPath \"src/rapper\" --apiUrl \"http://rap2api.taobao.org/repository/get?id=295591&token=PJefHz97_pY1lJnbf8Pwa-E0tCeWo_bc\" --rapUrl \"http://rap2.taobao.org\""
   },

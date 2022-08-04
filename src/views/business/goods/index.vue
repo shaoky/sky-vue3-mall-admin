@@ -23,12 +23,12 @@
                 </el-cascader>
             </el-form-item>
             <el-form-item label="状态：" >
-                <el-select v-model="form.isOpen" @change="_getGoodsList" placeholder="请选择状态">
+                <el-select v-model="form.isOpen" @change="getGoodsList" placeholder="请选择状态">
                     <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="_getGoodsList">查询</el-button>
+                <el-button type="primary" @click="getGoodsList">查询</el-button>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="$router.push({ path: '/business/goods/add' })">新建产品</el-button>
@@ -47,11 +47,11 @@
             <el-table-column label="状态">
                 <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
-            <el-table-column label="操作" width="150px;">
+            <el-table-column label="操作" width="160px;">
                 <template #default="scope">
-                    <el-button @click="$router.push({name:'goodsInfo',params:{id: scope.row.id}})" type="text" >编辑</el-button>
-                    <el-button @click="setIsOpen(scope.row)" type="text">{{scope.row.isOpen ? '下架' : '上架'}}</el-button>
-                    <el-button @click="onDelete(scope.row.id)" type="text">删除</el-button>
+                    <el-button @click="$router.push({name:'goodsInfo',params:{id: scope.row.id}})" type="primary" link>编辑</el-button>
+                    <el-button @click="setIsOpen(scope.row)" type="primary" link>{{scope.row.isOpen ? '下架' : '上架'}}</el-button>
+                    <el-button @click="onDelete(scope.row.id)" type="primary" link>删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -61,9 +61,8 @@
 </template>
 
 <script lang="ts">
-//@ts-ignore
 import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue'
-import { getGoodsList, getGoodsTypeList, deleteGoods, setGoodsIsOpen } from '../../../api/getData'
+import { getGoodsListApi, getGoodsTypeListApi, deleteGoods, setGoodsIsOpen } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import Pagination from '../../../components/pagination.vue'
 import { deleteChildren } from '../../../utils/tools'
@@ -85,7 +84,7 @@ export default defineComponent({
                 isOpen: undefined as number | undefined
             },
             status: [
-                {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
+                {label: '全部', value: ''}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
             list: [] as Models['GET/admin/goods/list']['Res']['data']['list'],
             count: 0,
@@ -93,18 +92,18 @@ export default defineComponent({
         })
 
         onMounted(() => {
-            _getGoodsList()
-            _getGoodsTypeList()
+            getGoodsList()
+            getGoodsTypeList()
         })
 
-        const _getGoodsList = async () => {
-            const data = await getGoodsList(state.form)
+        const getGoodsList = async () => {
+            const data = await getGoodsListApi(state.form)
             state.list = data.list
             state.count = data.count
         }
 
-        const _getGoodsTypeList = async () => {
-            const data = await getGoodsTypeList({type: 2})
+        const getGoodsTypeList = async () => {
+            const data = await getGoodsTypeListApi({type: 2})
             deleteChildren(data.list)
             state.categoryList = data.list
         }
@@ -127,23 +126,23 @@ export default defineComponent({
                     console.log(err)
                 }
 
-                _getGoodsList()
+                getGoodsList()
             })
         }
 
         const handleCurrentChange = (page: number) => {
             state.form.page = page
-            _getGoodsList()
+            getGoodsList()
         }
 
         const handleSizeChange = (value: number) => {
             state.form.size = value
-            _getGoodsList()
+            getGoodsList()
         }
 
         const goodsClassIdChange = (data) => {
             state.form.goodsClassId = data[data.length-1]
-            _getGoodsList()
+            getGoodsList()
         }
 
         const setIsOpen = async(data) => {
@@ -162,7 +161,7 @@ export default defineComponent({
 
         return {
             ...toRefs(state),
-            _getGoodsList,
+            getGoodsList,
             onDelete,
             goodsClassIdChange,
             handleCurrentChange,

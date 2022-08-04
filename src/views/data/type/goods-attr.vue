@@ -19,8 +19,8 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template #default="scope">
-                    <el-button type="text" @click="onEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" @click="onDelete(scope.row.id)">删除</el-button>
+                    <el-button type="primary" link @click="onEdit(scope.row)">编辑</el-button>
+                    <el-button type="primary" link @click="onDelete(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -39,7 +39,7 @@
                     <el-radio v-model="form.type" :label="3">多选属性</el-radio>
                 </el-form-item>
                 <el-form-item label="可选值：" v-if="form.type !== 1">
-                    <el-input style="width:300px;" v-model="form.content"></el-input><br/>
+                    <el-input style="width:300px;" v-model="form.content"></el-input>
                     多个值用,隔开
                 </el-form-item>
                 <el-form-item label="排序：">
@@ -80,7 +80,7 @@ export default defineComponent({
                 content: '',
                 sort: 20,
                 isOpen: false
-            } as Models['POST/admin/goods/attr/update']['Req'],
+            },
             bakForm: {}
         })
 

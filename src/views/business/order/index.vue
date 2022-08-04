@@ -11,12 +11,12 @@
                 <el-input v-model="form.no"></el-input>
             </el-form-item>
             <el-form-item label="状态：" >
-                <el-select v-model="form.status" @change="_getOrderList" placeholder="请选择状态">
+                <el-select v-model="form.status" @change="getOrderList" placeholder="请选择状态">
                     <el-option  v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="_getOrderList">查询</el-button>
+                <el-button type="primary" @click="getOrderList">查询</el-button>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="$router.push({ path: '/business/goods/add' })">新建产品</el-button>
@@ -31,7 +31,7 @@
             <el-table-column label="下单时间" prop="createTime"></el-table-column>
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
-                    <el-button @click="$router.push({name:'orderInfo',params:{id: scope.row.id}})" type="text">订单详情</el-button>
+                    <el-button @click="$router.push({name:'orderInfo',params:{id: scope.row.id}})" type="primary" link>订单详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
-import { getOrderList } from '../../../api/getData'
+import { getOrderListApi } from '../../../api/getData'
 import Pagination from '../../../components/pagination.vue'
 import { Models } from '@/rapper'
 
@@ -72,28 +72,28 @@ export default defineComponent({
         })
 
         onMounted(() => {
-            _getOrderList()
+            getOrderList()
         })
 
-        const _getOrderList = async () => {
-            const data = await getOrderList(state.form)
+        const getOrderList = async () => {
+            const data = await getOrderListApi(state.form)
             state.list = data.list
             state.count = data.count
         }
 
         const handleCurrentChange = (page: number) => {
             state.form.page = page
-            _getOrderList()
+            getOrderList()
         }
 
         const handleSizeChange = (value: number) => {
             state.form.size = value
-            _getOrderList()
+            getOrderList()
         }
 
         return {
             ...toRefs(state),
-            _getOrderList,
+            getOrderList,
             handleCurrentChange,
             handleSizeChange
         };

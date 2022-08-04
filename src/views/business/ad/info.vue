@@ -108,7 +108,7 @@ export default defineComponent({
         const onSubmit = async () => {
             if (state.id) {
                 try {
-                    let res = await updateAd(state.form)
+                    await updateAd(state.form)
                     ElMessage({
                         type: 'info',
                         message: '修改成功',
@@ -123,7 +123,7 @@ export default defineComponent({
                 
             } else {
                 try {
-                    let res = await addAd(state.form)
+                    await addAd(state.form)
                     ElMessage({
                         type: 'info',
                         message: '添加成功',
@@ -136,9 +136,7 @@ export default defineComponent({
                     });
                 }
             }
-            // this.form = {}
         }
-
 
         return {
             ...toRefs(state),

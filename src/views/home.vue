@@ -20,11 +20,7 @@
         </div>
 
         <!-- 弹出框-个人信息 -->
-        <el-dialog
-            title="个人信息"
-            v-model="userInfoVisible"
-            width="30%"
-            class="userInfo">
+        <el-dialog title="个人信息" v-model="userInfoVisible" width="30%">
             <el-form ref="form" :model="userInfo" label-width="80px">
                 <el-form-item label="用户名：">{{userInfo.username}}</el-form-item>
                 <el-form-item label="姓名：">{{userInfo.realName}}</el-form-item>
@@ -36,7 +32,7 @@
         </el-dialog>
 
         <!-- 弹出框-修改密码 -->
-        <el-dialog title="修改密码" v-model="editPasswordVisible" width="30%" class="editPassword">
+        <el-dialog title="修改密码" v-model="editPasswordVisible" width="30%">
             <el-form ref="form" :model="editPassword" label-width="100px">
                 <el-form-item label="用户名：">{{userInfo.username}}</el-form-item>
                 <el-form-item label="旧密码：">
@@ -58,8 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-// @ts-ignore
-import { reactive, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import validator from '../utils/validator'
 import { getUserInfo, resetPassword } from '../api/getData'
 import { useRoute, useRouter } from 'vue-router'
@@ -67,7 +62,7 @@ import { ElNotification, ElMessageBox } from 'element-plus'
 import { useStore } from '../store/index'
 
 const store = useStore()
-let navIndex = ref<string>('/')
+let navIndex = ref('/')
 let group = ref([
     {
         url: '/',
@@ -86,32 +81,34 @@ let group = ref([
         name: '数据管理'
     }
 ])
-let userInfo = ref({}) // 用户信息
+let userInfo = ref({
+    username: '',
+    realName: ''
+}) // 用户信息
 let userInfoVisible = ref<boolean>(false) // 用户信息-弹窗
 let editPasswordVisible = ref<boolean>(false) // 修改密码-弹窗
 let editPassword = ref({ // 修改密码-表单
     password: '',
     newPassword: ''
 })
-let router = ref({})
+let router = useRouter()
+let route = useRoute()
 let confirmNewPassword = ref<string>('') // 确认密码
 
 onMounted(() => {
-    router = useRouter()
-    const path = useRoute().path
-    if (path.indexOf('/business') > -1) {
-        navIndex = '/business'
+    if (route.path.indexOf('/business') > -1) {
+        navIndex.value = '/business'
     }
-    if (path.indexOf('/system') > -1) {
-        navIndex = '/system'
+    if (route.path.indexOf('/system') > -1) {
+        navIndex.value = '/system'
     }
-    if (path.indexOf('/data') > -1) {
-        navIndex = '/data'
+    if (route.path.indexOf('/data') > -1) {
+        navIndex.value = '/data'
     }
-    _getUserInfo()
+    getUser()
 })
 
-const _getUserInfo = async() => {
+const getUser = async() => {
     const data = await getUserInfo()
     userInfo.value = data
     store.updateUser({
@@ -151,15 +148,15 @@ const handleSelect = async(key) => {
 }
 
 const reset = async() => {
-    if (validator.pass(editPassword.password)) {
+    if (validator.pass(editPassword.value.password)) {
         ElNotification({
             title: '提示',
-            message: validator.pass(editPassword.password),
+            message: validator.pass(editPassword.value.password),
             type: 'warning'
         })
         return
     }
-    if (!editPassword.newPassword) {
+    if (!editPassword.value.newPassword) {
         ElNotification({
             title: '提示',
             message: '请输入新密码',
@@ -175,7 +172,7 @@ const reset = async() => {
         })
         return
     }
-    if (editPassword.newPassword !== confirmNewPassword) {
+    if (editPassword.value.newPassword !== confirmNewPassword.value) {
         ElNotification({
             title: '提示',
             message: '两次输入的密码不一致',
@@ -185,15 +182,15 @@ const reset = async() => {
     }
     try {
         let data = await resetPassword({
-            password: editPassword.password,
-            newPassword: editPassword.newPassword
+            password: editPassword.value.password,
+            newPassword: editPassword.value.newPassword
         })
         ElNotification({
             title: '成功',
             message: data,
             type: 'success'
         })
-    } catch(e) {
+    } catch(e: any) {
         ElNotification({
             title: '错误',
             message: e.data,
@@ -202,10 +199,6 @@ const reset = async() => {
         return
     }
     editPasswordVisible.value = false
-}
-
-const out = () => {
-    router.push({path: '/'})
 }
 
 </script>

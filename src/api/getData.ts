@@ -32,7 +32,7 @@ export const updateArticle = (data: IModels['POST/admin/article/update']['Req'])
 export const deleteArticle = (data: IModels['POST/admin/article/delete']['Req']) => fetch('POST/admin/article/delete', data)
 
 // 产品管理
-export const getGoodsList = (data: IModels['GET/admin/goods/list']['Req']) => fetch('GET/admin/goods/list', data)
+export const getGoodsListApi = (data: IModels['GET/admin/goods/list']['Req']) => fetch('GET/admin/goods/list', data)
 export const addGoods = (data: IModels['POST/admin/goods/add']['Req']) => fetch('POST/admin/goods/add', data)
 export const deleteGoods = (data: IModels['POST/admin/goods/delete']['Req']) => fetch('POST/admin/goods/delete', data)
 export const updateGoods = (data: IModels['POST/admin/goods/update']['Req']) => fetch('POST/admin/goods/update', data)
@@ -40,7 +40,7 @@ export const goodsGoodsInfo = (data: IModels['GET/admin/goods/info']['Req']) => 
 export const setGoodsIsOpen = (data: IModels['POST/admin/goods/isOpen/set']['Req']) => fetch('POST/admin/goods/isOpen/set', data)
 
 // 订单管理
-export const getOrderList = (data: IModels['GET/admin/order/list']['Req']) => fetch('GET/admin/order/list', data)
+export const getOrderListApi = (data: IModels['GET/admin/order/list']['Req']) => fetch('GET/admin/order/list', data)
 export const getOrderInfo = (data: IModels['GET/admin/order/info']['Req']) => fetch('GET/admin/order/info', data)
 export const setOrderDelivery = (data: IModels['POST/admin/order/delivery']['Req']) => fetch('POST/admin/order/delivery', data)
 
@@ -50,7 +50,7 @@ export const setOrderDelivery = (data: IModels['POST/admin/order/delivery']['Req
  */
 
 // 产品类目
-export const getGoodsTypeList = (data: IModels['GET/admin/goods/type/list']['Req']) => fetch('GET/admin/goods/type/list', data)
+export const getGoodsTypeListApi = (data: IModels['GET/admin/goods/type/list']['Req']) => fetch('GET/admin/goods/type/list', data)
 export const addGoodsType = (data: IModels['POST/admin/goods/type/add']['Req']) => fetch('POST/admin/goods/type/add', data)
 export const updateGoodsType = (data: IModels['POST/admin/goods/type/update']['Req']) => fetch('POST/admin/goods/type/update', data)
 export const deleteGoodsType = (data: IModels['POST/admin/goods/type/delete']['Req']) => fetch('POST/admin/goods/type/delete', data)

@@ -16,6 +16,7 @@ export default defineComponent({
         }
     },
     setup(props) {
+        // @ts-ignore
         const content = ref(props.config.initialContent)
         const state = reactive({
             editorConfig: {

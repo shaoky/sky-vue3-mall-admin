@@ -1,4 +1,4 @@
-/* md5: c53877d7ed353f37518b163ffed88152 */
+/* md5: bc3ce2eee45f41fb297202837a46abe7 */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -972,6 +972,7 @@ export interface IModels {
       page: number
       size: number
       title?: string
+      typeId?: number
     }
     Res: {
       code: number
@@ -1009,9 +1010,10 @@ export interface IModels {
           imageUrl: string
           isOpen: boolean
           sort: number
-          type: number
+          typeId: number
           operation: string
           positionId: number
+          content: string
         }
       }
     }
@@ -1028,9 +1030,7 @@ export interface IModels {
       imageUrl: string
       isOpen: boolean
       sort: number
-      type: number
-      operation: string
-      positionId: number
+      typeId: number
     }
     Res: {
       code: number
@@ -1046,12 +1046,10 @@ export interface IModels {
     Req: {
       imageUrl: string
       isOpen: boolean
-      operation: string
-      valueMap: string
-      type: number
+      typeId: number
       sort: number
       title: string
-      positionId: number
+      content: string
     }
     Res: {
       code: number
@@ -1417,7 +1415,10 @@ export interface IModels {
       sort: number
       title: string
       isOpen: number
-      classId?: number
+      /**
+       * 父id
+       */
+      parentId?: number
       imageUrl: string
     }
     Res: {
@@ -1542,12 +1543,11 @@ export interface IModels {
    */
   'POST/admin/goods/spec/update': {
     Req: {
-      id?: number
+      id: number
       content: string
       isOpen: boolean
       name: string
       sort: number
-      goodsClassId?: number
     }
     Res: {
       code: number
@@ -1601,7 +1601,7 @@ export interface IModels {
    */
   'POST/admin/goods/attr/add': {
     Req: {
-      goodsClassId?: number
+      goodsClassId: number
       type: number
       content: string
       sort: number
@@ -1620,13 +1620,12 @@ export interface IModels {
    */
   'POST/admin/goods/attr/update': {
     Req: {
-      id?: number
+      id: number
       content: string
       isOpen: boolean
       name: string
       sort: number
       type: number
-      goodsClassId?: number
     }
     Res: {
       code: number

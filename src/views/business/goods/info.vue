@@ -42,14 +42,14 @@
                     :key="index">
                     <el-checkbox-group v-model="item.value" @change="onSpec">
                         <el-checkbox :label="item1" v-for="(item1, index1) in item.content" :key="index1">{{item1}}</el-checkbox>
-                        <el-button size="mini" type="primary" style="margin-left: 20px;" v-if="item.content.length > 0" @click="deleteGoodsSpecVisible = true, goodsSku.specList = item">删除</el-button>
-                        <el-button size="mini" type="primary" style="margin-left: 20px;" @click="addGoodsSpecVisible = true, goodsSku.attrIndex = index, goodsSku.specName = ''">新增{{item.name}}</el-button>
+                        <el-button type="primary" style="margin-left: 20px;" v-if="item.content.length > 0" @click="deleteGoodsSpecVisible = true, goodsSku.specList = item">删除</el-button>
+                        <el-button type="primary" style="margin-left: 20px;" @click="addGoodsSpecVisible = true, goodsSku.attrIndex = index, goodsSku.specName = ''">新增{{item.name}}</el-button>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item style="margin-left: -70px;">
-                    <el-button size="mini" type="primary" style="margin-left: 20px;" v-if="goodsSpecList.length > 0" @click="deleteGoodsAttrVisible = true">删除属性</el-button>
-                    <el-button size="mini" type="primary" style="margin-left: 20px;" @click="addGoodsAttrVisible = true, goodsSku.specName1 = '', goodsSku.attrName = ''">新增属性</el-button>
-                    <el-button size="mini" type="primary" style="margin-left: 20px" @click="openSkuImage" v-if="goodsSpecList.length > 0">设置图片</el-button>
+                    <el-button type="primary" style="margin-left: 20px;" v-if="goodsSpecList.length > 0" @click="deleteGoodsAttrVisible = true">删除属性</el-button>
+                    <el-button type="primary" style="margin-left: 20px;" @click="addGoodsAttrVisible = true, goodsSku.specName1 = '', goodsSku.attrName = ''">新增属性</el-button>
+                    <el-button type="primary" style="margin-left: 20px" @click="openSkuImage" v-if="goodsSpecList.length > 0">设置图片</el-button>
                 </el-form-item>
             </el-form>
             <table class="v-table" style="margin-left: 70px;">
@@ -216,7 +216,7 @@
 // @ts-ignore
 import { defineComponent, reactive, onMounted, toRefs, ref, watch } from 'vue';
 import { imgBaseUrl } from '../../../config/env'
-import { getGoodsTypeList, goodsGoodsInfo, addGoods, updateGoods, getGoodsTypeInfo } from '../../../api/getData'
+import { getGoodsTypeListApi, goodsGoodsInfo, addGoods, updateGoods, getGoodsTypeInfo } from '../../../api/getData'
 import ueditor from '../../../components/ueditor.vue'
 // import region from '@/components/common/region'
 import { useRoute } from 'vue-router'
@@ -262,7 +262,7 @@ export default defineComponent({
         onMounted(async() => {
 
             let params = useRoute().params
-            await _getGoodsTypeList()
+            await getGoodsTypeList()
             if (params.id) {
                 state.id = Number(params.id) 
                 await _getGoodsInfo(state.id)
@@ -309,8 +309,8 @@ export default defineComponent({
             }
         }
 
-        const _getGoodsTypeList = async () => {
-            const data = await getGoodsTypeList({type: 2, isOpen: 1})
+        const getGoodsTypeList = async () => {
+            const data = await getGoodsTypeListApi({type: 2, isOpen: 1})
             deleteChildren(data.list)
             state.classList = data.list
         }

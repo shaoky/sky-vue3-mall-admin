@@ -37,13 +37,12 @@
             </el-table-column>
             <el-table-column label="排序" prop="sort"></el-table-column>
             <el-table-column label="状态">
-                
                 <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
-                    <el-button @click="$router.push({name:'adInfo',params:{id: scope.row.id}})" type="text" >编辑</el-button>
-                    <el-button @click="onDelete(scope.row.id)" type="text">删除</el-button>
+                    <el-button @click="$router.push({name:'adInfo',params:{id: scope.row.id}})" type="primary" link >编辑</el-button>
+                    <el-button @click="onDelete(scope.row.id)" type="primary" link>删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -72,11 +71,11 @@ export default defineComponent({
                 page: 1,
                 size: 20,
                 title: '',
-                isOpen: null,
+                isOpen: -1 as number | undefined,
                 positionId: null
             },
             status: [
-                {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
+                {label: '全部', value: -1}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
             list: [] as Models['GET/admin/ad/list']['Res']['data']['list'],
             count: 0,
@@ -89,7 +88,11 @@ export default defineComponent({
         })
 
         const getAdList = async () => {
-            const data = await getAdListApi(state.form)
+            let form = {...state.form}
+            if (form.isOpen === -1) {
+                form.isOpen = undefined
+            }
+            const data = await getAdListApi(form)
             state.list = data.list
             state.count = data.count
         }

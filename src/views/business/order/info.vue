@@ -55,9 +55,9 @@
         </el-table-column>
     </el-table>
 
-    <dir class="mt20" style="text-align: center;">
+    <div class="mt20" style="text-align: center;">
         <el-button type="primary" @click="delieryVisible = true" v-if="order.status == 2">发货</el-button>
-    </dir>
+    </div>
 
     <el-dialog
         title="发货"
@@ -76,7 +76,7 @@
         </div>
         <span slot="footer" class="dialog-footer mt20">
             <el-button @click="delieryVisible = false">取 消</el-button>
-            <el-button type="primary" @click="_setOrderDelivery">确 定</el-button>
+            <el-button type="primary" @click="setDelivery">确 定</el-button>
         </span>
     </el-dialog>
 </div>
@@ -128,7 +128,7 @@ export default defineComponent({
             state.order = data.info
         }
 
-        const _setOrderDelivery = async() => {
+        const setDelivery = async() => {
             const data = await setOrderDelivery({id: state.id, ...state.courier})
             state.delieryVisible = false
             state.order.status = 3
@@ -143,7 +143,7 @@ export default defineComponent({
 
         return {
            ...toRefs(state),
-           _setOrderDelivery
+           setDelivery
         };
      }
   });

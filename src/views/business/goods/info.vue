@@ -243,7 +243,7 @@ export default defineComponent({
             id: null as number | null,
             form: {
                 imageUrl: '',
-                isOpen: 0,
+                isOpen: false,
                 content: ' ',
                 saleCount: 0,
                 sort: 100,
@@ -388,7 +388,7 @@ export default defineComponent({
 
             if (state.id) {
                 try {
-                    let res = await updateGoods(form)
+                    await updateGoods(form)
                     ElMessage({
                         type: 'info',
                         message: '修改成功',

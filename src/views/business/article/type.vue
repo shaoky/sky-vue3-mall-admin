@@ -109,22 +109,11 @@ export default defineComponent({
             } else {
                 state.isAdd = false
                 state.form = JSON.parse(JSON.stringify(state.list[index]))
-                // if (state.form.isOpen === 0) {
-                //     state.form.isOpen = false
-                // } else if (state.form.isOpen === 1) {
-                //     state.form.isOpen = true
-                // }
             }
         }
 
         const onSubmit = async () => {
-            // if (state.form.isOpen) {
-            //     state.form.isOpen = 1
-            // } else {
-            //     state.form.isOpen = 0
-            // }
             if (state.isAdd) {
-                // console.log(this.form)
                 try {
                     let res = await addArticleType(state.form)
                     ElMessage({

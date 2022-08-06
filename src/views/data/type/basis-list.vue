@@ -23,7 +23,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="状态" width="80px;">
-                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="340px">
                 <template #default="scope">
@@ -59,7 +59,7 @@
                         <el-button type="primary" size="small" @click="goodsTypedialogVisible = true">选择</el-button>
                     </el-form-item> -->
                     <el-form-item label="是否启用：">
-                        <el-checkbox v-model="form.isOpenBoolean"></el-checkbox>
+                        <el-checkbox v-model="form.isOpen"></el-checkbox>
                     </el-form-item>
                 </el-form>
             <span slot="footer" class="dialog-footer">
@@ -71,20 +71,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue'
-import { getGoodsTypeListApi, addGoodsType, updateGoodsType, getArticleTypeList, deleteGoodsType } from '../../../api/getData'
+import { defineComponent, reactive, onMounted, toRefs } from 'vue'
+import { getGoodsTypeListApi, addGoodsType, updateGoodsType, deleteGoodsType } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import Pagination from '../../../components/pagination.vue'
 import { imgBaseUrl } from '../../../config/env'
 import { Models } from '@/rapper'
-import filter, { filtersModel } from '@/utils/filter'
+import filter from '@/utils/filter'
 
 export default defineComponent({
     components: {Pagination},
     setup() {
-        const internalInstance = getCurrentInstance()
         const state = reactive({
-            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             imgBaseUrl,
             dialogVisible: false,
             isAdd: false,
@@ -94,8 +92,7 @@ export default defineComponent({
                 parentId: undefined, 
                 sort: 10,
                 title: '',
-                isOpen: 0,
-                isOpenBoolean: false,
+                isOpen: true,
                 imageUrl: ''
             },
             status: [
@@ -152,11 +149,6 @@ export default defineComponent({
             } else {
                 state.isAdd = false
                 state.form = {...data}
-                if (state.form.isOpen === 0) {
-                    state.form.isOpenBoolean = false
-                } else if (state.form.isOpen === 1) {
-                    state.form.isOpenBoolean = true
-                }
             }
         }
 
@@ -167,7 +159,7 @@ export default defineComponent({
                         title: state.form.title,
                         imageUrl: state.form.imageUrl,
                         sort: state.form.sort,
-                        isOpen: filter.booleanToNumber(state.form.isOpenBoolean)
+                        isOpen: state.form.isOpen
                     })
                     ElMessage({
                         type: 'success',
@@ -177,14 +169,13 @@ export default defineComponent({
                     getGoodsTypeList()
                 } catch (err) {}
             } else {
-                // console.log(this.form)
                 try {
                     await updateGoodsType({
                         id: state.form.id!,
                         title: state.form.title,
                         imageUrl: state.form.imageUrl,
                         sort: state.form.sort,
-                        isOpen: filter.booleanToNumber(state.form.isOpenBoolean)
+                        isOpen: state.form.isOpen
                     })
                     ElMessage({
                         type: 'success',

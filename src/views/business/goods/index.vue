@@ -45,7 +45,7 @@
             <el-table-column label="价格" prop="price"></el-table-column>
             <el-table-column label="排序" prop="sort"></el-table-column>
             <el-table-column label="状态">
-                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="160px;">
                 <template #default="scope">
@@ -61,20 +61,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue'
+import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getGoodsListApi, getGoodsTypeListApi, deleteGoods, setGoodsIsOpen } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import Pagination from '../../../components/pagination.vue'
 import { deleteChildren } from '../../../utils/tools'
 import { Models } from '@/rapper'
-import { filtersModel } from '@/utils/filter'
 
 export default defineComponent({
     components: {Pagination},
     setup() {
-        const internalInstance = getCurrentInstance()
         const state = reactive({
-            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             goodsClassId: null as string | null,
             form: {
                 page: 1,

@@ -1,4 +1,9 @@
 class Filter {
+    /**
+     * @description 阿萨德阿萨德撒旦
+     * @param value 
+     * @returns 
+     */
     isOpen (value: boolean) {
         let text = ''
         if (value) {
@@ -19,7 +24,10 @@ class Filter {
 }
 
 export interface filtersModel  {
-    isOpen (value: boolean): string;
+    /**
+     * @description 显示开启或者未开启
+     */
+    isOpen(value: boolean): string;
     booleanToNumber(value: boolean): number;
 }
 

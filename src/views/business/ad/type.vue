@@ -122,20 +122,10 @@ export default defineComponent({
             } else {
                 state.isAdd = false
                 state.form = JSON.parse(JSON.stringify(state.list[index]))
-                if (state.form.isOpen === 0) {
-                    state.form.isOpen = false as any
-                } else if (state.form.isOpen === 1) {
-                    state.form.isOpen = true as any
-                }
             }
         }
 
         const onSubmit = async () => {
-            if (state.form.isOpen) {
-                state.form.isOpen = 1
-            } else {
-                state.form.isOpen = 0
-            }
             if (state.isAdd) {
                 try {
                     let res = await addAdPosition(state.form)

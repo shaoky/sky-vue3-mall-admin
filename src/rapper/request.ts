@@ -1,4 +1,4 @@
-/* md5: bc3ce2eee45f41fb297202837a46abe7 */
+/* md5: bd3811e9bf6e77216020b5e0ae34d811 */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -827,7 +827,7 @@ export interface IModels {
       width: number
       height: number
       mark: string
-      isOpen: number
+      isOpen: boolean
     }
     Res: {
       code: number
@@ -850,7 +850,7 @@ export interface IModels {
           title: string
           description: null
           mark: string
-          isOpen: number
+          isOpen: boolean
           width: number
           height: number
         }[]
@@ -868,7 +868,7 @@ export interface IModels {
       title: string
       description: string
       mark: string
-      isOpen: number
+      isOpen: boolean
       width: number
       height: number
     }
@@ -1116,7 +1116,7 @@ export interface IModels {
   'POST/admin/goods/add': {
     Req: {
       imageUrl: string
-      isOpen: number
+      isOpen: boolean
       content: string
       saleCount: number
       sort: number
@@ -1161,7 +1161,7 @@ export interface IModels {
       spec: string
       attr: string
       content: string
-      isOpen: number
+      isOpen: boolean
       sort: number
       createTime: number
       bannerList: {
@@ -1218,7 +1218,7 @@ export interface IModels {
             value: string
           }[]
           content: string
-          isOpen: number
+          isOpen: boolean
           sort: number
           createTime: number
           bannerList: {
@@ -1395,7 +1395,7 @@ export interface IModels {
         list: {
           id: number
           imageUrl: string
-          isOpen: number
+          isOpen: boolean
           level: number
           parentId: number
           sort: number
@@ -1414,7 +1414,7 @@ export interface IModels {
     Req: {
       sort: number
       title: string
-      isOpen: number
+      isOpen: boolean
       /**
        * 父id
        */
@@ -1437,7 +1437,7 @@ export interface IModels {
       parentId?: number
       title: string
       imageUrl: string
-      isOpen: number
+      isOpen: boolean
       sort: number
       level?: number
     }

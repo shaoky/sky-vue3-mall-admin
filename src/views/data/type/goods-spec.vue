@@ -14,7 +14,7 @@
             <el-table-column label="可选列表" prop="content"></el-table-column>
             <el-table-column label="排序" prop="sort" width="80px;"></el-table-column>
             <el-table-column label="状态" width="80px;">
-                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作">
                 <template #default="scope">
@@ -48,19 +48,15 @@
     </div>
 </template>
 <script lang="ts">
-// @ts-ignore
-import { defineComponent, ref, reactive, onMounted, toRefs, getCurrentInstance } from 'vue'
+import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue'
 import { getGoodsSpecList, addGoodsSpec, updateGoodsSpec, deleteGoodsSpec } from '../../../api/getData'
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus';
 import { Models } from '@/rapper'
-import { filtersModel } from '@/utils/filter'
 
 export default defineComponent({
     setup() {
-         const internalInstance = getCurrentInstance()
         const state = reactive({
-            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             dialogVisible: false,
             list: [] as Models['GET/admin/goods/spec/list']['Res']['data']['list'],
             form: {

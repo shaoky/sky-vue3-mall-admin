@@ -15,7 +15,7 @@
             <el-table-column label="可选列表" prop="content"></el-table-column>
             <el-table-column label="排序" prop="sort" width="80px;"></el-table-column>
             <el-table-column label="状态" width="80px;">
-                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作">
                 <template #default="scope">
@@ -57,7 +57,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, toRefs, getCurrentInstance } from 'vue'
+import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue'
 import { getGoodsAttrList, addGoodsAttr, updateGoodsAttr, deleteGoodsAttr } from '../../../api/getData'
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus';
@@ -66,10 +66,8 @@ import { filtersModel } from '@/utils/filter'
 
 export default defineComponent({
     setup() {
-        const internalInstance = getCurrentInstance()
 
         const state = reactive({
-            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             dialogVisible: false,
             list: [] as Models['GET/admin/goods/attr/list']['Res']['data']['list'],
             form: {
@@ -94,7 +92,7 @@ export default defineComponent({
         })
 
         const _getGoodsAttrList = async() => {
-            let res = await getGoodsAttrList({goodsClassId: state.form.goodsClassId!})
+            let res = await getGoodsAttrList({goodsClassId: state.form.goodsClassId})
             // @ts-ignore
             state.list = res.list
         }

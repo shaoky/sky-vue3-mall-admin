@@ -37,7 +37,7 @@
             </el-table-column>
             <el-table-column label="排序" prop="sort"></el-table-column>
             <el-table-column label="状态">
-                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
@@ -56,15 +56,12 @@ import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from
 import { getArticleListApi, getArticleTypeList, deleteArticle } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import Pagination from '../../../components/pagination.vue';
-import { filtersModel } from '@/utils/filter'
 import { Models } from '@/rapper'
 
 export default defineComponent({
     components: {Pagination},
     setup() {
-        const internalInstance = getCurrentInstance()
         const state = reactive({
-            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             form: {
                 page: 1,
                 size: 20,

@@ -15,6 +15,9 @@ axios.interceptors.response.use(
                 path: '/'
             })
         }
+        if (response.data.code === 500) {
+            ElMessage.error(response.data.error)
+        }
         return response
     },
     (error) => {

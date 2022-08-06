@@ -7,7 +7,7 @@
             <el-breadcrumb-item>{{$route.meta.title}}</el-breadcrumb-item>
         </el-breadcrumb>
         
-        <el-button type="primary" @click="onEdit({}, -1)">新增</el-button>
+        <el-button type="primary" @click="onEdit(bakForm)">新增</el-button>
 
         <el-table class="mt20" border :data="list">
             <el-table-column label="分类名称">
@@ -27,8 +27,8 @@
             </el-table-column>
             <el-table-column label="操作" width="340px">
                 <template #default="scope">
-                    <el-button type="primary" link @click="onEdit(scope.row, scope.$index)">编辑</el-button>
-                    <el-button type="primary" link @click="onEdit(scope.row,-1)">添加子类</el-button>
+                    <el-button type="primary" link @click="onEdit(scope.row)">编辑</el-button>
+                    <el-button type="primary" link @click="onEdit(scope.row)">添加子类</el-button>
                     <el-button type="primary" link @click="$router.push({name:'goodsAttr',params:{id:scope.row.id}})">查看属性</el-button>
                     <el-button type="primary" link @click="$router.push({name:'goodsSpec',params:{id:scope.row.id}})">查看规格</el-button>
                     <el-button type="primary" link @click="onDelete(scope.row.id)">删除</el-button>
@@ -72,12 +72,13 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
-import { getGoodsTypeListApi, addGoodsType, updateGoodsType, deleteGoodsType } from '../../../api/getData'
+import { getGoodsTypeListApi, addGoodsType, updateGoodsType, deleteGoodsType } from '@/api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import Pagination from '../../../components/pagination.vue'
-import { imgBaseUrl } from '../../../config/env'
+import Pagination from '@/components/pagination.vue'
+import { imgBaseUrl } from '@/config/env'
 import { Models } from '@/rapper'
-import filter from '@/utils/filter'
+
+type GoodsTypeModel = Models['GET/admin/goods/type/list']['Res']['data']['list'][0]
 
 export default defineComponent({
     components: {Pagination},
@@ -86,10 +87,10 @@ export default defineComponent({
             imgBaseUrl,
             dialogVisible: false,
             isAdd: false,
-            default: {},
+            bakForm: {},
             form: {
                 id: undefined,
-                parentId: undefined, 
+                parentId: undefined,
                 sort: 10,
                 title: '',
                 isOpen: true,
@@ -98,7 +99,7 @@ export default defineComponent({
             status: [
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
-            list: [] as Models['GET/admin/goods/type/list']['Res']['data']['list'],
+            list: [] as GoodsTypeModel[],
             page: {
                 total: 20
             },
@@ -106,7 +107,7 @@ export default defineComponent({
         })
 
         onMounted(() => {
-            state.default = {...state.form}
+            state.bakForm = {...state.form}
             getGoodsTypeList()
         })
 
@@ -127,7 +128,7 @@ export default defineComponent({
                     ElMessage({
                         type: 'info',
                         message: '已删除',
-                    });
+                    })
                 } catch (err) {
                     console.log(err)
                 }
@@ -136,58 +137,41 @@ export default defineComponent({
             })
         };
 
-        const onEdit = (data, index: number) => {
-            state.form =  {...state.default} as any
+        const onEdit = (row) => {
             state.dialogVisible = true
-            if (index === -1) {
-                state.isAdd = true
-                if (data.id) {
-                    state.form.parentId = data.id
-                } else {
-                    state.form.parentId = undefined
-                }
-            } else {
-                state.isAdd = false
-                state.form = {...data}
-            }
+            state.form = {...row}
         }
 
         const onSubmit = async () => {
-            if (state.isAdd) {
-                try {
-                    await addGoodsType({
-                        title: state.form.title,
-                        imageUrl: state.form.imageUrl,
-                        sort: state.form.sort,
-                        isOpen: state.form.isOpen
-                    })
-                    ElMessage({
-                        type: 'success',
-                        message: '添加成功',
-                    });
-                    state.dialogVisible = false
-                    getGoodsTypeList()
-                } catch (err) {}
+            if (!state.form.id) {
+                await addGoodsType({
+                    title: state.form.title,
+                    imageUrl: state.form.imageUrl,
+                    sort: state.form.sort,
+                    isOpen: state.form.isOpen
+                })
+                ElMessage({
+                    type: 'success',
+                    message: '添加成功',
+                })
             } else {
-                try {
-                    await updateGoodsType({
-                        id: state.form.id!,
-                        title: state.form.title,
-                        imageUrl: state.form.imageUrl,
-                        sort: state.form.sort,
-                        isOpen: state.form.isOpen
-                    })
-                    ElMessage({
-                        type: 'success',
-                        message: '添加成功',
-                    });
-                    state.dialogVisible = false
-                    getGoodsTypeList()
-                } catch (err) {}
+                await updateGoodsType({
+                    id: state.form.id!,
+                    title: state.form.title,
+                    imageUrl: state.form.imageUrl,
+                    sort: state.form.sort,
+                    isOpen: state.form.isOpen
+                })
+                ElMessage({
+                    type: 'success',
+                    message: '修改成功',
+                })
             }
+            state.dialogVisible = false
+            getGoodsTypeList()
         }
 
-        const handleAvatarSuccess = (res, file) => {
+        const handleAvatarSuccess = (res) => {
             state.form.imageUrl = res.data.url
         }
 
@@ -198,9 +182,9 @@ export default defineComponent({
             onEdit,
             onSubmit,
             handleAvatarSuccess
-        };
+        }
      }
-  });
+  })
 </script>
 
 <style scoped lang="less">

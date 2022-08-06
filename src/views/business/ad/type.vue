@@ -8,7 +8,7 @@
         </el-breadcrumb>
 
         <el-form :inline="true">
-            <el-button type="primary" @click="onEdit(-1)">新建位置</el-button>
+            <el-button type="primary" @click="onEdit({})">新建位置</el-button>
         </el-form>
 
         <el-table border :data="list" class="mt20">
@@ -18,14 +18,14 @@
             <el-table-column label="广告位高度" prop="height"></el-table-column>
             <el-table-column label="广告位标识码" prop="mark"></el-table-column>
             <el-table-column label="状态">
-                <template #default="scope">{{filters.isOpen(scope.row.isOpen)}}</template>
+                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
             </el-table-column>
             <!-- <el-table-column label="分类位置" prop="">
                 <template slot-scope="scope">{{ list[scope.$index].position | getPosition }}</template>
             </el-table-column> -->
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
-                    <el-button type="primary" link @click="onEdit(scope.$index)">编辑</el-button>
+                    <el-button type="primary" link @click="onEdit(scope.row)">编辑</el-button>
                     <el-button type="primary" link @click="onDelete(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -62,21 +62,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue';
-import { getAdPositionListApi, delAdPosition, addAdPosition, updateAdPosition } from '../../../api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus';
+import { defineComponent, reactive, onMounted, toRefs } from 'vue'
+import { getAdPositionListApi, delAdPosition, addAdPosition, updateAdPosition } from '@/api/getData'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import { Models } from '@/rapper'
-import { filtersModel } from '@/utils/filter'
+
+type adModel = Models['GET/admin/ad/position/list']['Res']['data']['list'][0]
 
 export default defineComponent({
     setup() {
-        const internalInstance = getCurrentInstance()
         const state = reactive({
-            filters: internalInstance?.appContext.config.globalProperties.$filters as filtersModel,
             isAdd: true,
-            fatherId: '',
             form: {} as Models['POST/admin/ad/position/update']['Req'],
-            list: [] as Models['GET/admin/ad/position/list']['Res']['data']['list'],
+            list: [] as adModel[],
             dialogVisible: false,
             position: [
                 {label: '系统公告', value: 1}, {label: '使用指南', value: 2}, {label: '常见问题', value: 3}
@@ -91,7 +89,6 @@ export default defineComponent({
             const data = await getAdPositionListApi()
             state.list = data.list
         }
-        
 
         const onDelete = (id: number) => {
             ElMessageBox.confirm('确认删除此分类吗?', '提示', {
@@ -100,63 +97,38 @@ export default defineComponent({
                 type: 'warning',
             })
             .then(async() => {
-                    try {
-                    await delAdPosition({id: id})
-                    ElMessage({
-                        type: 'info',
-                        message: '已取消删除',
-                    });
-                } catch (err) {
-                    console.log(err)
-                }
-
+                await delAdPosition({id})
+                ElMessage({
+                    type: 'info',
+                    message: '已取消删除',
+                })
                 getAdPosition()
             })
-        };
+        }
 
-        const onEdit = (index: number) => {
-            state.form = {} as any
+        const onEdit = (row) => {
+            state.form = { ...row }
             state.dialogVisible = true
-            if (index === -1) {
-                state.isAdd = true
-            } else {
-                state.isAdd = false
-                state.form = JSON.parse(JSON.stringify(state.list[index]))
-            }
         }
 
         const onSubmit = async () => {
-            if (state.isAdd) {
-                try {
-                    let res = await addAdPosition(state.form)
-                    ElMessage({
-                        type: 'success',
-                        message: '添加成功',
-                    });
-                    state.dialogVisible = false
-                    getAdPosition()
-                } catch (err: any) {
-                    ElMessage({
-                        type: 'error',
-                        message: err.data,
-                    })
-                }
+            if (!state.form.id) {
+                await addAdPosition(state.form)
+                ElMessage({
+                    type: 'success',
+                    message: '添加成功',
+                })
+               
             } else {
-                try {
-                    let res = await updateAdPosition(state.form)
-                    ElMessage({
-                        type: 'success',
-                        message: '更新成功',
-                    });
-                    state.dialogVisible = false
-                    getAdPosition()
-                } catch (err: any) {
-                    ElMessage({
-                        type: 'error',
-                        message: err.data,
-                    })
-                }
+                await updateAdPosition(state.form)
+                ElMessage({
+                    type: 'success',
+                    message: '更新成功',
+                })
+                state.dialogVisible = false
             }
+            state.dialogVisible = false
+            getAdPosition()
         }
 
         return {
@@ -164,9 +136,9 @@ export default defineComponent({
             onDelete,
             onEdit,
             onSubmit
-        };
+        }
      }
-  });
+  })
 </script>
 
 <style scoped lang="less">

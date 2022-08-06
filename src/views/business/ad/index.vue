@@ -112,14 +112,14 @@ export default defineComponent({
                     ElMessage({
                         type: 'info',
                         message: '已删除',
-                    });
+                    })
                 } catch (err) {
                     console.log(err)
                 }
 
                 getAdPosition()
             })
-        };
+        }
 
         const handleCurrentChange = (value: number) => {
             state.form.page = value
@@ -139,9 +139,9 @@ export default defineComponent({
             onDelete,
             handleCurrentChange,
             handleSizeChange
-        };
+        }
      }
-  });
+  })
 </script>
 
 <style scoped lang="less">

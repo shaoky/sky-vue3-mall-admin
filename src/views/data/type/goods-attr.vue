@@ -58,18 +58,19 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue'
-import { getGoodsAttrList, addGoodsAttr, updateGoodsAttr, deleteGoodsAttr } from '../../../api/getData'
+import { getGoodsAttrList, addGoodsAttr, updateGoodsAttr, deleteGoodsAttr } from '@/api/getData'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
 import { Models } from '@/rapper'
-import { filtersModel } from '@/utils/filter'
+
+type GoodsAttr = Models['GET/admin/goods/attr/list']['Res']['data']['list'][0]
 
 export default defineComponent({
     setup() {
 
         const state = reactive({
             dialogVisible: false,
-            list: [] as Models['GET/admin/goods/attr/list']['Res']['data']['list'],
+            list: [] as GoodsAttr[],
             form: {
                 id: undefined,
                 goodsClassId: 0,
@@ -93,7 +94,6 @@ export default defineComponent({
 
         const _getGoodsAttrList = async() => {
             let res = await getGoodsAttrList({goodsClassId: state.form.goodsClassId})
-            // @ts-ignore
             state.list = res.list
         }
 
@@ -103,12 +103,12 @@ export default defineComponent({
         }
 
         const onSubmit = async() => {
-            if (state.form.id) {
+            if (!state.form.id) {
                 if (state.form.type === 1) {
                     state.form.content = ''
                 }
                 await updateGoodsAttr({
-                    id: state.form.id,
+                    id: state.form.id!,
                     content: state.form.content,
                     isOpen: state.form.isOpen,
                     name: state.form.name,
@@ -128,8 +128,6 @@ export default defineComponent({
                
             }
             state.dialogVisible = false
-            // @ts-ignore
-            state.form = {...state.bakForm}
             _getGoodsAttrList()
         }
 

@@ -8,7 +8,7 @@
         </el-breadcrumb>
 
         <el-form :inline="true">
-            <el-button type="primary" @click="onEdit(-1)">新建类型</el-button>
+            <el-button type="primary" @click="onEdit({})">新建类型</el-button>
         </el-form>
 
         <el-table border :data="list" class="mt20">
@@ -16,7 +16,7 @@
             <el-table-column label="排序" prop="sort"></el-table-column>
             <el-table-column label="操作" width="150px;">
                 <template #default="scope">
-                    <el-button type="primary" link @click="onEdit(scope.$index)">编辑</el-button>
+                    <el-button type="primary" link @click="onEdit(scope.row)">编辑</el-button>
                     <el-button type="primary" link @click="onDelete(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -56,14 +56,15 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import { imgBaseUrl } from '../../../config/env'
 import { Models } from '@/rapper'
 
+type ActiveModel = Models['GET/admin/article/type/list']['Res']['data']['list'][0]
+
 export default defineComponent({
     setup() {
         const state = reactive({
             imgBaseUrl,
             isAdd: true,
-            fatherId: '',
             form: {} as Models['POST/admin/article/type/update']['Req'],
-            list: [] as Models['GET/admin/article/type/list']['Res']['data']['list'],
+            list: [] as ActiveModel[],
             dialogVisible: false,
             position: [
                 {label: '系统公告', value: 1}, {label: '使用指南', value: 2}, {label: '常见问题', value: 3}
@@ -87,53 +88,41 @@ export default defineComponent({
                 type: 'warning',
             })
             .then(async() => {
-                    try {
+                try {
                     await deleteArticleType({id: id})
                     ElMessage({
                         type: 'info',
                         message: '已取消删除',
-                    });
+                    })
                 } catch (err) {
                     console.log(err)
                 }
 
                 _getArticleTypeList()
             })
-        };
+        }
 
-        const onEdit = (index: number) => {
-            state.form = {} as any
+        const onEdit = (row) => {
+            state.form = { ...row }
             state.dialogVisible = true
-            if (index === -1) {
-                state.isAdd = true
-            } else {
-                state.isAdd = false
-                state.form = JSON.parse(JSON.stringify(state.list[index]))
-            }
         }
 
         const onSubmit = async () => {
-            if (state.isAdd) {
-                try {
-                    let res = await addArticleType(state.form)
-                    ElMessage({
-                        type: 'success',
-                        message: '添加成功',
-                    });
-                    state.dialogVisible = false
-                    _getArticleTypeList()
-                } catch (err) {}
+            if (!state.form.id) {
+                await addArticleType(state.form)
+                ElMessage({
+                    type: 'success',
+                    message: '添加成功',
+                })
             } else {
-                try {
-                    let res = await updateArticleType(state.form)
-                    ElMessage({
-                        type: 'success',
-                        message: '添加成功',
-                    });
-                    state.dialogVisible = false
-                    _getArticleTypeList()
-                } catch (err) {}
+                await updateArticleType(state.form)
+                ElMessage({
+                    type: 'success',
+                    message: '添加成功',
+                })
             }
+            state.dialogVisible = false
+            _getArticleTypeList()
         }
 
         const handleAvatarSuccess = (res) => {
@@ -146,9 +135,9 @@ export default defineComponent({
             onEdit,
             onSubmit,
             handleAvatarSuccess
-        };
+        }
      }
-  });
+  })
 </script>
 
 <style scoped lang="less">

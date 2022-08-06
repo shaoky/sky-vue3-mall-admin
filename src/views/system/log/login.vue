@@ -17,8 +17,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
-import { getLogLogin } from '../../../api/getData'
-import Pagination from '../../../components/pagination.vue'
+import { getLogLogin } from '@/api/getData'
+import Pagination from '@/components/pagination.vue'
 import { Models } from '@/rapper'
 
 export default defineComponent({

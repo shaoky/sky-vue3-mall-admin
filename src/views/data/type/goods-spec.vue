@@ -49,9 +49,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue'
-import { getGoodsSpecList, addGoodsSpec, updateGoodsSpec, deleteGoodsSpec } from '../../../api/getData'
+import { getGoodsSpecList, addGoodsSpec, updateGoodsSpec, deleteGoodsSpec } from '@/api/getData'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
 import { Models } from '@/rapper'
 
 export default defineComponent({
@@ -81,7 +81,6 @@ export default defineComponent({
 
         const _getGoodsAttrList = async() => {
             let res = await getGoodsSpecList({goodsClassId: state.form.goodsClassId})
-            // @ts-ignore
             state.list = res.list
         }
 
@@ -112,8 +111,6 @@ export default defineComponent({
                
             }
             state.dialogVisible = false
-            // @ts-ignore
-            state.form = {...state.bakForm}
             _getGoodsAttrList()
         }
 

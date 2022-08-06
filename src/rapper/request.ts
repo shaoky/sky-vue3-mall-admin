@@ -1,4 +1,4 @@
-/* md5: bd3811e9bf6e77216020b5e0ae34d811 */
+/* md5: a923b75afe69dc2053ba6da2930927a2 */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -848,7 +848,7 @@ export interface IModels {
         list: {
           id: number
           title: string
-          description: null
+          description: string
           mark: string
           isOpen: boolean
           width: number
@@ -898,7 +898,7 @@ export interface IModels {
    */
   'POST/admin/article/type/add': {
     Req: {
-      sort: string
+      sort: number
       title: string
       imageUrl: string
     }
@@ -921,11 +921,7 @@ export interface IModels {
         list: {
           id: number
           title: string
-          imageUrl:
-            | {
-                [k: string]: any
-              }
-            | string
+          imageUrl: string
           sort: number
         }[]
       }
@@ -941,7 +937,7 @@ export interface IModels {
       id: number
       title: string
       imageUrl: string
-      sort: string
+      sort: number
     }
     Res: {
       code: number
@@ -1588,7 +1584,6 @@ export interface IModels {
           content: string
           sort: number
           isOpen: boolean
-          tip: null
           typeName: string
         }[]
       }

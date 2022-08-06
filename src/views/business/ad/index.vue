@@ -32,7 +32,7 @@
             <el-table-column label="广告位置" prop="positionTitle"></el-table-column>
             <el-table-column label="广告图片" prop="imageUrl">
                 <template #default="scope">
-                    <img :src="scope.row.imageUrl" style="max-height: 160px; margin:0 auto; display: block;">
+                    <img :src="scope.row.imageUrl" style="max-height: 70px; margin:0 auto; display: block;">
                 </template>
             </el-table-column>
             <el-table-column label="排序" prop="sort"></el-table-column>

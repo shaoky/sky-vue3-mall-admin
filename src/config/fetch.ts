@@ -1,8 +1,23 @@
-import axios from 'axios';
+import axios from 'axios'
 import router from '../router'
 import { baseURL } from './env'
 import { ElMessage } from 'element-plus'
 import { IModels } from '../rapper/request'
+
+const CancelToken = axios.CancelToken
+const source = CancelToken.source()
+window.axiosSource = []
+
+axios.interceptors.request.use(
+    (config) => {
+        if (config.cancelToken) {
+            const cancelToken = axios.CancelToken.source()
+            window.axiosSource.push(cancelToken)
+            config.cancelToken = cancelToken.token
+        }
+        return config
+    }
+)
 
 axios.interceptors.response.use(
     (response) => {
@@ -10,7 +25,7 @@ axios.interceptors.response.use(
             ElMessage({
                 type: 'error',
                 message: '登录超时',
-            });
+            })
             router.push({
                 path: '/'
             })
@@ -32,9 +47,8 @@ export default async function<T extends keyof IModels> (
 ) :Promise<IModels[T]['Res']['data']> {
     return new Promise((resolve, reject) => {
         let method
-        const token = window.localStorage.getItem('token') || ''
-        let urlRep = url.replace(/GET/g, '')
-        urlRep = urlRep.replace(/POST/g, '')
+        const urlRep = url.replace(/GET/g, '')
+                        .replace(/POST/g, '')
 
         if (url.indexOf('GET') > -1) {
             method = 'get'
@@ -49,8 +63,9 @@ export default async function<T extends keyof IModels> (
             data: method === 'post' ? params : {},
             responseType: 'json',
             headers: {
-                Authorization: token,
-            }
+                Authorization: window.localStorage.getItem('token') || '',
+            },
+            cancelToken: source.token
         }).then(res => {
             if (res.data.code === 200) {
                 resolve(res.data.data)
@@ -63,3 +78,12 @@ export default async function<T extends keyof IModels> (
     })
 }
 
+/**
+ * 取消接口
+ * @description 用于tab栏的高频切换，或者后端接口返回慢，多次请求造成页面数据显示错误
+ */
+export function cancelAxiosSource() {
+    window?.axiosSource.forEach(item => {
+        item.cancel('取消请求')
+    })
+}

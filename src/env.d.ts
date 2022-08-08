@@ -6,3 +6,4 @@ declare module '*.vue' {
   export default component
 }
 declare var BMapGL: any
+declare var axiosSource: any

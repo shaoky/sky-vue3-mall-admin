@@ -25,7 +25,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="system">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 

@@ -8,7 +8,6 @@
         <el-table border :data="list">
             <el-table-column label="登陆时间" prop="time"></el-table-column>
             <el-table-column label="用户名" prop="username"></el-table-column>
-            <el-table-column label="客户端请求ip" prop="ip"></el-table-column>
         </el-table>
         <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange" :size="size" :total="total"></pagination>
 

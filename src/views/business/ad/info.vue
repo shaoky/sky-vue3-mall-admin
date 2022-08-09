@@ -68,7 +68,10 @@ export default defineComponent({
         const state = reactive({
             imgBaseUrl: imgBaseUrl,
             id: 0,
-            form: {} as Models['POST/admin/ad/update']['Req'],
+            form: {
+                sort: 10,
+                isOpen: false
+            } as Models['POST/admin/ad/update']['Req'],
             positionList: [] as Models['GET/admin/ad/position/list']['Res']['data']['list'],
             typeList: [
                 {label: '网页链接', value: 1},
@@ -107,34 +110,20 @@ export default defineComponent({
 
         const onSubmit = async () => {
             if (state.id) {
-                try {
-                    await updateAd(state.form)
-                    ElMessage({
-                        type: 'info',
-                        message: '修改成功',
-                    });
-                    window.history.back()
-                } catch (err: any) {
-                    ElMessage({
-                        type: 'error',
-                        message: err.data,
-                    });
-                }
-                
+                await updateAd(state.form)
+                ElMessage({
+                    type: 'info',
+                    message: '修改成功',
+                });
+                window.history.back()
+               
             } else {
-                try {
-                    await addAd(state.form)
-                    ElMessage({
-                        type: 'info',
-                        message: '添加成功',
-                    });
-                    window.history.back()
-                } catch (err: any) {
-                    ElMessage({
-                        type: 'error',
-                        message: err.error,
-                    });
-                }
+                await addAd(state.form)
+                ElMessage({
+                    type: 'info',
+                    message: '添加成功',
+                });
+                window.history.back()
             }
         }
 

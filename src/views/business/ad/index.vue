@@ -11,12 +11,12 @@
                 <el-input v-model="form.title"></el-input>
             </el-form-item>
             <el-form-item label="位置：">
-                <el-select v-model="form.positionId" @change="getAdList" placeholder="请选择位置">
+                <el-select v-model="form.positionId" @change="getAdList" placeholder="请选择位置" clearable>
                     <el-option  v-for="item in positionList" :key="item.id" :label="item.title" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="状态：" >
-                <el-select v-model="form.isOpen" @change="getAdList">
+                <el-select v-model="form.isOpen" @change="getAdList" placeholder="请选择状态" clearable>
                     <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
@@ -53,9 +53,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
-import { getAdPositionListApi, getAdListApi, delAd } from '../../../api/getData'
+import { getAdPositionListApi, getAdListApi, delAd } from '@/api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import Pagination from '../../../components/pagination.vue'
+import Pagination from '@/components/pagination.vue'
 import { Models } from '@/rapper'
 
 export default defineComponent({
@@ -68,11 +68,11 @@ export default defineComponent({
                 page: 1,
                 size: 20,
                 title: '',
-                isOpen: -1 as number | undefined,
+                isOpen: '',
                 positionId: null
             },
             status: [
-                {label: '全部', value: -1}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
+                {label: '全部', value: ''}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
             ],
             list: [] as Models['GET/admin/ad/list']['Res']['data']['list'],
             count: 0,
@@ -85,11 +85,7 @@ export default defineComponent({
         })
 
         const getAdList = async () => {
-            let form = {...state.form}
-            if (form.isOpen === -1) {
-                form.isOpen = undefined
-            }
-            const data = await getAdListApi(form)
+            const data = await getAdListApi(state.form)
             state.list = data.list
             state.count = data.count
         }
@@ -107,7 +103,7 @@ export default defineComponent({
                 type: 'warning',
             })
             .then(async() => {
-                    try {
+                try {
                     await delAd({id: id})
                     ElMessage({
                         type: 'info',

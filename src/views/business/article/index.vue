@@ -16,7 +16,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="状态：" >
-                <el-select v-model="form.isOpen" @change="getArticleList" placeholder="请选择状态">
+                <el-select v-model="form.isOpen" @change="getArticleList" placeholder="请选择状态" clearable>
                     <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs, getCurrentInstance } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs } from 'vue';
 import { getArticleListApi, getArticleTypeList, deleteArticle } from '../../../api/getData'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import Pagination from '../../../components/pagination.vue';
@@ -66,8 +66,8 @@ export default defineComponent({
                 page: 1,
                 size: 20,
                 title: '',
-                isOpen: undefined as number | undefined,
-                typeId: undefined as number | undefined
+                isOpen: '',
+                typeId: undefined
             },
             status: [
                 {label: '全部', value: ''}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
@@ -83,11 +83,7 @@ export default defineComponent({
         })
 
         const getArticleList = async () => {
-            let form = {...state.form}
-            if (form.isOpen === -1) {
-                form.isOpen = undefined
-            }
-            const data = await getArticleListApi(form)
+            const data = await getArticleListApi(state.form)
             state.list = data.list
             state.count = data.count
         }

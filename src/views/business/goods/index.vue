@@ -19,11 +19,12 @@
                     :options="categoryList"
                     :props="{ value: 'id', label: 'title', expandTrigger: 'hover' }"
                     placeholder="请选择"
-                    @change="goodsClassIdChange">
+                    @change="goodsClassIdChange"
+                    clearable>
                 </el-cascader>
             </el-form-item>
             <el-form-item label="状态：" >
-                <el-select v-model="form.isOpen" @change="getGoodsList" placeholder="请选择状态">
+                <el-select v-model="form.isOpen" @change="getGoodsList" placeholder="请选择状态" clearable>
                     <el-option  v-for="item in status" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
@@ -77,8 +78,8 @@ export default defineComponent({
                 page: 1,
                 size: 20,
                 title: '',
-                goodsClassId: undefined as number | undefined,
-                isOpen: undefined as number | undefined
+                goodsClassId: undefined,
+                isOpen: undefined
             },
             status: [
                 {label: '全部', value: ''}, {label: '未发布', value: 0}, {label: '已发布', value: 1}

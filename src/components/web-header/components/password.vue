@@ -1,7 +1,7 @@
 <template>
     <el-dialog title="修改密码" v-model="editPasswordVisible" width="30%">
         <el-form ref="form" :model="editPassword" label-width="100px">
-            <el-form-item label="用户名：">{{userInfo.username}}11</el-form-item>
+            <el-form-item label="用户名：">{{userInfo.username}}</el-form-item>
             <el-form-item label="旧密码：">
                 <el-input type="password" v-model="editPassword.password"></el-input>
             </el-form-item>

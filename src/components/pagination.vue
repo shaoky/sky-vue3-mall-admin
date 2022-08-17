@@ -5,7 +5,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             v-model:currentPage="currentPage"
-            :page-sizes="[10, 50, 100]"
+            :page-sizes="[10, 20, 50, 100]"
             :page-size="size"
             layout="total, sizes, prev, pager, next"
             :total="total">

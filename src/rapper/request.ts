@@ -1,4 +1,4 @@
-/* md5: a923b75afe69dc2053ba6da2930927a2 */
+/* md5: b83eca1550dde74706c398d51cea3134 */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -1366,8 +1366,15 @@ export interface IModels {
    * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518530&itf=2308505
    */
   'POST/admin/order/delivery': {
-    Req: {}
-    Res: {}
+    Req: {
+      id: number
+      courierName: string
+      courierNo: string
+    }
+    Res: {
+      code: number
+      data: boolean
+    }
   }
 
   /**
@@ -1656,6 +1663,7 @@ export interface IModels {
       data: {
         token: string
         username: string
+        url: string
       }
     }
   }
@@ -1684,13 +1692,17 @@ export interface IModels {
     Res: {
       code: number
       data: {
-        id: number
         username: string
-        password: string
-        secret: string
-        token: string
-        status: number
         realName: string
+        columnList: {
+          id: number
+          isOpen: number
+          name: string
+          parentId: number
+          sort: number
+          url: string
+          children: any[]
+        }[]
       }
     }
   }
@@ -1765,44 +1777,279 @@ export interface IModels {
       code: number
       data: {
         list: {
-          id: number
-          userId: number
           /**
            * 用户名
            */
           username: string
-          method: string
-          /**
-           * 控制器
-           */
-          controller: string
-          /**
-           * 方法
-           */
-          action: string
-          /**
-           * 说明
-           */
-          operation: string
-          /**
-           * 请求参数
-           */
-          input: string
-          /**
-           * 用户ip
-           */
-          ip: string
           /**
            * 登录时间
            */
           time: string
-          /**
-           * 使用时间
-           */
-          useTime: string
-          token: string
         }[]
         count: number
+      }
+    }
+  }
+
+  /**
+   * 接口名：后台用户列表
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316171
+   */
+  'GET/admin/user/admin/list': {
+    Req: {
+      page: number
+      size: number
+      status?: number
+    }
+    Res: {
+      code: number
+      data: {
+        list: {
+          id: number
+          username: string
+          realName: string
+          status: number
+          loginTime: string
+        }[]
+        count: number
+      }
+    }
+  }
+
+  /**
+   * 接口名：增加用户
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316349
+   */
+  'POST/admin/user/admin/add': {
+    Req: {
+      /**
+       * 登录账号
+       */
+      username: string
+      /**
+       * 密码
+       */
+      password: string
+      /**
+       * 姓名
+       */
+      realName: string
+      /**
+       * 备注
+       */
+      remark?: string
+      /**
+       * 启用状态
+       */
+      isOpen: boolean
+      /**
+       * 角色Id
+       */
+      roleId: number
+    }
+    Res: {
+      code: number
+      message: string
+    }
+  }
+
+  /**
+   * 接口名：更新用户
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316398
+   */
+  'POST/admin/user/admin/update': {
+    Req: {
+      /**
+       * 用户名
+       */
+      username: string
+      /**
+       * 姓名
+       */
+      realName: string
+      remark?: string
+      isOpen: boolean
+      id: number
+      /**
+       * 角色Id
+       */
+      roleId: number
+    }
+    Res: {
+      code: number
+      message: string
+    }
+  }
+
+  /**
+   * 接口名：删除用户
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316400
+   */
+  'POST/admin/user/admin/delete': {
+    Req: {
+      id: number
+    }
+    Res: {
+      code: number
+      message: string
+    }
+  }
+
+  /**
+   * 接口名：菜单列表
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316407
+   */
+  'GET/admin/column/list': {
+    Req: {
+      isOpen?: number
+    }
+    Res: {
+      code: number
+      data: {
+        list: {
+          name: string
+          sort: number
+          isOpen: number
+          id: number
+          url: string
+        }[]
+      }
+    }
+  }
+
+  /**
+   * 接口名：删除菜单
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316409
+   */
+  'POST/admin/column/delete': {
+    Req: {
+      id: number
+    }
+    Res: {
+      code: number
+      data: boolean
+    }
+  }
+
+  /**
+   * 接口名：增加菜单
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316414
+   */
+  'POST/admin/column/add': {
+    Req: {
+      sort: number
+      name: string
+      isOpen: boolean
+      url: string
+      parentId: number
+    }
+    Res: {
+      code: number
+      data: boolean
+    }
+  }
+
+  /**
+   * 接口名：更新菜单
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316415
+   */
+  'POST/admin/column/update': {
+    Req: {
+      id: number
+      sort: number
+      isOpen: boolean
+      name: string
+      url: string
+      parentId: number
+    }
+    Res: {
+      code: number
+      data: boolean
+    }
+  }
+
+  /**
+   * 接口名：角色列表
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316489
+   */
+  'GET/admin/role/list': {
+    Req: {}
+    Res: {
+      code: number
+      data: {
+        list: {
+          id: number
+          name: string
+          remark: string
+          columnIds: string
+        }[]
+      }
+    }
+  }
+
+  /**
+   * 接口名：增加角色
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316490
+   */
+  'POST/admin/role/add': {
+    Req: {
+      name: string
+      remark: string
+    }
+    Res: {
+      code: number
+      data: boolean
+    }
+  }
+
+  /**
+   * 接口名：更新角色
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316491
+   */
+  'POST/admin/role/update': {
+    Req: {
+      id: number
+      name?: string
+      remark?: string
+      columnIds?: string
+    }
+    Res: {
+      code: number
+      data: boolean
+    }
+  }
+
+  /**
+   * 接口名：删除角色
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316492
+   */
+  'POST/admin/role/delete': {
+    Req: {
+      id: number
+    }
+    Res: {
+      code: number
+      data: boolean
+    }
+  }
+
+  /**
+   * 接口名：获取角色详情
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2317297
+   */
+  'GET/admin/role/info': {
+    Req: {
+      id: number
+    }
+    Res: {
+      code: number
+      data: {
+        info: {
+          id: number
+          name: string
+          columnIds: string
+          remark: string
+        }
       }
     }
   }
@@ -1889,6 +2136,19 @@ export interface IResponseTypes {
   'GET/admin/system/web/config/info': ResSelector<IModels['GET/admin/system/web/config/info']['Res']>
   'POST/admin/system/web/config/update': ResSelector<IModels['POST/admin/system/web/config/update']['Res']>
   'GET/admin/system/log/login': ResSelector<IModels['GET/admin/system/log/login']['Res']>
+  'GET/admin/user/admin/list': ResSelector<IModels['GET/admin/user/admin/list']['Res']>
+  'POST/admin/user/admin/add': ResSelector<IModels['POST/admin/user/admin/add']['Res']>
+  'POST/admin/user/admin/update': ResSelector<IModels['POST/admin/user/admin/update']['Res']>
+  'POST/admin/user/admin/delete': ResSelector<IModels['POST/admin/user/admin/delete']['Res']>
+  'GET/admin/column/list': ResSelector<IModels['GET/admin/column/list']['Res']>
+  'POST/admin/column/delete': ResSelector<IModels['POST/admin/column/delete']['Res']>
+  'POST/admin/column/add': ResSelector<IModels['POST/admin/column/add']['Res']>
+  'POST/admin/column/update': ResSelector<IModels['POST/admin/column/update']['Res']>
+  'GET/admin/role/list': ResSelector<IModels['GET/admin/role/list']['Res']>
+  'POST/admin/role/add': ResSelector<IModels['POST/admin/role/add']['Res']>
+  'POST/admin/role/update': ResSelector<IModels['POST/admin/role/update']['Res']>
+  'POST/admin/role/delete': ResSelector<IModels['POST/admin/role/delete']['Res']>
+  'GET/admin/role/info': ResSelector<IModels['GET/admin/role/info']['Res']>
 }
 
 export function createFetch(fetchConfig: commonLib.RequesterOption, extraConfig?: {fetchType?: commonLib.FetchType}) {
@@ -3111,6 +3371,207 @@ export function createFetch(fetchConfig: commonLib.RequesterOption, extraConfig?
         params: req,
         extra,
       }) as Promise<IResponseTypes['GET/admin/system/log/login']>
+    },
+
+    /**
+     * 接口名：后台用户列表
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316171
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'GET/admin/user/admin/list': (req?: IModels['GET/admin/user/admin/list']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/user/admin/list',
+        method: 'GET',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['GET/admin/user/admin/list']>
+    },
+
+    /**
+     * 接口名：增加用户
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316349
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/user/admin/add': (req?: IModels['POST/admin/user/admin/add']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/user/admin/add',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/user/admin/add']>
+    },
+
+    /**
+     * 接口名：更新用户
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316398
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/user/admin/update': (
+      req?: IModels['POST/admin/user/admin/update']['Req'],
+      extra?: commonLib.IExtra
+    ) => {
+      return rapperFetch({
+        url: '/admin/user/admin/update',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/user/admin/update']>
+    },
+
+    /**
+     * 接口名：删除用户
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316400
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/user/admin/delete': (
+      req?: IModels['POST/admin/user/admin/delete']['Req'],
+      extra?: commonLib.IExtra
+    ) => {
+      return rapperFetch({
+        url: '/admin/user/admin/delete',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/user/admin/delete']>
+    },
+
+    /**
+     * 接口名：菜单列表
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316407
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'GET/admin/column/list': (req?: IModels['GET/admin/column/list']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/column/list',
+        method: 'GET',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['GET/admin/column/list']>
+    },
+
+    /**
+     * 接口名：删除菜单
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316409
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/column/delete': (req?: IModels['POST/admin/column/delete']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/column/delete',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/column/delete']>
+    },
+
+    /**
+     * 接口名：增加菜单
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316414
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/column/add': (req?: IModels['POST/admin/column/add']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/column/add',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/column/add']>
+    },
+
+    /**
+     * 接口名：更新菜单
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316415
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/column/update': (req?: IModels['POST/admin/column/update']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/column/update',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/column/update']>
+    },
+
+    /**
+     * 接口名：角色列表
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316489
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'GET/admin/role/list': (req?: IModels['GET/admin/role/list']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/role/list',
+        method: 'GET',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['GET/admin/role/list']>
+    },
+
+    /**
+     * 接口名：增加角色
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316490
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/role/add': (req?: IModels['POST/admin/role/add']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/role/add',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/role/add']>
+    },
+
+    /**
+     * 接口名：更新角色
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316491
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/role/update': (req?: IModels['POST/admin/role/update']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/role/update',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/role/update']>
+    },
+
+    /**
+     * 接口名：删除角色
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2316492
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'POST/admin/role/delete': (req?: IModels['POST/admin/role/delete']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/role/delete',
+        method: 'POST',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['POST/admin/role/delete']>
+    },
+
+    /**
+     * 接口名：获取角色详情
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2317297
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'GET/admin/role/info': (req?: IModels['GET/admin/role/info']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/role/info',
+        method: 'GET',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['GET/admin/role/info']>
     },
   }
 }

@@ -73,3 +73,24 @@ export const deleteGoodsAttr = (data: IModels['POST/admin/goods/attr/delete']['R
 export const getWebsite = () => fetch('GET/admin/system/web/config/info', {})
 export const updateWebsite = (data: IModels['POST/admin/system/web/config/update']['Req']) => fetch('POST/admin/system/web/config/update', data)
 export const getLogLogin = (data: IModels['GET/admin/system/log/login']['Req']) => fetch('GET/admin/system/log/login', data)
+
+/**
+ * 权限
+ */
+
+// 菜单
+export const getColumnList = (data: IModels['GET/admin/column/list']['Req'] = {}) => fetch('GET/admin/column/list', data)
+export const addeColumn = (data: IModels['POST/admin/column/add']['Req']) => fetch('POST/admin/column/add', data)
+export const updateColumn = (data: IModels['POST/admin/column/update']['Req']) => fetch('POST/admin/column/update', data)
+export const deleteColumn = (data: IModels['POST/admin/column/delete']['Req']) => fetch('POST/admin/column/delete', data)
+// 管理员
+export const getAdminUserList = (data: IModels['GET/admin/user/admin/list']['Req']) => fetch('GET/admin/user/admin/list', data)
+export const addAdminUser = (data: IModels['POST/admin/user/admin/add']['Req']) => fetch('POST/admin/user/admin/add', data)
+export const updateAdminUser = (data: IModels['POST/admin/user/admin/update']['Req']) => fetch('POST/admin/user/admin/update', data)
+export const deleteAdminUser = (data: IModels['POST/admin/user/admin/delete']['Req']) => fetch('POST/admin/user/admin/delete', data)
+// 角色
+export const getRoleList = () => fetch('GET/admin/role/list', {})
+export const getRoleInfo = (data: IModels['GET/admin/role/info']['Req']) => fetch('GET/admin/role/info', data)
+export const addRole = (data: IModels['POST/admin/role/add']['Req']) => fetch('POST/admin/role/add', data)
+export const updateRole = (data: IModels['POST/admin/role/update']['Req']) => fetch('POST/admin/role/update', data)
+export const deleteRole = (data: IModels['POST/admin/role/delete']['Req']) => fetch('POST/admin/role/delete', data)

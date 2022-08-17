@@ -21,6 +21,13 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
     (response) => {
+        const message = response.data.message
+        if (response.data.code === 200 && message) {
+            ElMessage({
+                type: 'success',
+                message: message,
+            })
+        }
         if (response.data.code === 401) {
             ElMessage({
                 type: 'error',

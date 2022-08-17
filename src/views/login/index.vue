@@ -25,12 +25,10 @@
     </div>
 </template>
 <script setup lang="ts">
-// @ts-ignore
-import { reactive, ref } from 'vue'
-import { login } from '../../api/getData'
+import { reactive } from 'vue'
+import { login } from '@/api/getData'
 import { useRouter } from 'vue-router'
-import { ElNotification } from 'element-plus'
-import { useStore } from '../../store/index'
+import { useStore } from '@/store/index'
 
 let account = reactive({
     username: '',
@@ -41,24 +39,19 @@ let store = useStore()
 let router = useRouter()
 
 const onLogin = async() => {
-    try {
-        const loginInfo = await login(account)
-        store.updateUser({
-            username: loginInfo.username
-        })
-        window.localStorage.setItem('token', loginInfo.token)
-        router.push({ name: 'index' })
-    } catch (e: any) {
-        ElNotification({
-            title: '提示',
-            message: e.error,
-            type: 'warning'
-        })
-    }
+    const loginInfo = await login(account)
+    store.updateUser({
+        username: loginInfo.username
+    })
+    window.localStorage.setItem('token', loginInfo.token)
+    router.push({ path: loginInfo.url })
 }
 </script>
 
 <style lang="less" scoped>
+:deep(.el-input__wrapper) {
+    box-shadow: none;
+}
 .login {
     .box {
         width: 1200px;

@@ -42,7 +42,7 @@ const store = useStore()
 let init = ref(false)
 let userInfoRef = ref()
 let passwordRef = ref()
-let navIndex = ref('/')
+let navIndex = ref('/index')
 let userInfo = ref<UserInfoModel>({
     username: '',
     realName: '',
@@ -84,10 +84,12 @@ const getUser = async() => {
 const handleSelect = async(key: string) => {
     let find = group.value.find(item => item.url === key)
     if (find) {
+        setMentList(find.url)
         router.push({
             path: find.url
         })
     }
+    
 
     switch (key) {
         case 'userInfo':

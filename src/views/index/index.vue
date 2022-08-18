@@ -17,7 +17,6 @@ const store = useStore()
 .index-container {
     background: #f5f5f5;
     .top {
-        padding: 0 40px;
         padding-bottom: 50px;
         background: #fff;
         .title {

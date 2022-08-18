@@ -1,11 +1,10 @@
 <template>
-    <el-aside width="200px" v-if="init">
+    <el-aside width="200px">
         <el-menu 
-            ref="menuRef" 
             router 
             :default-active="asideIndex" 
         >
-            <el-sub-menu :index="item.id" :key="item.id" v-for="item in menuList">
+            <el-sub-menu :index="String(item.id)" :key="item.id" v-for="item in menuList">
                 <template #title>
                     <span>{{item.name}}</span>
                 </template>
@@ -23,11 +22,8 @@ import { useRoute } from 'vue-router'
 
 const store = useStore()
 let route = useRoute()
-let menuRef = ref()
-let init = ref(true)
 
 const menuList = computed(() => {
-    menuRef.value && menuRef?.value?.close()
     return store.menuList
 })
 

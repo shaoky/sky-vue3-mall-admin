@@ -3,7 +3,7 @@
         <web-header></web-header>
         <div class="mainBody" id="mainBody">
             <Menu v-if="$route.name !== 'index'"></Menu>
-            <div class="right-main">
+            <div class="right-main" :class="{ 'index' : $route['name'] === 'index' }">
                 <router-view />
             </div>
         </div>
@@ -37,6 +37,9 @@ import Menu from '../components/menu.vue'
         flex: 1;
         padding: 0 40px 40px 240px;
         background: #fff;
+        &.index {
+            padding: 0 40px 40px 40px;
+        }
     }
 }
 

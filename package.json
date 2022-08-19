@@ -5,6 +5,7 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
+    "report": "vite build",
     "rapper": "rapper --type normal --rapperPath \"src/rapper\" --apiUrl \"http://rap2api.taobao.org/repository/get?id=295591&token=PJefHz97_pY1lJnbf8Pwa-E0tCeWo_bc\" --rapUrl \"http://rap2.taobao.org\""
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "@vue/compiler-sfc": "^3.0.5",
     "less": "^4.1.1",
     "less-loader": "^9.0.0",
+    "rollup-plugin-visualizer": "^5.7.1",
     "typescript": "^4.7.4",
     "vite": "^3.0.5",
     "vite-plugin-style-import": "^0.10.0",

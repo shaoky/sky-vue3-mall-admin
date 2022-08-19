@@ -42,7 +42,7 @@ const store = useStore()
 let init = ref(false)
 let userInfoRef = ref()
 let passwordRef = ref()
-let navIndex = ref('/index')
+let navIndex = ref('/index') // 导航栏默认选中状态
 let userInfo = ref<UserInfoModel>({
     username: '',
     realName: '',
@@ -66,16 +66,12 @@ const getUser = async() => {
     store.updateUser({
         username: data.username
     })
-    // 获取当前页面url的第一层
-    for(let item of userInfo.value.columnList) {
-        for(let item1 of item.children) {
-            for (let item2 of item1.children) {
-                if (item2.url === route.path) {
-                    navIndex.value = item.url
-                    break
-                }
-            }
-        }
+    store.updateMent(userInfo.value.columnList)
+   
+    const title = route.matched[0].meta.title
+    const find = userInfo.value.columnList.find(item => item.name === title)
+    if (find) {
+        navIndex.value = find.url
     }
     setMentList(navIndex.value)
     init.value = true
@@ -89,7 +85,6 @@ const handleSelect = async(key: string) => {
             path: find.url
         })
     }
-    
 
     switch (key) {
         case 'userInfo':
@@ -109,9 +104,12 @@ const handleSelect = async(key: string) => {
     }
 }
 
+/**
+ * 设置左边列表
+ */
 const setMentList = (path: string) => {
-    const menuList = userInfo.value.columnList.find(item => item.url === path)?.children
-    menuList && store.updateMent(menuList)
+    let menuList = userInfo.value.columnList.find(item => item.url === path)?.children || []
+    menuList && store.updateMentAside(menuList)
 } 
 </script>
 
@@ -146,37 +144,32 @@ const setMentList = (path: string) => {
         }
     }
 }
-</style>
 
-<style lang="less">
-/*
- * 导航样式覆盖
- */
-
-// 默认颜色
-.el-menu--horizontal>.el-menu-item {
+:deep(.el-menu--horizontal>.el-menu-item) {
     padding: 0 10px;
-    margin: 0 21px!important;
-    color: #fff!important;
+    margin: 0 21px;
+    color: #fff;
     font-size: 16px;
+    &.is-active {
+        color: #fff!important;
+    }
+    &:hover {
+        color: #fff!important;
+    }
+    .el-sub-menu__title {
+        color: #fff!important; font-size: 16px;
+    }
 }
-// 选中颜色
-.el-menu--horizontal>.el-menu-item.is-active {
-    color: #fff!important;
-    opacity: .8;
-    border-bottom: 2px solid #fff;
+.el-menu-item:focus, .el-menu-item:hover{
+    background-color: transparent!important;
 }
-.el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover{color: #fff;}
-// 选中背景颜色
-.el-menu--horizontal>.el-menu-item:hover{background-color: transparent!important;}
-.el-menu-item:focus, .el-menu-item:hover{background-color: transparent!important;}
-// 二级下拉
-.el-menu--horizontal>.el-sub-menu.is-active .el-submenu__title{opacity: .8; color: #fff;}
-.el-menu--horizontal>.el-sub-menu .el-sub-menu__title{color: #fff!important; font-size: 16px;} // 文字
-.el-menu--horizontal>.el-sub-menu .el-sub-menu__title:hover{opacity: .8; background-color: transparent!important; color: #fff!important;}
-.el-menu--horizontal .el-sub-menu__title i{color: #fff;} // 箭头
-.el-menu--horizontal .el-menu .el-menu-item, .el-menu--horizontal .el-menu .el-submenu__title{color: #303133;}
-.el-menu--horizontal .el-menu .el-menu-item, .el-menu--horizontal .el-menu .el-submenu__title:hover{color: #303133;}
-.el-menu--horizontal .el-menu .el-menu-item:hover{color: #f00!important;} // 鼠标经过
-.el-menu--horizontal .el-menu .el-menu-item.is-active, .el-menu--horizontal .el-menu .el-submenu__title:hover{color: #f00;} // 选中
+:deep(.el-menu--horizontal>.el-sub-menu .el-sub-menu__title){
+    color: #fff;
+    font-size: 16px;
+    &:hover {
+        opacity: .8;
+        background-color: transparent; 
+        color: #fff;
+    }
+}
 </style>

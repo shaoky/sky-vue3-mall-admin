@@ -58,11 +58,17 @@ const routes: Array<RouteRecordRaw> = [
                     },
                     {
                         path: '/business/ad/add',
+                        meta: {
+                            title: '添加广告'
+                        },
                         component: () => import("@/views/business/ad/info.vue"),
                     },
                     {
                         path: '/business/ad/info/:id',
                         name: 'adInfo',
+                        meta: {
+                            title: '编辑广告'
+                        },
                         component: () => import("@/views/business/ad/info.vue"),
                     },
                     {

@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import pullAll from 'lodash/pullAll'
 
 interface GoodsSpec {
     name: string;
@@ -149,7 +150,7 @@ export default function useGoodsSpec() {
     const deleteSpec = () => {
         for (let item of state.goodsSpecList) {
             if (item.name === state.goodsSku.specList.name) {
-                _.pullAll(item.content, state.goodsSku.delSpec)
+                pullAll(item.content, state.goodsSku.delSpec)
             }
         }
 
@@ -178,14 +179,14 @@ export default function useGoodsSpec() {
                 }
             }
         }
-        _.pullAll(state.goodsSpecList, arr)
+        pullAll(state.goodsSpecList, arr)
         onSpec()
         state.deleteGoodsAttrVisible = false
     }
 
     const openSkuImage = () => {
-        state.goodsSku.saveGoodsSpecList = _.cloneDeep(state.goodsSpecList)
-        state.goodsSku.setGoodsSkuList = _.cloneDeep(state.goodsSkuList)
+        state.goodsSku.saveGoodsSpecList = cloneDeep(state.goodsSpecList)
+        state.goodsSku.setGoodsSkuList = cloneDeep(state.goodsSkuList)
         state.goodsSku.addAttrImage = state.goodsSpecList.findIndex(item => item.images.length > 0)
         state.addGoodsSkuImageVisible = true
     }
@@ -209,7 +210,7 @@ export default function useGoodsSpec() {
     }
 
     const addGoodsSkuImage = () => {
-        state.goodsSkuList = _.cloneDeep(state.goodsSku.setGoodsSkuList)
+        state.goodsSkuList = cloneDeep(state.goodsSku.setGoodsSkuList)
         state.addGoodsSkuImageVisible = false
     }
 

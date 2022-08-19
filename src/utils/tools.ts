@@ -17,13 +17,13 @@ export const deleteChildren = (data) => {
  * @param filed 要查询的字段
  * @returns 
  */
-export const getParent = (list, value: string, filed: string) => {
+export const getParent = (list, value: string, filed: string, level = 1) => {
     for(let item of list) {
-        if (item[filed] === value) {
+        if (item[filed] === value && level > 1) {
             // delete item.children
             return [item]
         }
-        let arr = getParent(item.children, value, filed)
+        let arr = getParent(item.children, value, filed, level+1)
         if (arr) {
             // delete item.children
             return [...arr, item]

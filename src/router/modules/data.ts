@@ -4,7 +4,7 @@ import { RouteRecordRaw } from "vue-router"
  */
 const routes: Array<RouteRecordRaw> = [
     {
-        path: '',
+        path: '/data',
         meta: {
             title: '数据管理'
         },

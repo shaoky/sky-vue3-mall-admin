@@ -12,11 +12,9 @@ for(let item in modulesFiles) {
 const routes: Array<RouteRecordRaw> = [
     {
         path: "/",
+        name: 'login',
         component: () => import("../views/login/index.vue"),
     },
-    /**
-     * 首页
-     */
     {
         name: 'index',
         meta: {

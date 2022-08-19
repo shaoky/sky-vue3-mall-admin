@@ -42,7 +42,6 @@
 import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue'
 import { getGoodsSpecList, addGoodsSpec, updateGoodsSpec, deleteGoodsSpec } from '@/api/getData'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import { Models } from '@/rapper'
 
 export default defineComponent({
@@ -89,17 +88,8 @@ export default defineComponent({
                     name: state.form.name,
                     sort: state.form.sort
                 })
-                ElMessage({
-                    type: 'success',
-                    message: '更新成功',
-                })
             } else {
                 await addGoodsSpec(state.form)
-                ElMessage({
-                    type: 'success',
-                    message: '添加成功',
-                })
-               
             }
             state.dialogVisible = false
             _getGoodsAttrList()
@@ -108,10 +98,6 @@ export default defineComponent({
         const onDelete = async(id: number) => {
             await deleteGoodsSpec({id})
             _getGoodsAttrList()
-            ElMessage({
-                type: 'success',
-                message: '删除成功',
-            })
         }
 
         return {

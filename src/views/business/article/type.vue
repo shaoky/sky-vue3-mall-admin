@@ -81,16 +81,7 @@ export default defineComponent({
                 type: 'warning',
             })
             .then(async() => {
-                try {
-                    await deleteArticleType({id: id})
-                    ElMessage({
-                        type: 'info',
-                        message: '已取消删除',
-                    })
-                } catch (err) {
-                    console.log(err)
-                }
-
+                await deleteArticleType({id: id})
                 _getArticleTypeList()
             })
         }
@@ -103,16 +94,8 @@ export default defineComponent({
         const onSubmit = async () => {
             if (!state.form.id) {
                 await addArticleType(state.form)
-                ElMessage({
-                    type: 'success',
-                    message: '添加成功',
-                })
             } else {
                 await updateArticleType(state.form)
-                ElMessage({
-                    type: 'success',
-                    message: '添加成功',
-                })
             }
             state.dialogVisible = false
             _getArticleTypeList()

@@ -58,7 +58,7 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getGoodsListApi, getGoodsTypeListApi, deleteGoods, setGoodsIsOpen } from '../../../api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import Pagination from '../../../components/pagination.vue'
 import { deleteChildren } from '../../../utils/tools'
 import { Models } from '@/rapper'
@@ -107,16 +107,7 @@ export default defineComponent({
                 type: 'warning',
             })
             .then(async() => {
-                try {
-                    await deleteGoods({id: id})
-                    ElMessage({
-                        type: 'info',
-                        message: '已删除',
-                    });
-                } catch (err) {
-                    console.log(err)
-                }
-
+                await deleteGoods({id: id})
                 getGoodsList()
             })
         }
@@ -142,11 +133,6 @@ export default defineComponent({
                 isOpen: data.isOpen ? 0 : 1
             })
             data.isOpen = !data.isOpen
-            ElMessage({
-                type: 'success',
-                message: '操作成功',
-            })
-
         }
 
         return {

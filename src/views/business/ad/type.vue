@@ -57,7 +57,7 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getAdPositionListApi, delAdPosition, addAdPosition, updateAdPosition } from '@/api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { Models } from '@/rapper'
 
 type adModel = Models['GET/admin/ad/position/list']['Res']['data']['list'][0]
@@ -90,10 +90,6 @@ export default defineComponent({
             })
             .then(async() => {
                 await delAdPosition({id})
-                ElMessage({
-                    type: 'info',
-                    message: '已取消删除',
-                })
                 getAdPosition()
             })
         }
@@ -106,18 +102,8 @@ export default defineComponent({
         const onSubmit = async () => {
             if (!state.form.id) {
                 await addAdPosition(state.form)
-                ElMessage({
-                    type: 'success',
-                    message: '添加成功',
-                })
-               
             } else {
                 await updateAdPosition(state.form)
-                ElMessage({
-                    type: 'success',
-                    message: '更新成功',
-                })
-                state.dialogVisible = false
             }
             state.dialogVisible = false
             getAdPosition()

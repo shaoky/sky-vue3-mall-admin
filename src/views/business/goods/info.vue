@@ -214,7 +214,6 @@ import { getGoodsTypeListApi, goodsGoodsInfo, addGoods, updateGoods, getGoodsTyp
 import ueditor from '../../../components/ueditor.vue'
 // import region from '@/components/common/region'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import { deleteChildren } from '../../../utils/tools'
 import useGoodsSpec from './composables/useGoodsSpec'
 import { Models } from '@/rapper'
@@ -381,30 +380,11 @@ export default defineComponent({
             // })
 
             if (state.id) {
-                try {
-                    await updateGoods(form)
-                    ElMessage({
-                        type: 'info',
-                        message: '修改成功',
-                    });
-                    window.history.back()
-                } catch (err) {}
-                
+                await updateGoods(form)
             } else {
-                try {
-                    await addGoods(form)
-                    ElMessage({
-                        type: 'info',
-                        message: '添加成功',
-                    });
-                    window.history.back()
-                } catch (err: any) {
-                    ElMessage({
-                        type: 'error',
-                        message: err.data,
-                    });
-                }
+                await addGoods(form)
             }
+            window.history.back()
         }
 
         return {

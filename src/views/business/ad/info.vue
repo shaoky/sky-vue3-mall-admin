@@ -42,7 +42,6 @@
 
             <div class="btn">
                 <el-button type="primary" @click="onSubmit">保存</el-button>
-                <el-button type="primary">删除</el-button>
             </div>
         </el-form>
     </div>
@@ -54,7 +53,6 @@ import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { imgBaseUrl } from '../../../config/env'
 import { getAdPositionListApi, addAd, updateAd, getAdInfoApi } from '../../../api/getData'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import { Models } from '@/rapper'
 
 export default defineComponent({
@@ -105,20 +103,10 @@ export default defineComponent({
         const onSubmit = async () => {
             if (state.id) {
                 await updateAd(state.form)
-                ElMessage({
-                    type: 'info',
-                    message: '修改成功',
-                });
-                window.history.back()
-               
             } else {
                 await addAd(state.form)
-                ElMessage({
-                    type: 'info',
-                    message: '添加成功',
-                });
-                window.history.back()
             }
+             window.history.back()
         }
 
         return {

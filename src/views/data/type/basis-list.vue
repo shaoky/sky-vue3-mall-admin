@@ -116,16 +116,7 @@ export default defineComponent({
                 type: 'warning',
             })
             .then(async() => {
-                try {
-                    await deleteGoodsType({id: id})
-                    ElMessage({
-                        type: 'info',
-                        message: '已删除',
-                    })
-                } catch (err) {
-                    console.log(err)
-                }
-
+                await deleteGoodsType({id: id})
                 getGoodsTypeList()
             })
         };
@@ -144,10 +135,6 @@ export default defineComponent({
                     isOpen: state.form.isOpen,
                     parentId: state.form.parentId
                 })
-                ElMessage({
-                    type: 'success',
-                    message: '添加成功',
-                })
             } else {
                 await updateGoodsType({
                     id: state.form.id!,
@@ -155,10 +142,6 @@ export default defineComponent({
                     imageUrl: state.form.imageUrl,
                     sort: state.form.sort,
                     isOpen: state.form.isOpen
-                })
-                ElMessage({
-                    type: 'success',
-                    message: '修改成功',
                 })
             }
             state.dialogVisible = false

@@ -48,7 +48,7 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getAdPositionListApi, getAdListApi, delAd } from '@/api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import Pagination from '@/components/pagination.vue'
 import { Models } from '@/rapper'
 
@@ -97,16 +97,7 @@ export default defineComponent({
                 type: 'warning',
             })
             .then(async() => {
-                try {
-                    await delAd({id: id})
-                    ElMessage({
-                        type: 'info',
-                        message: '已删除',
-                    })
-                } catch (err) {
-                    console.log(err)
-                }
-
+                await delAd({id: id})
                 getAdPosition()
             })
         }

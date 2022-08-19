@@ -51,7 +51,6 @@
 import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue'
 import { getGoodsAttrList, addGoodsAttr, updateGoodsAttr, deleteGoodsAttr } from '@/api/getData'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import { Models } from '@/rapper'
 
 type GoodsAttr = Models['GET/admin/goods/attr/list']['Res']['data']['list'][0]
@@ -106,16 +105,8 @@ export default defineComponent({
                     sort: state.form.sort,
                     type: state.form.type
                 })
-                ElMessage({
-                    type: 'success',
-                    message: '更新成功',
-                })
             } else {
                 await addGoodsAttr(state.form)
-                ElMessage({
-                    type: 'success',
-                    message: '添加成功',
-                })
                
             }
             state.dialogVisible = false
@@ -125,10 +116,6 @@ export default defineComponent({
         const onDelete = async(id: number) => {
             await deleteGoodsAttr({id})
             _getGoodsAttrList()
-            ElMessage({
-                type: 'success',
-                message: '删除成功',
-            })
         }
 
         return {

@@ -41,7 +41,6 @@ import { imgBaseUrl } from '../../../config/env'
 import { getArticleTypeList, addArticle, updateArticle, getArticleInfoApi } from '../../../api/getData'
 import ueditor from '../../../components/ueditor.vue'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import { Models } from '@/rapper'
 
 export default defineComponent({
@@ -86,29 +85,9 @@ export default defineComponent({
             // @ts-ignore
             state.form.content = ue.value.content
             if (state.id) {
-                try {
-                    await updateArticle(state.form)
-                    ElMessage({
-                        type: 'info',
-                        message: '修改成功',
-                    });
-                    window.history.back()
-                } catch (err) {}
-                
+                await updateArticle(state.form)
             } else {
-                try {
-                    await addArticle(state.form)
-                    ElMessage({
-                        type: 'info',
-                        message: '添加成功',
-                    });
-                    window.history.back()
-                } catch (err: any) {
-                    ElMessage({
-                        type: 'error',
-                        message: err.data,
-                    });
-                }
+                await addArticle(state.form)
             }
         }
 

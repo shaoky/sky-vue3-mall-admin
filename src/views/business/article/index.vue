@@ -48,7 +48,7 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue';
 import { getArticleListApi, getArticleTypeList, deleteArticle } from '../../../api/getData'
-import { ElMessageBox, ElMessage } from 'element-plus';
+import { ElMessageBox } from 'element-plus';
 import Pagination from '../../../components/pagination.vue';
 import { Models } from '@/rapper'
 
@@ -94,16 +94,7 @@ export default defineComponent({
                 type: 'warning',
             })
             .then(async() => {
-                try {
-                    await deleteArticle({id: id})
-                    ElMessage({
-                        type: 'info',
-                        message: '已删除',
-                    });
-                } catch (err) {
-                    console.log(err)
-                }
-
+                await deleteArticle({id})
                 getArticleList()
             })
         };

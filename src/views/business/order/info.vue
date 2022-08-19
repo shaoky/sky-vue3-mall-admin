@@ -1,5 +1,4 @@
 <template>
-<div>
     <div class="v-title mt20">订单信息</div>
     <el-table class="mt20" :data="options" border>
         <el-table-column label="基础信息">
@@ -19,7 +18,7 @@
                 <el-form label-position="left" class="form-align">
                     <el-form-item label="收货人：">{{order.userName}}</el-form-item>
                     <el-form-item label="手机号：">{{order.userTel}}</el-form-item>
-                    <el-form-item label="收货地址：">{{order.province+order.city+order.county+order.address}}</el-form-item>
+                    <el-form-item label="收货地址：">{{order.province}}{{order.city}}{{order.county}}{{order.address}}</el-form-item>
                 </el-form>
             </template>
         </el-table-column>
@@ -79,74 +78,43 @@
             <el-button type="primary" @click="setDelivery">确 定</el-button>
         </span>
     </el-dialog>
-</div>
-    
-    <!-- <el-table class="mt20" :data="options" border  v-if="order.orderStatus === 3 || order.orderStatus === 4">
-        <el-table-column label="发货信息">
-            <template slot-scope="scope">
-                <el-form  label-position="left" inline  style="color:#999;">
-                    <el-form-item label="快递名称：" >{{order.courierName}}</el-form-item>
-                    <el-form-item label="发货单号：" >{{order.courierNo}}</el-form-item>
-                </el-form>
-            </template>
-        </el-table-column>
-    </el-table> -->
+
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue'
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 import { getOrderInfo, setOrderDelivery } from '../../../api/getData'
 import { useRoute } from 'vue-router'
-import { ElNotification } from 'element-plus'
-import { Models } from '@/rapper'
+import type { Models } from '@/rapper'
 
-export default defineComponent({
-    components: {},
-    setup() {
-        const state = reactive({
-            id: 0,
-            delieryVisible: false,
-            options: [{no: 1}],
-            order: {
-                status: 0
-            } as Models['GET/admin/order/info']['Res']['data']['info'],
-            courier: {
-                courierName: '',
-                courierNo: ''
-            },
-            
-        })
+type OrderModel = Models['GET/admin/order/info']['Res']['data']['info']
 
-        onMounted(() => {
-            initData()
-        })
+let id = ref()
+let delieryVisible = ref(false)
+let options = ref([{no: 1}])
+let order = ref<Partial<OrderModel>>({})
+let courier = ref({
+    courierName: '',
+    courierNo: ''
+})
 
-        const initData = async() => {
-            let params = useRoute().params
-            state.id = +params.id
-            const data = await getOrderInfo({id: Number(params.id)})
-            state.order = data.info
-        }
+onMounted(() => {
+    let params = useRoute().params
+    id.value = +params.id
+    initData()
+})
 
-        const setDelivery = async() => {
-            const data = await setOrderDelivery({id: state.id, ...state.courier})
-            state.delieryVisible = false
-            state.order.status = 3
-            ElNotification({
-                title: '保存成功',
-                message: data as string,
-                type: 'success'
-            })
-            initData()
-        }
+const initData = async() => {
+    const data = await getOrderInfo({id: id.value})
+    order.value = data.info
+}
 
-
-        return {
-           ...toRefs(state),
-           setDelivery
-        };
-     }
-  });
+const setDelivery = async() => {
+    await setOrderDelivery({id: id.value, ...courier.value})
+    delieryVisible.value = false
+    order.value.status = 3
+    initData()
+}
 </script>
 
 <style scoped lang="less">

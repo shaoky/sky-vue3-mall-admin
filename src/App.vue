@@ -1,5 +1,5 @@
 <template>
-	<div class="wrap">
+	<div class="wrap" v-if="isWrap">
         <web-header></web-header>
         <div class="mainBody" id="mainBody">
             <Menu v-if="!isIndex"></Menu>
@@ -8,7 +8,8 @@
                 <router-view />
             </div>
         </div>
-  </div>
+    </div>
+    <router-view v-else />
 </template>
 
 <script lang="ts" setup>
@@ -19,9 +20,17 @@ import Menu from './components/menu.vue'
 import Breadcrumb from '@/components/breadcrumb.vue'
 
 const route = useRoute()
+const noWrap = ['login']
+
 const isIndex = computed(() => {
     return route.name === 'index'
 })
+
+const isWrap = computed(() => {
+    const name = route.name as string
+    return !noWrap.includes(name)
+})
+
 
 </script>
 

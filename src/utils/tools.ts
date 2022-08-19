@@ -9,3 +9,24 @@ export const deleteChildren = (data) => {
         }
     }
 }
+
+/**
+ * 递归查询该节点的所有父级阶段
+ * @param list 
+ * @param value 要查询的值 
+ * @param filed 要查询的字段
+ * @returns 
+ */
+export const getParent = (list, value: string, filed: string) => {
+    for(let item of list) {
+        if (item[filed] === value) {
+            // delete item.children
+            return [item]
+        }
+        let arr = getParent(item.children, value, filed)
+        if (arr) {
+            // delete item.children
+            return [...arr, item]
+        }
+    }
+}

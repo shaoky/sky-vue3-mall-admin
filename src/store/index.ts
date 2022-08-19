@@ -9,7 +9,8 @@ export const useStore = defineStore('main', {
     state: () => {
         return {
             user: {} as User,
-            menuList: [] as MenuModel[]
+            menuList: [] as MenuModel[],
+            menuAsideList: [] as MenuModel[]
         }
     },
     actions: {
@@ -18,6 +19,9 @@ export const useStore = defineStore('main', {
         },
         updateMent(data: MenuModel[]) {
             this.menuList = data
+        },
+        updateMentAside(data: MenuModel[]) {
+            this.menuAsideList = data
         }
     }
 })

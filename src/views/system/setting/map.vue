@@ -1,11 +1,5 @@
 <template>
     <div class="admin-add">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>系统设置</el-breadcrumb-item>
-            <el-breadcrumb-item>{{$route.meta.title}}</el-breadcrumb-item>
-        </el-breadcrumb>
-
         <div id="container" style="width: 60%; height: 400px;"></div> 
         <el-form label-width="160px" style="margin-top: 50px;">
             <el-form-item label="百度X坐标：">
@@ -70,12 +64,7 @@ export default defineComponent({
         }
 
         const onSave = async () => {
-            const data = await updateWebsite(state.website)
-            ElNotification({
-                title: '保存成功',
-                message: data,
-                type: 'success'
-            })
+            await updateWebsite(state.website)
         }
 
         return {

@@ -1,11 +1,5 @@
 <template>
     <div class="articleIndex">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>前台业务</el-breadcrumb-item>
-            <el-breadcrumb-item>产品管理</el-breadcrumb-item>
-            <el-breadcrumb-item>产品列表</el-breadcrumb-item>
-        </el-breadcrumb>
         <el-form :inline="true">
             <el-form-item label="标题：">
                 <el-input v-model="form.title"></el-input>
@@ -76,7 +70,7 @@ export default defineComponent({
             goodsClassId: null as string | null,
             form: {
                 page: 1,
-                size: 20,
+                size: 10,
                 title: '',
                 goodsClassId: undefined,
                 isOpen: undefined
@@ -105,7 +99,6 @@ export default defineComponent({
             deleteChildren(data.list)
             state.categoryList = data.list
         }
-        
 
         const onDelete = (id: number) => {
             ElMessageBox.confirm('确认删除吗?', '提示', {
@@ -144,7 +137,7 @@ export default defineComponent({
         }
 
         const setIsOpen = async(data) => {
-            const res = await setGoodsIsOpen({
+            await setGoodsIsOpen({
                 id: data.id,
                 isOpen: data.isOpen ? 0 : 1
             })
@@ -152,10 +145,9 @@ export default defineComponent({
             ElMessage({
                 type: 'success',
                 message: '操作成功',
-            });
+            })
 
         }
-
 
         return {
             ...toRefs(state),
@@ -165,9 +157,9 @@ export default defineComponent({
             handleCurrentChange,
             handleSizeChange,
             setIsOpen
-        };
+        }
      }
-  });
+  })
 </script>
 
 <style scoped lang="less">

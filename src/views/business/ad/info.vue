@@ -1,11 +1,5 @@
 <template>
     <div class="articleInfo">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>前台业务</el-breadcrumb-item>
-            <el-breadcrumb-item>广告管理</el-breadcrumb-item>
-            <el-breadcrumb-item>{{id ? '广告详情': '新增广告' }}</el-breadcrumb-item>
-        </el-breadcrumb>
         <el-form label-width="120px">
             <el-form-item label="广告标题：">
                 <el-input style="width:300px;" v-model="form.title"></el-input>

@@ -1,11 +1,5 @@
 <template>
     <div class="admin-add">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>系统设置</el-breadcrumb-item>
-            <el-breadcrumb-item>管理员设置</el-breadcrumb-item>
-        </el-breadcrumb>
-
         <el-form label-width="160px">
             <el-form-item label="站点名称：">
                 <el-input style="width:300px;"  v-model="website.webTitle"></el-input>
@@ -79,12 +73,7 @@ const getData = async() => {
 }
 
 const onSave = async() => {
-    const data = await updateWebsite(website.value)
-    ElNotification({
-        title: '保存成功',
-        message: data,
-        type: 'success'
-    })
+    await updateWebsite(website.value)
 }
 
 initData()

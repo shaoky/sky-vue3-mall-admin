@@ -1,12 +1,5 @@
 <template>
     <div class="article-classify">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>前台业务</el-breadcrumb-item>
-            <el-breadcrumb-item>文章管理</el-breadcrumb-item>
-            <el-breadcrumb-item>文章类型</el-breadcrumb-item>
-        </el-breadcrumb>
-
         <el-form :inline="true">
             <el-button type="primary" @click="onEdit({})">新建类型</el-button>
         </el-form>

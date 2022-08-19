@@ -16,7 +16,7 @@
     </el-aside>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useStore } from '@/store'
 import { useRoute } from 'vue-router'
 
@@ -24,7 +24,7 @@ const store = useStore()
 let route = useRoute()
 
 const menuList = computed(() => {
-    return store.menuList
+    return store.menuAsideList
 })
 
 const asideIndex = computed(() => {
@@ -41,7 +41,7 @@ const asideIndex = computed(() => {
     bottom: 0;
     background-color: #fff;
     border: 1px solid #e5e5e5;
-    overflow-x: hidden;
+    overflow-x: hidden!important;
     .el-menu {
         border-right: none;
     }

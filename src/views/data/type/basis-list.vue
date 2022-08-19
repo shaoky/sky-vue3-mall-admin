@@ -1,12 +1,5 @@
 <template>
     <div class="articleIndex">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>数据管理</el-breadcrumb-item>
-            <el-breadcrumb-item>商品数据</el-breadcrumb-item>
-            <el-breadcrumb-item>{{$route.meta.title}}</el-breadcrumb-item>
-        </el-breadcrumb>
-        
         <el-button type="primary" @click="onEdit(bakForm)">新增</el-button>
 
         <el-table class="mt20" border :data="list">
@@ -28,7 +21,7 @@
             <el-table-column label="操作" width="340px">
                 <template #default="scope">
                     <el-button type="primary" link @click="onEdit(scope.row)">编辑</el-button>
-                    <el-button type="primary" link @click="onEdit(scope.row)">添加子类</el-button>
+                    <el-button type="primary" link @click="onEdit({parentId: scope.row.id})">添加子类</el-button>
                     <el-button type="primary" link @click="$router.push({name:'goodsAttr',params:{id:scope.row.id}})">查看属性</el-button>
                     <el-button type="primary" link @click="$router.push({name:'goodsSpec',params:{id:scope.row.id}})">查看规格</el-button>
                     <el-button type="primary" link @click="onDelete(scope.row.id)">删除</el-button>
@@ -148,7 +141,8 @@ export default defineComponent({
                     title: state.form.title,
                     imageUrl: state.form.imageUrl,
                     sort: state.form.sort,
-                    isOpen: state.form.isOpen
+                    isOpen: state.form.isOpen,
+                    parentId: state.form.parentId
                 })
                 ElMessage({
                     type: 'success',

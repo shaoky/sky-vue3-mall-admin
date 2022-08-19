@@ -1,12 +1,5 @@
 <template>
     <div class="article-classify">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>前台业务</el-breadcrumb-item>
-            <el-breadcrumb-item>广告管理</el-breadcrumb-item>
-            <el-breadcrumb-item>广告位置管理</el-breadcrumb-item>
-        </el-breadcrumb>
-
         <el-form :inline="true">
             <el-button type="primary" @click="onEdit({})">新建位置</el-button>
         </el-form>
@@ -72,7 +65,6 @@ type adModel = Models['GET/admin/ad/position/list']['Res']['data']['list'][0]
 export default defineComponent({
     setup() {
         const state = reactive({
-            isAdd: true,
             form: {} as Models['POST/admin/ad/position/update']['Req'],
             list: [] as adModel[],
             dialogVisible: false,

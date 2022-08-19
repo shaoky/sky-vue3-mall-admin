@@ -1,11 +1,5 @@
 <template>
     <div class="articleIndex">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>前台业务</el-breadcrumb-item>
-            <el-breadcrumb-item>文章管理</el-breadcrumb-item>
-            <el-breadcrumb-item>文章列表</el-breadcrumb-item>
-        </el-breadcrumb>
         <el-form :inline="true">
             <el-form-item label="标题：">
                 <el-input v-model="form.title"></el-input>

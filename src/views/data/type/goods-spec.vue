@@ -1,51 +1,42 @@
 <template>
-    <div>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>数据管理</el-breadcrumb-item>
-            <el-breadcrumb-item>基础数据管理</el-breadcrumb-item>
-            <el-breadcrumb-item>{{$route.meta.title}}</el-breadcrumb-item>
-        </el-breadcrumb>
+    <el-button type="primary" @click="onEdit(bakForm)">新增</el-button>
 
-        <el-button type="primary" @click="onEdit(bakForm)">新增</el-button>
+    <el-table class="mt20" border :data="list">
+        <el-table-column label="规格名称" prop="name"></el-table-column>
+        <el-table-column label="可选列表" prop="content"></el-table-column>
+        <el-table-column label="排序" prop="sort" width="80px;"></el-table-column>
+        <el-table-column label="状态" width="80px;">
+            <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
+        </el-table-column>
+        <el-table-column label="操作">
+            <template #default="scope">
+                <el-button type="primary" link @click="onEdit(scope.row)">编辑</el-button>
+                <el-button type="primary" link @click="onDelete(scope.row.id)">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
 
-        <el-table class="mt20" border :data="list">
-            <el-table-column label="规格名称" prop="name"></el-table-column>
-            <el-table-column label="可选列表" prop="content"></el-table-column>
-            <el-table-column label="排序" prop="sort" width="80px;"></el-table-column>
-            <el-table-column label="状态" width="80px;">
-                <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
-            </el-table-column>
-            <el-table-column label="操作">
-                <template #default="scope">
-                    <el-button type="primary" link @click="onEdit(scope.row)">编辑</el-button>
-                    <el-button type="primary" link @click="onDelete(scope.row.id)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-
-        <el-dialog :title="form.id ? '编辑规格' : '新增规格'" v-model="dialogVisible" width="500px" center>
-            <el-form label-width="120px">
-                <el-form-item label="规格名称：">
-                    <el-input style="max-width:300px;" v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="可选值：">
-                    <el-input style="width:300px;" v-model="form.content"></el-input>
-                    多个值用,隔开
-                </el-form-item>
-                <el-form-item label="排序：">
-                    <el-input style="width:300px;" v-model.number="form.sort"></el-input>
-                </el-form-item>
-                <el-form-item label="是否启用：">
-                    <el-checkbox v-model="form.isOpen"></el-checkbox>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onSubmit">确 定</el-button>
-            </span>
-        </el-dialog>
-    </div>
+    <el-dialog :title="form.id ? '编辑规格' : '新增规格'" v-model="dialogVisible" width="500px" center>
+        <el-form label-width="120px">
+            <el-form-item label="规格名称：">
+                <el-input style="max-width:300px;" v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="可选值：">
+                <el-input style="width:300px;" v-model="form.content"></el-input>
+                多个值用,隔开
+            </el-form-item>
+            <el-form-item label="排序：">
+                <el-input style="width:300px;" v-model.number="form.sort"></el-input>
+            </el-form-item>
+            <el-form-item label="是否启用：">
+                <el-checkbox v-model="form.isOpen"></el-checkbox>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="onSubmit">确 定</el-button>
+        </span>
+    </el-dialog>
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue'

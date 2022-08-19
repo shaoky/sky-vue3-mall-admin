@@ -1,10 +1,5 @@
 <template>
     <div class="admin-add">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>系统设置</el-breadcrumb-item>
-            <el-breadcrumb-item>管理员设置</el-breadcrumb-item>
-        </el-breadcrumb>
         <el-table border :data="list">
             <el-table-column label="登陆时间" prop="time"></el-table-column>
             <el-table-column label="用户名" prop="username"></el-table-column>

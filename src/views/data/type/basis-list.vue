@@ -2,13 +2,8 @@
     <div class="articleIndex">
         <el-button type="primary" @click="onEdit(bakForm)">新增</el-button>
 
-        <el-table class="mt20" border :data="list">
-            <el-table-column label="分类名称">
-                <template #default="scope">
-                    <span v-if="scope.row.parentId === 0">{{scope.row.title}}</span>
-                    <span class="sub-type-line" v-else :style="{marginLeft: scope.row.level * 15 + 'px'}">{{scope.row.title}}</span>
-                </template>
-            </el-table-column>
+        <el-table class="mt20" border row-key="id" default-expand-all :data="list">
+            <el-table-column label="分类名称" prop="title"></el-table-column>
             <el-table-column label="排序" prop="sort" width="80px;"></el-table-column>
             <el-table-column label="分类图标" width="180px;">
                 <template #default="scope">
@@ -105,7 +100,7 @@ export default defineComponent({
         })
 
         const getGoodsTypeList = async () => {
-            const data = await getGoodsTypeListApi({type: 1})
+            const data = await getGoodsTypeListApi({type: 2})
             state.list = data.list
         }
 

@@ -5,7 +5,7 @@
                 <el-cascader
                     v-model="form.goodsClassId"
                     :options="classList"
-                    :props="{ value: 'id', label: 'title', expandTrigger: 'hover' }"
+                    :props="{ value: 'id', label: 'title' }"
                     placeholder="请选择"
                     @change="goodsClassIdChange">
                 </el-cascader>
@@ -143,7 +143,7 @@
             <el-form label-width="120px">
                 <el-form-item label="属性名称：">
                     <el-checkbox-group v-model="goodsSku.delAttr">
-                        <el-checkbox :label="item" v-for="(item, index) in goodsSpecList" :key="index">{{item.name}}</el-checkbox>
+                        <el-checkbox :label="item.name" v-for="(item, index) in goodsSpecList" :key="index">{{item.name}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
             </el-form>
@@ -221,6 +221,7 @@ import { Models } from '@/rapper'
 interface bannerModel {
     id?: number;
     url: string;
+    name: string; // el-upload 要求必传
 }
 
 export default defineComponent({
@@ -268,7 +269,8 @@ export default defineComponent({
             state.form = {...data.info} as any
             state.bannerList = data.info.bannerList.map(item => ({
                 id: item.id,
-                url: item.imageUrl
+                url: item.imageUrl,
+                name: ''
             }))
             await goodsClassIdChange([data.info.goodsClassId])
             let goodsAttr = data.info.attr

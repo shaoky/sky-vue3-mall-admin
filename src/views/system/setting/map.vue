@@ -19,7 +19,6 @@
 <script lang="ts">
 import { defineComponent, reactive, onMounted, toRefs } from 'vue'
 import { getWebsite, updateWebsite } from '../../../api/getData'
-import { ElNotification } from 'element-plus'
 
 export default defineComponent({
     setup() {

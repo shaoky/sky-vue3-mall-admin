@@ -11,7 +11,7 @@
                 <el-cascader
                     v-model="goodsClassId"
                     :options="categoryList"
-                    :props="{ value: 'id', label: 'title', expandTrigger: 'hover' }"
+                    :props="{ value: 'id', label: 'title' }"
                     placeholder="请选择"
                     @change="goodsClassIdChange"
                     clearable>
@@ -67,7 +67,7 @@ export default defineComponent({
     components: {Pagination},
     setup() {
         const state = reactive({
-            goodsClassId: null as string | null,
+            goodsClassId: undefined,
             form: {
                 page: 1,
                 size: 10,

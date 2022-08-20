@@ -48,7 +48,7 @@ export default defineComponent({
                 page: 1,
                 size: 20,
                 no: '',
-                status: null as number | null
+                status: 0
             },
             status: [
                 {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}

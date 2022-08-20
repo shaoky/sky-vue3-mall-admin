@@ -63,7 +63,7 @@ export default defineComponent({
                 size: 20,
                 title: '',
                 isOpen: '',
-                positionId: null
+                positionId: undefined
             },
             status: [
                 {label: '全部', value: ''}, {label: '未发布', value: 0}, {label: '已发布', value: 1}

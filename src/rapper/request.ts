@@ -1,4 +1,4 @@
-/* md5: b83eca1550dde74706c398d51cea3134 */
+/* md5: 56e291b92c8bc715311d41d702e40fc3 */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -1277,6 +1277,7 @@ export interface IModels {
       size: number
       no?: string
       title?: string
+      status?: number
     }
     Res: {
       code: number

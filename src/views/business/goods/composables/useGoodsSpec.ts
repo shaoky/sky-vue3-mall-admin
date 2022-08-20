@@ -44,7 +44,7 @@ export default function useGoodsSpec() {
             delSpec: [],
             attrIndex: 0,
             specList: [] as any,
-            delAttr: [] as GoodsSpec[],
+            delAttr: [] as string[],
             saveGoodsSpecList: [] as GoodsSpec[], // 临时保存
             setGoodsSkuList: [] as GoodsSku[], // 临时保存
             addAttrImage: -1,
@@ -171,15 +171,15 @@ export default function useGoodsSpec() {
     }
 
     const deleteAttr = () => {
-        let arr: GoodsSpec[] = []
+        let deleteList: GoodsSpec[] = []
         for (let item of state.goodsSpecList) {
             for (let item1 of state.goodsSku.delAttr) {
-                if (item1.name === item.name) {
-                    arr.push(item)
+                if (item1 === item.name) {
+                    deleteList.push(item)
                 }
             }
         }
-        pullAll(state.goodsSpecList, arr)
+        pullAll(state.goodsSpecList, deleteList)
         onSpec()
         state.deleteGoodsAttrVisible = false
     }

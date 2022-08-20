@@ -2,6 +2,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
 import { visualizer } from 'rollup-plugin-visualizer'
 
 const lifecycle = process.env.npm_lifecycle_event
@@ -17,7 +21,13 @@ export default defineConfig({
     // 打包分析
     lifecycle === 'report'
       ? visualizer({open: true, brotliSize: true, filename: 'report.html'})
-      : null
+      : null,
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),
   ],
   resolve: {
     alias: {

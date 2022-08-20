@@ -2,6 +2,7 @@ import axios from 'axios'
 import router from '../router'
 import { baseURL } from './env'
 import { ElMessage } from 'element-plus'
+import 'element-plus/es/components/message/style/css'
 import { IModels } from '../rapper/request'
 
 const CancelToken = axios.CancelToken

@@ -28,6 +28,7 @@
 import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
+import 'element-plus/es/components/message-box/style/css'
 import { getUserInfo } from '@/api/getData'
 import { useStore } from '@/store/index'
 import UserInfo from './components/userInfo.vue'

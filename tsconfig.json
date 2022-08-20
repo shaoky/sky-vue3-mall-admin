@@ -16,6 +16,7 @@
     //   "webpack-env",
     //   "jest"
     // ],
+    "types": ["element-plus/global"],
     "paths": {
       "@/*": [
         "src/*"

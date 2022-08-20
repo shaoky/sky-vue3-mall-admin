@@ -10,13 +10,13 @@
                         <div class="icon">
                             账号
                         </div>
-                        <el-input v-model="account.username" @keyup.enter.native="login" placeholder="手机号/用户名"></el-input>
+                        <el-input v-model="account.username" @keyup.enter.native="onLogin" placeholder="手机号/用户名"></el-input>
                     </div>
                     <div class="item password">
                         <div class="icon">
                             密码
                         </div>
-                        <el-input v-model="account.password" @keyup.enter.native="login" type="password" placeholder="请输入密码"></el-input>
+                        <el-input v-model="account.password" @keyup.enter.native="onLogin" type="password" placeholder="请输入密码"></el-input>
                     </div>
                 </div>
                 <div class="submit-btn" @click="onLogin">登录</div>

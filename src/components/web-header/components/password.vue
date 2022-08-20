@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import { ElNotification } from 'element-plus'
-import { ref, defineProps, defineExpose } from 'vue'
+import { ref } from 'vue'
 import validator from '@/utils/validator'
 import { resetPassword } from '@/api/getData'
 import { Models } from '@/rapper'

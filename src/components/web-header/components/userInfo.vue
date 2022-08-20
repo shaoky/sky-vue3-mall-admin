@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineExpose } from 'vue'
+import { ref } from 'vue'
 import { Models } from '@/rapper'
 type UserInfoModel = Models['GET/admin/user/admin/info']['Res']['data']
 

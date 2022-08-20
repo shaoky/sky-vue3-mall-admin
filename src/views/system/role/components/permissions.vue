@@ -20,7 +20,7 @@
     </el-drawer>
 </template>
 <script setup lang="ts">
-import { ref, defineExpose, defineEmits, defineProps } from 'vue'
+import { ref, defineEmits } from 'vue'
 import { getColumnList, updateRole } from '@/api/getData'
 import type { Models } from '@/rapper'
 

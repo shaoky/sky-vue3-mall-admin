@@ -23,9 +23,11 @@ export default defineConfig({
       ? visualizer({open: true, brotliSize: true, filename: 'report.html'})
       : null,
     AutoImport({
+      dts: 'src/types/auto-imports.d.ts',
       resolvers: [ElementPlusResolver()],
     }),
     Components({
+      dts: 'src/types/components.d.ts',
       resolvers: [ElementPlusResolver()],
     }),
   ],

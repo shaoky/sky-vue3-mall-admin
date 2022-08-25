@@ -90,6 +90,7 @@ const routes: Array<RouteRecordRaw> = [
                     },
                     {
                         path: '/business/goods/add',
+                        name: 'goodsAdd',
                         meta: { title: '添加产品' },
                         component: () => import("@/views/business/goods/info.vue"),
                     },
@@ -110,7 +111,7 @@ const routes: Array<RouteRecordRaw> = [
                     {
                         path: '/business/order/index',
                         name: 'order',
-                        meta: { title: '订单列表' },
+                        meta: { title: '订单列表', keepAlive: true },
                         component: () => import("@/views/business/order/index.vue"),
                     },
                     {

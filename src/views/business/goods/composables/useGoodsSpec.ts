@@ -133,7 +133,7 @@ export default function useGoodsSpec() {
                     item1.id = item.id
                     item1.price = item.price
                     item1.stock = item.stock
-                    item1.imageUrl = item.imageUrl
+                    // item1.imageUrl = item.imageUrl
                 }
             })
         })
@@ -146,14 +146,14 @@ export default function useGoodsSpec() {
         state.goodsSpecList[state.goodsSku.attrIndex].content.push(state.goodsSku.specName)
         state.addGoodsSpecVisible = false
     }
-
     const deleteSpec = () => {
         for (let item of state.goodsSpecList) {
             if (item.name === state.goodsSku.specList.name) {
                 pullAll(item.content, state.goodsSku.delSpec)
+                pullAll(item.value, state.goodsSku.delSpec)
             }
         }
-
+        onSpec()
         state.deleteGoodsSpecVisible = false
     }
 

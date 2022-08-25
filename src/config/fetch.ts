@@ -3,7 +3,7 @@ import router from '../router'
 import { baseURL } from './env'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
-import { IModels } from '../rapper/request'
+import type { Models } from '../rapper'
 
 const CancelToken = axios.CancelToken
 const source = CancelToken.source()
@@ -48,11 +48,11 @@ axios.interceptors.response.use(
     }
 )
 
-export default async function<T extends keyof IModels> (
+export default async function<T extends keyof Models> (
     url: T,
-    params: IModels[T]['Req']
+    params: Models[T]['Req']
     // @ts-ignore
-) :Promise<IModels[T]['Res']['data']> {
+) :Promise<Models[T]['Res']['data']> {
     return new Promise((resolve, reject) => {
         let method
         const urlRep = url.replace(/GET/g, '')

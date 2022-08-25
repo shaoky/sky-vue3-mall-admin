@@ -66,7 +66,7 @@ const handleAvatarSuccess = (url: string) => {
     form.value.imageUrl = url
 }
 
- const onSubmit = async () => {
+const onSubmit = async () => {
     if (form.value.id) {
         await updateArticleType(form.value)
     } else {

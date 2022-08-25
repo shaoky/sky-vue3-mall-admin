@@ -1,4 +1,4 @@
-/* md5: 56e291b92c8bc715311d41d702e40fc3 */
+/* md5: 71387c3ea62d4fe857425729537dc433 */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -1027,6 +1027,7 @@ export interface IModels {
       isOpen: boolean
       sort: number
       typeId: number
+      content: string
     }
     Res: {
       code: number

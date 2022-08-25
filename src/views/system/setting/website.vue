@@ -17,7 +17,6 @@
                     placeholder="请输入网站描述"
                     v-model="website.webDescription" style="width: 300px;">
                 </el-input>
-                <!-- <el-input style="width:300px;" v-model="website.webDescription"></el-input> -->
             </el-form-item>
             <el-form-item label="联系人：">
                 <el-input style="width:300px;" v-model="website.linkman"></el-input>
@@ -48,7 +47,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { getWebsite, updateWebsite } from '@/api/getData'
-import { ElNotification } from 'element-plus'
 import type { Models } from '@/rapper'
 
 let website = ref<Models['POST/admin/system/web/config/update']['Req']>({
@@ -78,6 +76,3 @@ const onSave = async() => {
 
 initData()
 </script>
-
-<style scoped lang="less">
-</style>

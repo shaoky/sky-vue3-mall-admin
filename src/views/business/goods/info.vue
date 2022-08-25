@@ -207,10 +207,9 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
-import { defineComponent, reactive, onMounted, toRefs, ref, watch } from 'vue';
+import { defineComponent, reactive, onMounted, toRefs, ref } from 'vue';
 import { imgBaseUrl } from '../../../config/env'
-import { getGoodsTypeListApi, goodsGoodsInfo, addGoods, updateGoods, getGoodsTypeInfo } from '../../../api/getData'
+import { getGoodsTypeList, goodsGoodsInfo, addGoods, updateGoods, getGoodsTypeInfo } from '../../../api/getData'
 import ueditor from '../../../components/ueditor.vue'
 // import region from '@/components/common/region'
 import { useRoute } from 'vue-router'
@@ -256,7 +255,7 @@ export default defineComponent({
         onMounted(async() => {
 
             let params = useRoute().params
-            await getGoodsTypeList()
+            await _getGoodsTypeList()
             if (params.id) {
                 state.id = Number(params.id) 
                 await _getGoodsInfo(state.id)
@@ -304,8 +303,8 @@ export default defineComponent({
             }
         }
 
-        const getGoodsTypeList = async () => {
-            const data = await getGoodsTypeListApi({type: 2, isOpen: 1})
+        const _getGoodsTypeList = async () => {
+            const data = await getGoodsTypeList({type: 2, isOpen: 1})
             deleteChildren(data.list)
             state.classList = data.list
         }
@@ -331,11 +330,7 @@ export default defineComponent({
                     item.images = []
                 }
             })
-
-            // const { specList }  = useGoodsSpec(res.goodsSpec)
         }
-
-
 
         const onSubmit = async () => {
             let form = {...state.form}

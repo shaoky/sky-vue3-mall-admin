@@ -32,7 +32,6 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { getRoleList, addRole, deleteRole, updateRole } from '@/api/getData'
 import type { Models } from '@/rapper'
 import Permissions from './components/permissions.vue'
@@ -40,9 +39,7 @@ import Permissions from './components/permissions.vue'
 type RoleModel = Models['POST/admin/role/update']['Req']
 type RoleInfoModel = Models['GET/admin/role/list']['Res']['data']['list'][0]
 
-let route = useRoute()
 let PermissionsRef = ref()
-let parentId = ref(0)
 let roleList = ref<RoleInfoModel[]>([])
 let dialogVisible = ref(false)
 let form = ref<RoleModel>({

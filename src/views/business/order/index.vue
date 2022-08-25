@@ -1,99 +1,46 @@
 <template>
-    <div class="articleIndex">
-        <el-form :inline="true">
-            <el-form-item label="订单号：">
-                <el-input v-model="form.no"></el-input>
-            </el-form-item>
-            <el-form-item label="状态：" >
-                <el-select v-model="form.status" @change="getOrderList" placeholder="请选择状态">
-                    <el-option  v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="getOrderList">查询</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="$router.push({ path: '/business/goods/add' })">新建产品</el-button>
-            </el-form-item>
-        </el-form>
-        <el-table border :data="list">
-            <el-table-column label="订单号" prop="no" width="200"></el-table-column>
-            <el-table-column label="订单类型" prop="statusName"></el-table-column>
-            <el-table-column label="收货人" prop="userName"></el-table-column>
-            <el-table-column label="订单金额" prop="totalMoney"></el-table-column>
-            <el-table-column label="应付金额" prop="payMoney"></el-table-column>
-            <el-table-column label="下单时间" prop="createTime"></el-table-column>
-            <el-table-column label="操作" width="150px;">
-                <template #default="scope">
-                    <el-button @click="$router.push({name:'orderInfo',params:{id: scope.row.id}})" type="primary" link>订单详情</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-         <!-- 分页 -->
-        <pagination @handleCurrentChange='handleCurrentChange' @handleSizeChange="handleSizeChange"  :total="count"></pagination>
-    </div>
+    <Table :api="getOrderList" :search="searchList">
+        <el-table-column label="订单号" prop="no" width="200"></el-table-column>
+        <el-table-column label="订单类型" prop="statusName"></el-table-column>
+        <el-table-column label="收货人" prop="userName"></el-table-column>
+        <el-table-column label="订单金额" prop="totalMoney"></el-table-column>
+        <el-table-column label="应付金额" prop="payMoney"></el-table-column>
+        <el-table-column label="下单时间" prop="createTime"></el-table-column>
+        <el-table-column label="操作" width="150px;">
+            <template #default="scope">
+                <el-button @click="$router.push({name: 'orderInfo', params: {id: scope.row.id}})" type="primary" link>订单详情</el-button>
+            </template>
+        </el-table-column>
+    </Table>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from 'vue'
-import { getOrderListApi } from '../../../api/getData'
-import Pagination from '../../../components/pagination.vue'
-import { Models } from '@/rapper'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import Table from '@/components/table/index.vue'
+import { getOrderList } from '@/api/getData'
+import { SearchModel } from '@/components/search/interface'
 
-export default defineComponent({
-    components: {Pagination},
-    setup() {
-        const state = reactive({
-            form: {
-                page: 1,
-                size: 20,
-                no: '',
-                status: 0
-            },
-            status: [
-                {label: '全部', value: null}, {label: '未发布', value: 0}, {label: '已发布', value: 1}
-            ],
-            list: [] as Models['GET/admin/order/list']['Res']['data']['list'],
-            count: 0,
-            statusList: [
-                {value: 0, label: '全部'}, 
-                {value: 1, label: '未付款'}, 
-                {value: 2, label: '待发货'}, 
-                {value: 3, label: '已发货'}, 
-                {value: 4, label: '交易完成'}, 
-                {value: 7, label: '已取消'}
-            ],
-        })
+let searchList = ref<SearchModel[]>([
+    {
+        label: '订单号',
+        field: 'no',
+        type: 'text',
+        value: '',
+    },
+    {
+        label: '状态',
+        field: 'status',
+        type: 'select',
+        value: '',
+        items: [
+            {value: 0, label: '全部'}, 
+            {value: 1, label: '未付款'}, 
+            {value: 2, label: '待发货'}, 
+            {value: 3, label: '已发货'}, 
+            {value: 4, label: '交易完成'}, 
+            {value: 7, label: '已取消'}
+        ]
+    }
+])
 
-        onMounted(() => {
-            getOrderList()
-        })
-
-        const getOrderList = async () => {
-            const data = await getOrderListApi(state.form)
-            state.list = data.list
-            state.count = data.count
-        }
-
-        const handleCurrentChange = (page: number) => {
-            state.form.page = page
-            getOrderList()
-        }
-
-        const handleSizeChange = (value: number) => {
-            state.form.size = value
-            getOrderList()
-        }
-
-        return {
-            ...toRefs(state),
-            getOrderList,
-            handleCurrentChange,
-            handleSizeChange
-        };
-     }
-  });
 </script>
-
-<style scoped lang="less">
-</style>

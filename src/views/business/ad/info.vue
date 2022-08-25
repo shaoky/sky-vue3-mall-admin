@@ -1,127 +1,110 @@
 <template>
-    <div class="articleInfo">
-        <el-form label-width="120px">
-            <el-form-item label="广告标题：">
-                <el-input style="width:300px;" v-model="form.title"></el-input>
-            </el-form-item>
-            <el-form-item label="广告位置：" >
-                <el-select v-model="form.positionId" placeholder="请选择">
-                    <el-option v-for="(item,index) in positionList" :key="index" :label="item.title" :value="item.id"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="广告类型：">
-                <el-select v-model="form.type" placeholder="请选择">
-                    <el-option v-for="(item,index) in typeList" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-form-item>
-            <!-- <el-form-item label="安卓页面：">
-                <el-input style="width:300px;" v-model="form.androidPage"></el-input>
-            </el-form-item>
-            <el-form-item label="苹果页面：">
-                <el-input style="width:300px;" v-model="form.iosPage"></el-input>
-            </el-form-item> -->
-            <el-form-item label="操作：">
-                <el-input style="width:300px;" v-model="form.operation"></el-input>
-            </el-form-item>
-            <el-form-item label="广告排序：">
-                <el-input style="width:300px;" v-model="form.sort"></el-input>
-            </el-form-item>
-            <el-form-item label="广告图片：">
-                <el-upload
-                    class="avatar-uploader"
-                    :action="imgBaseUrl"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess">
-                    <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
-                    <el-icon v-else class="avatar-uploader-icon" :size="24" color="#8c939d"><Plus /></el-icon>
-                </el-upload>
-            </el-form-item>
-            <el-form-item label="是否启用：">
-                <el-checkbox v-model="form.isOpen"></el-checkbox>
-            </el-form-item>
-
-            <div class="btn">
-                <el-button type="primary" @click="onSubmit">保存</el-button>
-            </div>
-        </el-form>
-    </div>
+    <el-form label-width="120px">
+        <el-form-item label="标题：">
+            <el-input class="info-input-width" v-model="form.title"></el-input>
+        </el-form-item>
+        <el-form-item label="位置：" >
+            <el-select v-model="form.positionId" placeholder="请选择">
+                <el-option 
+                    v-for="item in positionList" 
+                    :key="item.id" 
+                    :label="item.title" 
+                    :value="item.id"
+                ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="类型：">
+            <el-select v-model="form.type" placeholder="请选择">
+                <el-option 
+                    v-for="(item,index) in typeList"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="操作：">
+            <el-input class="info-input-width" v-model="form.operation"></el-input>
+        </el-form-item>
+        <el-form-item label="广告排序：">
+            <el-input class="info-input-width" v-model.number="form.sort"></el-input>
+        </el-form-item>
+        <el-form-item label="图片：">
+            <upload-image :imageUrl="form.imageUrl" @success="handleAvatarSuccess"></upload-image>
+        </el-form-item>
+        <el-form-item label="是否启用：">
+            <el-checkbox v-model="form.isOpen"></el-checkbox>
+        </el-form-item>
+        <div class="btn-submit">
+            <el-button type="primary" @click="onSubmit">保存</el-button>
+        </div>
+    </el-form>
 </template>
 
-<script lang="ts">
-// @ts-ignore
-import { defineComponent, reactive, onMounted, toRefs } from 'vue'
-import { imgBaseUrl } from '../../../config/env'
-import { getAdPositionListApi, addAd, updateAd, getAdInfoApi } from '../../../api/getData'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { getAdPositionList, addAd, updateAd, getAdInfo } from '@/api/getData'
 import { useRoute } from 'vue-router'
-import { Models } from '@/rapper'
+import type { Models } from '@/rapper'
+import UploadImage from '@/components/upload/image.vue'
 
-export default defineComponent({
-    setup() {
-        const state = reactive({
-            imgBaseUrl: imgBaseUrl,
-            id: 0,
-            form: {
-                sort: 10,
-                isOpen: false
-            } as Models['POST/admin/ad/update']['Req'],
-            positionList: [] as Models['GET/admin/ad/position/list']['Res']['data']['list'],
-            typeList: [
-                {label: '网页链接', value: 1},
-                {label: '商品详情', value: 2},
-                // {label: '店铺分享', value: 3},
-                // {label: '抢购详情', value: 4},
-                // {label: '跳转活动页', value: 5},
-                // {label: '待开发中', value: 100},
-                {label: '不跳转', value: -1}
-            ],
-            dialogImageUrl: '',
-            dialogVisible: false
-        })
+type TypeModel = Models['GET/admin/ad/position/list']['Res']['data']['list'][0]
 
-        onMounted(() => {
-            let params = useRoute().params
-            if (params.id) {
-                state.id = Number(params.id) 
-                getAdInfo(state.id)
-            }
-            getAdPosition()
-        })
-
-        const getAdInfo = async (id: number) => {
-            const data = await getAdInfoApi({id: id})
-            state.form = data.info
-        }
-
-        const getAdPosition = async () => {
-            const data = await getAdPositionListApi()
-            state.positionList = data.list
-        }
-        const handleAvatarSuccess = (res) => {
-            state.form.imageUrl = res.data.url
-        }
-
-        const onSubmit = async () => {
-            if (state.id) {
-                await updateAd(state.form)
-            } else {
-                await addAd(state.form)
-            }
-             window.history.back()
-        }
-
-        return {
-            ...toRefs(state),
-            onSubmit,
-            handleAvatarSuccess
-        }
-    }
+const route = useRoute()
+const ue = ref()
+let loading = ref(false)
+let form = ref({
+    id: 0,
+    title: '',
+    imageUrl: '',
+    operation: '',
+    isOpen: true,
+    sort: 10,
+    type: '' as string | number,
+    positionId: '' as string | number
 })
+let positionList = ref<TypeModel[]>([])
+let typeList = ref([
+    {label: '网页链接', value: 1},
+    {label: '商品详情', value: 2},
+    {label: '不跳转', value: -1}
+])
 
+const initData = async() => {
+    await _getAdPositionList()
+    if (route.params.id) {
+        await _getAdInfo(+route.params.id)
+    }
+    loading.value = true
+}
+
+const _getAdInfo = async (id: number) => {
+    const data = await getAdInfo({id})
+    form.value = data.info
+}
+
+const _getAdPositionList = async () => {
+    const data = await getAdPositionList()
+    positionList.value = data.list
+}
+
+const handleAvatarSuccess = (url: string) => {
+    form.value.imageUrl = url
+}
+
+const onSubmit = async () => {
+    const params = {
+        ...form.value,
+        type: +form.value.type,
+        positionId: +form.value.positionId
+    }
+    if (form.value.id) {
+        await updateAd(params)
+    } else {
+        await addAd(params)
+    }
+    window.history.back()
+}
+
+initData()
 </script>
-
-<style scoped>
-.btn{padding-left:120px;}
-</style>
-<style>
-
-</style>

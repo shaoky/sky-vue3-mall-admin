@@ -16,11 +16,21 @@
             >
                 <el-option 
                     v-for="item1 in item.items" 
-                    :key="item1.value" 
-                    :label="item1.label" 
-                    :value="item1.value"
+                    :key="item1.value"
+                    :label="item1[item.props?.label || 'label']" 
+                    :value="item1[item.props?.value || 'value']"
                 ></el-option>
             </el-select>
+            <!-- 级联选择器 -->
+            <el-cascader
+                v-model="search[item.field]"
+                :options="item.items"
+                :props="item.props"
+                placeholder="请选择"
+                @change="onCascaderSearch"
+                clearable
+                v-if="item.type === 'cascader'"
+            ></el-cascader>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="onSearch">查询</el-button>
@@ -50,6 +60,17 @@ watchEffect(() => {
 })
 
 const onSearch = () => {
+    emit('change', search.value)
+}
+
+/**
+ * 级联返回值处理：[1,2,3] => 3
+ */
+const onCascaderSearch = () => {
+    const filters = props.data.filter(item => item.type === 'cascader')
+    filters.forEach(item => {
+        search.value[item.field] = search.value[item.field].at(-1)
+    })
     emit('change', search.value)
 }
 

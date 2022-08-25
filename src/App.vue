@@ -6,7 +6,12 @@
             <div class="right-main" :class="{ 'index' : isIndex }">
                 <Breadcrumb v-if="!isIndex"></Breadcrumb>
                 <el-config-provider :locale="locale">
-                    <router-view />
+                    <router-view v-slot="{ Component }">
+                        <keep-alive>
+                            <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive"></component>
+                        </keep-alive> 
+                        <component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive"></component>
+                    </router-view>
                 </el-config-provider>
             </div>
         </div>

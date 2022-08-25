@@ -29,6 +29,7 @@ import type { SearchModel } from '../search/interface'
 
 interface Props {
     api: (data: any) => Promise<any>
+    apiParams: any
 	pagination?: boolean
     search?: SearchModel[]
 }
@@ -45,7 +46,8 @@ let initParams = ref({})
 
 const props = withDefaults(defineProps<Props>(), {
     pagination: true,
-    search: () => []
+    search: () => [],
+    apiParams: () => {}
 })
 
 const initTableData = async () => {
@@ -57,13 +59,8 @@ const initTableData = async () => {
         }
         // 如果api里有值，就去调用接口
         if (item.api) {
-            const data = await item.api()
-            item.items = data.list.map(item1 => {
-                return {
-                    value: item1[item.props?.value || 'id'],
-                    label: item1[item.props?.label || 'title']
-                }
-            })
+            const data = await item.api(item.params)
+            item.items = data.list
         }
     }
     getTableList()
@@ -71,8 +68,9 @@ const initTableData = async () => {
 
 const getTableList = async() => {
     let data = await props.api({
-        page: paginationData.value.page,
-        size: paginationData.value.size,
+        page: props.pagination ? paginationData.value.page : undefined,
+        size: props.pagination ? paginationData.value.size : undefined,
+        ...props.apiParams,
         ...initParams.value,
         ...params.value
     })

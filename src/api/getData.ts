@@ -4,6 +4,7 @@ import type { Models } from '@/rapper'
 export const login = (data: Models['POST/admin/login']['Req']) => fetch('POST/admin/login', data)
 export const getUserInfo = () => fetch('GET/admin/user/admin/info', {})
 export const resetPassword = (data: Models['POST/admin/user/admin/password']['Req']) => fetch('POST/admin/user/admin/password', data)
+export const getIndex = (data: Models['GET/admin/index']['Req']) => fetch('GET/admin/index', data)
 
 // 广告内容管理
 export const getAdList = (data: Models['GET/admin/ad/list']['Req']) => fetch('GET/admin/ad/list', data)

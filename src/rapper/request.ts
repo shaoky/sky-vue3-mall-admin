@@ -1,4 +1,4 @@
-/* md5: 71387c3ea62d4fe857425729537dc433 */
+/* md5: 53071c60db366c32e25094aad4b73419 */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -1380,6 +1380,38 @@ export interface IModels {
   }
 
   /**
+   * 接口名：首页
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518381&itf=2324257
+   */
+  'GET/admin/index': {
+    Req: {}
+    Res: {
+      code: number
+      data: {
+        list: {
+          date: string
+          orderMoney: string
+          orderNum: number
+          userNum: number
+        }[]
+        pending: {
+          stock: number
+          deliveryOrder: number
+          refundyOrder: number
+        }
+        goodsType: {
+          name: string
+          value: number
+        }[]
+        access: {
+          name: string
+          value: number
+        }[]
+      }
+    }
+  }
+
+  /**
    * 接口名：产品分类列表
    * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518381&itf=2307747
    */
@@ -1704,6 +1736,7 @@ export interface IModels {
           sort: number
           url: string
           children: any[]
+          isVisible: number
         }[]
       }
     }
@@ -1914,6 +1947,7 @@ export interface IModels {
           isOpen: number
           id: number
           url: string
+          isVisible: number
         }[]
       }
     }
@@ -1944,6 +1978,7 @@ export interface IModels {
       isOpen: boolean
       url: string
       parentId: number
+      isVisible: boolean
     }
     Res: {
       code: number
@@ -1963,6 +1998,7 @@ export interface IModels {
       name: string
       url: string
       parentId: number
+      isVisible: boolean
     }
     Res: {
       code: number
@@ -2119,6 +2155,7 @@ export interface IResponseTypes {
   'GET/admin/order/list': ResSelector<IModels['GET/admin/order/list']['Res']>
   'GET/admin/order/info': ResSelector<IModels['GET/admin/order/info']['Res']>
   'POST/admin/order/delivery': ResSelector<IModels['POST/admin/order/delivery']['Res']>
+  'GET/admin/index': ResSelector<IModels['GET/admin/index']['Res']>
   'GET/admin/goods/type/list': ResSelector<IModels['GET/admin/goods/type/list']['Res']>
   'POST/admin/goods/type/add': ResSelector<IModels['POST/admin/goods/type/add']['Res']>
   'POST/admin/goods/type/update': ResSelector<IModels['POST/admin/goods/type/update']['Res']>
@@ -3061,6 +3098,21 @@ export function createFetch(fetchConfig: commonLib.RequesterOption, extraConfig?
         params: req,
         extra,
       }) as Promise<IResponseTypes['POST/admin/order/delivery']>
+    },
+
+    /**
+     * 接口名：首页
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518381&itf=2324257
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'GET/admin/index': (req?: IModels['GET/admin/index']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/index',
+        method: 'GET',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['GET/admin/index']>
     },
 
     /**

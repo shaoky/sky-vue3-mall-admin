@@ -1,7 +1,7 @@
 <template>
     <div class="login">
         <div class="box">
-            <div class="login-title">管理后台</div>
+            <div class="login-title">天空商城管理系统</div>
             <div class="login-title1">为您提供真实可信的数据服务</div>
             <div class="login-box">
                 <div class="box-title">登录账号</div>
@@ -40,10 +40,7 @@ let router = useRouter()
 
 const onLogin = async() => {
     const loginInfo = await login(account)
-    store.updateUser({
-        username: loginInfo.username
-    })
-    window.localStorage.setItem('token', loginInfo.token)
+    store.setToken(loginInfo.token)
     router.push({ path: loginInfo.url })
 }
 </script>

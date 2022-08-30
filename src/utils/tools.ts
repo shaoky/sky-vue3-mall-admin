@@ -30,3 +30,19 @@ export const getParent = (list, value: string, filed: string, level = 1) => {
         }
     }
 }
+
+/**
+ * 树结构扁平化
+ * @param list 列表
+ * @param filed 子节点字段
+ */
+export const treeToArray = (list: object[], filed: string = 'children') => {
+    let result: any = []
+    for (const item of list) {
+        if (item[filed] && item[filed].length) {
+            result = [...result, ...treeToArray(item[filed])]
+        } 
+        result.push(item)
+    }
+    return result
+}

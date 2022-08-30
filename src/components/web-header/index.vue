@@ -1,6 +1,6 @@
 <template>
     <header class="v-header">
-        <div class="logo">后台管理系统</div>
+        <div class="logo">天空商城管理系统</div>
         <div class="nav" v-if="init">
             <el-menu 
                 class="el-menu-demo"
@@ -27,9 +27,8 @@
 <script lang="ts" setup name="hedaer">
 import { onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import 'element-plus/es/components/message-box/style/css'
-import { getUserInfo } from '@/api/getData'
 import { useStore } from '@/store/index'
 import UserInfo from './components/userInfo.vue'
 import Password from './components/password.vue'
@@ -50,10 +49,6 @@ let userInfo = ref<UserInfoModel>({
     columnList: []
 }) // 用户信息
 
-onMounted(() => {
-    getUser()
-})
-
 const group = computed((): any => {
     return userInfo.value.columnList.map(item => ({
         name: item.name,
@@ -61,22 +56,23 @@ const group = computed((): any => {
     }))
 })
 
-const getUser = async() => {
-    const data = await getUserInfo()
-    userInfo.value = data
-    store.updateUser({
-        username: data.username
-    })
-    store.updateMent(userInfo.value.columnList)
-   
+onMounted(() => {
+    userInfo.value.columnList = store.menuList
+    if (route.matched.length === 0) {
+        ElMessage({
+            type: 'error',
+            message: '本地文件路由未注册'
+        })
+        return
+    }
     const title = route.matched[0].meta.title
-    const find = userInfo.value.columnList.find(item => item.name === title)
+    const find = store.menuList.find(item => item.name === title)
     if (find) {
         navIndex.value = find.url
     }
     setMentList(navIndex.value)
     init.value = true
-}
+})
 
 const handleSelect = async(key: string) => {
     let find = group.value.find(item => item.url === key)

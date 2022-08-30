@@ -8,12 +8,17 @@ interface User {
 export const useStore = defineStore('main', {
     state: () => {
         return {
+            token: window.localStorage.getItem('token') || '',
             user: {} as User,
             menuList: [] as MenuModel[],
             menuAsideList: [] as MenuModel[]
         }
     },
     actions: {
+        setToken(token: string) {
+            this.token = token
+            window.localStorage.setItem('token', token)
+        },
         updateUser(user: User) {
             this.user = user
         },

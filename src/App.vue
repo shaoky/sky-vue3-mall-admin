@@ -1,5 +1,5 @@
 <template>
-	<div class="wrap" v-if="isWrap">
+	<div class="wrap" v-if="login">
         <web-header></web-header>
         <div class="mainBody" id="mainBody">
             <Menu v-if="!isIndex"></Menu>
@@ -26,18 +26,19 @@ import WebHeader from '@/components/web-header/index.vue'
 import Menu from './components/menu.vue'
 import Breadcrumb from '@/components/breadcrumb.vue'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import { notLogin } from './router/index'
 
 const route = useRoute()
-const noWrap = ref(['/'])
 const locale = ref(zhCn)
 
 const isIndex = computed(() => {
     return route.name === 'index'
 })
-
-const isWrap = computed(() => {
-    const name = route.path as string
-    return !noWrap.value.includes(name)
+const login = computed(() => {
+    if (notLogin.includes(route.path)) {
+        return false
+    }
+    return true
 })
 
 

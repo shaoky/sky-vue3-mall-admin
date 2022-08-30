@@ -19,12 +19,18 @@
 import { computed } from 'vue'
 import { useStore } from '@/store'
 import { useRoute } from 'vue-router'
+import cloneDeep from 'lodash/cloneDeep'
 
 const store = useStore()
 let route = useRoute()
 
 const menuList = computed(() => {
-    return store.menuAsideList
+    let menuAsideList = cloneDeep(store.menuAsideList)
+    return menuAsideList
+        .filter(item => {
+            item.children = item.children.filter(item => item.isVisible)
+            return item.isVisible
+        })
 })
 
 const asideIndex = computed(() => {

@@ -14,7 +14,7 @@
         <el-table-column label="销量" prop="saleCount" sortable></el-table-column>
         <el-table-column label="库存" prop="stock" sortable></el-table-column>
         <el-table-column label="排序" prop="sort"></el-table-column>
-        <el-table-column label="状态">
+        <el-table-column label="状态" width="80">
             <template #default="scope">
                  <el-switch v-model="scope.row.isOpen" @change="setIsOpen(scope.row)" />
             </template>

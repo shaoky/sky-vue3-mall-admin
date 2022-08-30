@@ -5,7 +5,10 @@
     <el-table border :data="culumnList" row-key="id" default-expand-all class="mt20">
         <el-table-column label="页面名称" prop="name"></el-table-column>
         <el-table-column label="排序" prop="sort"></el-table-column>
-        <el-table-column label="状态">
+        <el-table-column label="显示状态">
+            <template #default="scope">{{$filters.isOpen(scope.row.isVisible)}}</template>
+        </el-table-column>
+        <el-table-column label="启用状态">
             <template #default="scope">{{$filters.isOpen(scope.row.isOpen)}}</template>
         </el-table-column>
         <el-table-column label="操作">
@@ -36,6 +39,9 @@
                     clearable
                 />
             </el-form-item>
+            <el-form-item label="显示状态：">
+                <el-checkbox v-model="form.isVisible"></el-checkbox>
+            </el-form-item>
             <el-form-item label="启用状态：">
                 <el-checkbox v-model="form.isOpen"></el-checkbox>
             </el-form-item>
@@ -50,6 +56,7 @@
 import { onMounted, ref } from 'vue'
 import { getColumnList, deleteColumn, updateColumn, addeColumn } from '@/api/getData'
 import type { Models } from '@/rapper'
+import useMessageBox from '@/hooks/useMessageBox'
 
 type ColumnModel = Models['POST/admin/column/update']['Req']
 type ColumnInfo = Models['GET/admin/column/list']['Res']['data']['list'][0]
@@ -59,6 +66,7 @@ let copyForm = ref<ColumnModel>()
 let form = ref<ColumnModel>({
     id: 0,
     isOpen: false,
+    isVisible: true,
     name: '',
     url: '',
     sort: 10,
@@ -82,6 +90,7 @@ const onEdit = (row) => {
 }
 
 const onDelete = async(id: number) => {
+    await useMessageBox()
     await deleteColumn({id})
     getData()
 }
@@ -104,6 +113,7 @@ const onSubmit = async() => {
             url: form.value.url,
             sort: form.value.sort,
             isOpen: form.value.isOpen,
+            isVisible: form.value.isVisible,
             parentId
         })
     }

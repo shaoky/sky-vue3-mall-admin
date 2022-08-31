@@ -35,7 +35,6 @@ import Password from './components/password.vue'
 import { Models } from '@/rapper'
 
 type UserInfoModel = Models['GET/admin/user/admin/info']['Res']['data']
-
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
@@ -95,6 +94,7 @@ const handleSelect = async(key: string) => {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消'
             }).then(() => {
+                store.clear()
                 window.localStorage.clear()
                 router.push('/')
             })

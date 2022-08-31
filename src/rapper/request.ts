@@ -1,4 +1,4 @@
-/* md5: 53071c60db366c32e25094aad4b73419 */
+/* md5: 72e6f69d597a625387faedb603aa1dba */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -1684,6 +1684,28 @@ export interface IModels {
   }
 
   /**
+   * 接口名：用户列表
+   * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518381&itf=2326616
+   */
+  'GET/admin/user/list': {
+    Req: {
+      page?: number
+      size?: number
+      title?: string
+    }
+    Res: {
+      code: number
+      data: {
+        createTime: string
+        lastLoginTime: string
+        name: string
+        tel: string
+        photo: string
+      }[]
+    }
+  }
+
+  /**
    * 接口名：登录
    * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518383&itf=2308420
    */
@@ -2169,6 +2191,7 @@ export interface IResponseTypes {
   'POST/admin/goods/attr/add': ResSelector<IModels['POST/admin/goods/attr/add']['Res']>
   'POST/admin/goods/attr/update': ResSelector<IModels['POST/admin/goods/attr/update']['Res']>
   'POST/admin/goods/attr/delete': ResSelector<IModels['POST/admin/goods/attr/delete']['Res']>
+  'GET/admin/user/list': ResSelector<IModels['GET/admin/user/list']['Res']>
   'POST/admin/login': ResSelector<IModels['POST/admin/login']['Res']>
   'POST/admin/user/admin/password': ResSelector<IModels['POST/admin/user/admin/password']['Res']>
   'GET/admin/user/admin/info': ResSelector<IModels['GET/admin/user/admin/info']['Res']>
@@ -3326,6 +3349,21 @@ export function createFetch(fetchConfig: commonLib.RequesterOption, extraConfig?
         params: req,
         extra,
       }) as Promise<IResponseTypes['POST/admin/goods/attr/delete']>
+    },
+
+    /**
+     * 接口名：用户列表
+     * Rap 地址: http://rap2.taobao.org/repository/editor?id=295591&mod=518381&itf=2326616
+     * @param req 请求参数
+     * @param extra 请求配置项
+     */
+    'GET/admin/user/list': (req?: IModels['GET/admin/user/list']['Req'], extra?: commonLib.IExtra) => {
+      return rapperFetch({
+        url: '/admin/user/list',
+        method: 'GET',
+        params: req,
+        extra,
+      }) as Promise<IResponseTypes['GET/admin/user/list']>
     },
 
     /**

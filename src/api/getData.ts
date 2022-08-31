@@ -67,6 +67,8 @@ export const addGoodsAttr = (data: Models['POST/admin/goods/attr/add']['Req']) =
 export const updateGoodsAttr = (data: Models['POST/admin/goods/attr/update']['Req']) => fetch('POST/admin/goods/attr/update', data)
 export const deleteGoodsAttr = (data: Models['POST/admin/goods/attr/delete']['Req']) => fetch('POST/admin/goods/attr/delete', data)
 
+// 用户管理
+export const getUserList = (data: Models['GET/admin/user/list']['Req']) => fetch('GET/admin/user/list', data)
 
 /**
  * 系统设置

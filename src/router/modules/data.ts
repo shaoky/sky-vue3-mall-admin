@@ -34,6 +34,19 @@ const routes: Array<RouteRecordRaw> = [
                     },
                 ]
             },
+            {
+                path: '',
+                meta: {
+                    title: '用户管理'
+                },
+                children: [
+                    {
+                        path: '/data/user/index',
+                        meta: { title: '用户列表' },
+                        component: () => import("@/views/data/user/index.vue"),
+                    }
+                ]
+            }
         ]
     }
 ]

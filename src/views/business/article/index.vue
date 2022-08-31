@@ -44,7 +44,11 @@ let searchList = ref<SearchModel[]>([
         field: 'typeId',
         type: 'select',
         value: '',
-        api: getArticleTypeList
+        api: getArticleTypeList,
+        props: {
+            label: 'title',
+            value: 'id'
+        }
     },
     {
         label: '状态',

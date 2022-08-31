@@ -34,6 +34,7 @@ export default defineComponent({
         })
 
         const handleSizeChange = (val) => {
+            state.currentPage = 1
             emit('handleSizeChange', val)
             const box = document.getElementById('mainBody')!
             box.scrollTop = 0

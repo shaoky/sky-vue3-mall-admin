@@ -1,4 +1,4 @@
-/* md5: 72e6f69d597a625387faedb603aa1dba */
+/* md5: 5571369ab79520ea59513631a39cd53a */
 /* Rap仓库id: 295591 */
 /* Rapper版本: 1.3.1 */
 /* eslint-disable */
@@ -1160,19 +1160,9 @@ export interface IModels {
       content: string
       isOpen: boolean
       sort: number
-      createTime: number
       bannerList: {
         id?: number
         imageUrl: string
-      }[]
-      goodsClassIds: number[]
-      goodsSkuList: {
-        id?: number
-        goodsId?: number
-        stock?: number
-        price?: string
-        spec?: string
-        imageUrl?: any[]
       }[]
       sku?: {
         imageUrl?: string
@@ -1217,12 +1207,10 @@ export interface IModels {
           content: string
           isOpen: boolean
           sort: number
-          createTime: number
           bannerList: {
             id: number
             imageUrl: string
           }[]
-          goodsClassIds: number[]
           goodsSkuList: {
             id: number
             goodsId: number

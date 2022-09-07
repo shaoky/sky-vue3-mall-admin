@@ -1,5 +1,5 @@
 <template>
-    <Table 
+    <Table
         :api="getGoodsTypeList"
         :apiParams="{ type: 2 }"
         :pagination="false"

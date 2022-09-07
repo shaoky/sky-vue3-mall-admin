@@ -143,8 +143,3 @@ watchEffect(() => {
 })
 
 </script>
-<style lang="less" scoped>
-:deep(.el-form-item__content) {
-    padding-right: 50px;
-}
-</style>

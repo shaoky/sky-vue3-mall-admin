@@ -17,6 +17,7 @@
         v-if="pagination"
         @handleCurrentChange="handleCurrentChange" 
         @handleSizeChange="handleSizeChange" 
+        :size="paginationData.size"
         :total="paginationData.count"
     ></Pagination>
 </template>
@@ -29,7 +30,7 @@ import type { SearchModel } from '../search/interface'
 
 interface Props {
     api: (data: any) => Promise<any>
-    apiParams: any
+    apiParams?: any
 	pagination?: boolean
     search?: SearchModel[]
 }
@@ -54,7 +55,7 @@ const initTableData = async () => {
     searchList.value = cloneDeep(props.search)
     for (let item of searchList.value) {
         // 提取查询初始值
-        if (item.value || item.value === 0) {
+        if (item.value || item.value === 0 || item.type === 'select') {
             initParams.value[item.field] = item.value
         }
         // 如果api里有值，就去调用接口

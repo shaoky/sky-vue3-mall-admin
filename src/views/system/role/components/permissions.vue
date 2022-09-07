@@ -1,6 +1,6 @@
 <template>
     <el-drawer v-model="drawer" direction="rtl">
-        <template #title>
+        <template #header>
             <div class="title">角色权限配置</div>
         </template>
         <template #default>
@@ -68,8 +68,3 @@ const open = async(row) => {
 
 defineExpose({open})
 </script>
-<style lang="less" scoped>
-:deep(.el-form-item__content) {
-    padding-right: 50px;
-}
-</style>

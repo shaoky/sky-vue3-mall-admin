@@ -1,7 +1,7 @@
 <template>
     <Table :api="getGoodsList" :search="searchList" ref="tableRef">
         <template #btns>
-            <el-button type="primary" @click="$router.push({ path: '/business/article/add' })">新建</el-button>
+            <el-button type="primary" @click="$router.push({ path: '/business/goods/add' })">新建</el-button>
         </template>
         <el-table-column label="标题" prop="title" min-width="200"></el-table-column>
         <el-table-column label="类型" prop="goodsClassName"></el-table-column>

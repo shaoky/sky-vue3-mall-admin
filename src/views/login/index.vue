@@ -31,8 +31,8 @@ import { useRouter } from 'vue-router'
 import { useStore } from '@/store/index'
 
 let account = reactive({
-    username: '',
-    password: ''
+    username: 'admin',
+    password: 'a123456'
 })
 
 let store = useStore()

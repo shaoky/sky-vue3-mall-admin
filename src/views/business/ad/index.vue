@@ -71,7 +71,6 @@ let searchList = ref<SearchModel[]>([
         ]
     }
 ])
-
 const onDelete = async(id: number) => {
     await useMessageBox()
     await deleteAd({id})

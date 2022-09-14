@@ -7,7 +7,8 @@ let imgBaseUrl = ''
 
 if (ENVIR === 'DEVELOPMENT') {
     // baseURL = 'http://api.shop.shaoky.com'
-    baseURL = 'http://t.wzyyyy.com'
+    // baseURL = 'http://t.wzyyyy.com'
+    baseURL = 'http://api.sky.com'
 }
 
 if (ENVIR === 'PRODUCTION') {

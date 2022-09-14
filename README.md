@@ -1,10 +1,14 @@
 # 商城管理系统
 
-技术栈：vue3 + ts + vite
+技术栈：vue3 + ts + vite3 + pinia + elementUI
 
 ### 项目链接
 1. 管理后台（[在线访问地址](http://admin.shop.shaoky.com/)）
 2. h5（[项目链接](https://github.com/shaoky/vue3-mall-h5)）
+
+### 项目运行
+1. yarn
+2. yarn dev
 
 ### 功能
 

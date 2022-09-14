@@ -1,7 +1,10 @@
 import { ref } from 'vue'
+import cloneDeep from 'lodash/cloneDeep'
+
+import type { Ref } from 'vue'
 import type { GoodsSku, GoodsSpec } from '../interface'
 
-export default function useGoodsSkuImage(goodsSpecList, goodsSkuList, updateGoodsSkuList) {
+export default function useGoodsSkuImage(goodsSpecList: Ref<GoodsSpec[]>, goodsSkuList: Ref<GoodsSku[]>) {
     let addGoodsSkuImageVisible = ref(false)
     let addAttrImageIndex = ref(-1) // 添加图片到哪个属性上面
     let saveGoodsSpecList = ref<GoodsSpec[]>([]) // 备份用于取消恢复数据
@@ -9,14 +12,17 @@ export default function useGoodsSkuImage(goodsSpecList, goodsSkuList, updateGood
     let attrImageIndex = ref(0) // 图片添加到哪个值
 
     const openSkuImage = () => {
-        saveGoodsSpecList.value = goodsSpecList
-        saveGoodsSkuList.value = goodsSkuList
-        addAttrImageIndex.value = goodsSpecList.findIndex(item => item.images.length > 0)
+        saveGoodsSpecList.value = cloneDeep(goodsSpecList.value)
+        saveGoodsSkuList.value = cloneDeep(goodsSkuList.value)
+        addAttrImageIndex.value = goodsSpecList.value.findIndex(item => item.images.length > 0)
         addGoodsSkuImageVisible.value = true
     }
 
+    /**
+     * 图片上传
+     */
     const handleSkuImageSuccess = (res, file) => {
-        let spec = saveGoodsSpecList.value[Number(addAttrImageIndex.value)]
+        let spec = goodsSpecList.value[Number(addAttrImageIndex.value)]
         if (!spec.images || spec.images.length === 0) {
             spec.images = []
             for(let item of spec.value) {
@@ -31,9 +37,12 @@ export default function useGoodsSkuImage(goodsSpecList, goodsSkuList, updateGood
         }
     }
 
+    /**
+     * 保存添加的图片
+     */
     const addGoodsSkuImage = () => {
         addGoodsSkuImageVisible.value = false
-        updateGoodsSkuList(saveGoodsSkuList.value)
+        goodsSkuList.value = saveGoodsSkuList.value
     }
 
     return {

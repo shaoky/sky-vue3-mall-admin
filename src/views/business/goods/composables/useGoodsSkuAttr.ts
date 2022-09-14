@@ -1,8 +1,9 @@
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 import pullAll from 'lodash/pullAll'
 import type { GoodsSpec } from '../interface'
 
-export default function useGoodsSkuAttr(goodsSpecList: GoodsSpec[], onSpec) {
+export default function useGoodsSkuAttr(goodsSpecList: Ref<GoodsSpec[]>, onSku) {
     let deleteGoodsAttrVisible = ref(false)
     let addGoodsAttrVisible = ref(false)
     let attrName = ref('')
@@ -13,7 +14,7 @@ export default function useGoodsSkuAttr(goodsSpecList: GoodsSpec[], onSpec) {
         if (attrName.value === '') {
             return
         }
-        goodsSpecList.push({
+        goodsSpecList.value.push({
             name: attrName.value,
             content: [firstSpecName.value],
             value: [],
@@ -24,15 +25,15 @@ export default function useGoodsSkuAttr(goodsSpecList: GoodsSpec[], onSpec) {
     
     const deleteAttr = () => {
         let deleteList: GoodsSpec[] = []
-        for (let item of goodsSpecList) {
+        for (let item of goodsSpecList.value) {
             for (let item1 of delAttrList.value) {
                 if (item1 === item.name) {
                     deleteList.push(item)
                 }
             }
         }
-        pullAll(goodsSpecList, deleteList)
-        onSpec()
+        pullAll(goodsSpecList.value, deleteList)
+        onSku()
         deleteGoodsAttrVisible.value = false
     }
 
@@ -43,6 +44,6 @@ export default function useGoodsSkuAttr(goodsSpecList: GoodsSpec[], onSpec) {
         firstSpecName,
         delAttrList,
         addAttr,
-        deleteAttr
+        deleteAttr,
     }
 }

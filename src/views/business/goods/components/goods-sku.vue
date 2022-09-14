@@ -4,7 +4,7 @@
             class="mt20"
             :label="item.name+':'" v-for="(item, index) in goodsSpecList"
             :key="index">
-            <el-checkbox-group v-model="item.value" @change="onSpec">
+            <el-checkbox-group v-model="item.value" @change="onSku">
                 <el-checkbox :label="item1" v-for="(item1, index1) in item.content" :key="index1">{{item1}}</el-checkbox>
                 <el-button
                     class="ml20"
@@ -155,7 +155,8 @@ let goodsSpecList = ref<GoodsSpec[]>(cloneDeep(props.goodsSpec))
 let saveGoodsSkuList = ref(props.goodsSku)
 let goodsSkuList = ref<GoodsSku[]>([])
 
-let {
+// sku属性
+const {
     addGoodsAttrVisible,
     deleteGoodsAttrVisible,
     attrName,
@@ -163,8 +164,9 @@ let {
     delAttrList,
     addAttr,
     deleteAttr,
-} = useGoodsSkuAttr(goodsSpecList.value, onSpec)
+} = useGoodsSkuAttr(goodsSpecList, onSku)
 
+// sku规格
 const { 
     addGoodsSpecVisible,
     deleteGoodsSpecVisible,
@@ -174,8 +176,9 @@ const {
     delSpecList,
     addSpec,
     deleteSpec
-} = useGoodsSkuSpec(goodsSpecList.value, onSpec)
+} = useGoodsSkuSpec(goodsSpecList, onSku)
 
+// sku图片
 const { 
     addGoodsSkuImageVisible,
     addAttrImageIndex,
@@ -184,17 +187,16 @@ const {
     handleSkuImageSuccess,
     addGoodsSkuImage,
     saveGoodsSpecList
-} = useGoodsSkuImage(goodsSpecList.value, goodsSkuList.value, updateGoodsSkuList)
+} = useGoodsSkuImage(goodsSpecList, goodsSkuList)
 
 const initData = () => {
-    onSpec()
+    onSku()
 }
 
-function updateGoodsSkuList(list) {
-    goodsSkuList.value = list
-}
-
-function onSpec() {
+/**
+ * 计算sku
+ */
+function onSku() {
     if (goodsSpecList.value.length === 0) {
         return
     }
